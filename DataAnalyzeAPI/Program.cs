@@ -1,3 +1,4 @@
+using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,8 @@ builder.Services.AddDbContext<DataAnalyzeDbContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Services.AddAutoMapper(typeof(DatasetProfile));
 
 var app = builder.Build();
 
