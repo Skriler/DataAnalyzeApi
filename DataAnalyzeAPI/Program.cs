@@ -13,6 +13,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddAutoMapper(typeof(DatasetProfile));
 
+builder.Services.AddScoped<DatasetRepository>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

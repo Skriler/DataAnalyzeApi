@@ -1,4 +1,6 @@
-﻿using DataAnalyzeAPI.Models.DTOs;
+﻿using AutoMapper;
+using DataAnalyzeAPI.Models.DTOs.Create;
+using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +10,45 @@ namespace DataAnalyzeAPI.Controllers;
 [ApiController]
 public class DatasetController : ControllerBase
 {
-    
+    private readonly DatasetRepository repository;
+    private readonly IMapper mapper;
 
-    public DatasetController(DataAnalyzeDbContext context)
+    public DatasetController(DatasetRepository repository, IMapper mapper)
     {
-        this.context = context;
+        this.repository = repository;
+        this.mapper = mapper;
     }
 
+    /// <summary>
+    /// Get all datasets.
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var datasets = await repository.GetAllAsync();
+
+        return Ok(datasets);
+    }
+
+    /// <summary>
+    /// Get dataset by id.
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(long id)
+    {
+        var dataset = await repository.GetByIdAsync(id);
+
+        if (dataset == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(dataset);
+    }
+
+    /// <summary>
+    /// Create new dataset.
+    /// </summary>
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] DatasetCreateDto dto)
     {
@@ -23,6 +57,9 @@ public class DatasetController : ControllerBase
             return BadRequest("Invalid dataset data.");
         }
 
-        
+        var dataset = mapper.Map<Dataset>(dto);
+        await repository.AddAsync(dataset);
+
+        return CreatedAtAction(nameof(GetById), new { id = dataset.Id }, dataset);
     }
 }
