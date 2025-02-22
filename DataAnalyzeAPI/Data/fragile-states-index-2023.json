@@ -1,18 +1,18 @@
 {
     "name": "Fragile States Index 2023",
     "parameters": [
-      "demographicPressures",
-      "refugeesAndIDPs",
-      "groupGrievance",
-      "humanFlightAndBrainDrain",
-      "economicInequality",
-      "economy",
-      "stateLegitimacy",
-      "publicServices",
-      "humanRights",
-      "securityApparatus",
-      "factionalizedElites",
-      "externalIntervention"
+      "Demographic Pressures",
+      "Refugees and IDPs",
+      "Group Grievance",
+      "Human Flight and Brain Drain",
+      "Economic Inequality",
+      "Economy",
+      "State Legitimacy",
+      "Public Services",
+      "Human Rights",
+      "Security Apparatus",
+      "Factionalized Elites",
+      "External Intervention"
     ],
     "objects": [
       {

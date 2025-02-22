@@ -12,7 +12,7 @@ public class Dataset
 
     public DateTime CreatedAt { get; set; }
 
-    public List<DataObject> Objects { get; set; } = new();
-
     public List<Parameter> Parameters { get; set; } = new();
+
+    public List<DataObject> Objects { get; set; } = new();
 }

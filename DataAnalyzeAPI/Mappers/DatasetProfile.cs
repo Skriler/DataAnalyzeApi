@@ -19,8 +19,9 @@ public class DatasetProfile : Profile
                 )
             .ForMember(
                 dest => dest.Objects,
-                opt => opt.MapFrom((src, dest) => MapObjects(src.Objects, dest.Parameters))
-                );
+                opt => opt.MapFrom((src, dest) => MapObjects(src.Objects))
+                )
+            .AfterMap((src, dest) => MapParameterValues(dest.Objects, dest.Parameters));
     }
 
     private static List<Parameter> MapParameter(List<string> parameters)
@@ -28,21 +29,24 @@ public class DatasetProfile : Profile
         return parameters.ConvertAll(p => new Parameter { Name = p });
     }
 
-    private static List<DataObject> MapObjects(List<DataObjectCreateDTO> objects, List<Parameter> parameters)
+    private static List<DataObject> MapObjects(List<DataObjectCreateDTO> objects)
     {
         return objects.ConvertAll(obj => new DataObject
         {
             Name = obj.Name,
-            Values = MapParameterValues(obj.Values, parameters)
+            Values = obj.Values.ConvertAll(val => new ParameterValue { Value = val })
         });
     }
 
-    private static List<ParameterValue> MapParameterValues(List<string> values, List<Parameter> parameters)
+    private static void MapParameterValues(List<DataObject> objects, List<Parameter> parameters)
     {
-        return values.Select((val, index) => new ParameterValue
+        foreach (var obj in objects)
         {
-            Value = val,
-            Parameter = parameters[index]
-        }).ToList();
+            for (int i = 0; i < obj.Values.Count; ++i)
+            {
+                var val = obj.Values[i];
+                val.Parameter = parameters[i];
+            }
+        }
     }
 }

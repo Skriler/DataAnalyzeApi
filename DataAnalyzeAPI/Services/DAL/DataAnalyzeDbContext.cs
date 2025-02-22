@@ -16,6 +16,7 @@ public class DataAnalyzeDbContext : DbContext
     public DataAnalyzeDbContext(DbContextOptions<DataAnalyzeDbContext> options)
         : base(options)
     {
+        Database.EnsureDeleted();
         Database.EnsureCreated();
     }
 }

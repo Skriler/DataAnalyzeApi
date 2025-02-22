@@ -1,17 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DataAnalyzeAPI.Models.Entities;
 
 public class DataObject
 {
     [Key]
+    [JsonIgnore]
     public int Id { get; set; }
 
     [Required]
     public string Name { get; set; } = string.Empty;
 
-    public int DatasetId { get; set; }
-    public Dataset Dataset { get; set; } = default!;
+    [JsonIgnore] public int DatasetId { get; set; }
+    [JsonIgnore] public Dataset Dataset { get; set; } = default!;
 
     public List<ParameterValue> Values { get; set; } = new();
 }
