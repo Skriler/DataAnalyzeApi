@@ -1,7 +1,7 @@
 ﻿namespace DataAnalyzeAPI.Models.DTOs.Create;
 
-public record DatasetCreateDto(
+public record DatasetDto(
     string Name,
     List<string> Parameters,
-    List<DataObjectCreateDTO> Objects
+    List<DataObjectDTO> Objects
 );

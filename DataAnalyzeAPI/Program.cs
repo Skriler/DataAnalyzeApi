@@ -9,7 +9,7 @@ builder.Services.AddDbContext<DataAnalyzeDbContext>(options =>
 );
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(DatasetProfile));
 
@@ -19,7 +19,12 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(opt =>
+    {
+        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Data Analyze API v1");
+        opt.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();

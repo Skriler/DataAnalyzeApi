@@ -43,14 +43,16 @@ public class DatasetController : ControllerBase
             return NotFound();
         }
 
-        return Ok(dataset);
+        var dto = mapper.Map<DatasetDto>(dataset);
+
+        return Ok(dto);
     }
 
     /// <summary>
     /// Create new dataset.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] DatasetCreateDto dto)
+    public async Task<IActionResult> Create([FromBody] DatasetDto dto)
     {
         if (dto == null || dto.Objects.Count == 0 || dto.Parameters.Count == 0)
         {
@@ -61,5 +63,23 @@ public class DatasetController : ControllerBase
         await repository.AddAsync(dataset);
 
         return CreatedAtAction(nameof(GetById), new { id = dataset.Id }, dataset);
+    }
+
+    /// <summary>
+    /// Delete dataset by id.
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(long id)
+    {
+        var dataset = await repository.GetByIdAsync(id);
+
+        if (dataset == null)
+        {
+            return NotFound();
+        }
+
+        await repository.DeleteAsync(dataset);
+
+        return NoContent();
     }
 }

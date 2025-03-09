@@ -34,4 +34,10 @@ public class DatasetRepository
         context.Datasets.Add(dataset);
         await context.SaveChangesAsync();
     }
+
+    public async Task DeleteAsync(Dataset dataset)
+    {
+        context.Datasets.Remove(dataset);
+        await context.SaveChangesAsync();
+    }
 }
