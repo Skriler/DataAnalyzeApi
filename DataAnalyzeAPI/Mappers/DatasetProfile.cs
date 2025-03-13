@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DataAnalyzeAPI.Models.DTOs;
 using DataAnalyzeAPI.Models.DTOs.Create;
+using DataAnalyzeAPI.Models.DTOs.Dataset;
 using DataAnalyzeAPI.Models.Entities;
 
 namespace DataAnalyzeAPI.Mappers;

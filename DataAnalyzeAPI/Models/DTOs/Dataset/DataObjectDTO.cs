@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs;
+﻿namespace DataAnalyzeAPI.Models.DTOs.Dataset;
 
 public record DataObjectDTO(
     string Name,
