@@ -21,6 +21,13 @@ public class AnalyseController : Controller
     [HttpPost("similarity/{datasetId}")]
     public async Task<IActionResult> CalculateSimilarity(long datasetId)
     {
+        var dataset = await repository.GetByIdAsync(datasetId);
+
+        if (dataset == null)
+        {
+            return NotFound($"Dataset with ID {datasetId} not found");
+        }
+
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DataAnalyzeAPI.Models.DTOs.Dataset;
 
-public record DataObjectDTO(
+public record DataObjectDto(
     string Name,
     List<string> Values
 );

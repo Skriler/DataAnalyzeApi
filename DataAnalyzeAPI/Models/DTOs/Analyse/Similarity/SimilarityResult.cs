@@ -2,7 +2,7 @@
 
 public class SimilarityResult
 {
-    public long FirstObjectId { get; set; }
+    public long DatasetId { get; set; }
 
-    public long SecondObjectId { get; set; }
+    public List<SimilarityPairDto> Similarities { get; set; } = new();
 }
