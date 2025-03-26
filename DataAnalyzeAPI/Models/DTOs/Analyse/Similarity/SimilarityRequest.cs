@@ -4,7 +4,5 @@ namespace DataAnalyzeAPI.Models.DTOs.Analyse.Similarity;
 
 public class SimilarityRequest
 {
-    public double DeviationPercent { get; set; } = 10;
-
-    public List<ParameterSettings> ParameterSettings { get; set; } = new();
+    public List<ParameterSettingsDto> ParameterSettings { get; set; } = new();
 }

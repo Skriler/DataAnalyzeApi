@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataAnalyzeAPI.Models.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace DataAnalyzeAPI.Models.Entities;
@@ -11,4 +12,6 @@ public class Parameter
 
     [Required]
     public string Name { get; set; } = string.Empty;
+
+    public ParameterType Type { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using DataAnalyzeAPI.Models.DTOs.Create;
+using DataAnalyzeAPI.Models.DTOs.Dataset.Analysis;
+using DataAnalyzeAPI.Models.DTOs.Dataset.Create;
 using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ public class DatasetController : ControllerBase
             return NotFound();
         }
 
-        var dto = mapper.Map<DatasetDto>(dataset);
+        var dto = mapper.Map<DatasetCreateDto>(dataset);
 
         return Ok(dto);
     }
@@ -52,7 +53,7 @@ public class DatasetController : ControllerBase
     /// Create new dataset.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] DatasetDto dto)
+    public async Task<IActionResult> Create([FromBody] DatasetCreateDto dto)
     {
         if (dto == null || dto.Objects.Count == 0 || dto.Parameters.Count == 0)
         {

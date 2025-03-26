@@ -9,7 +9,7 @@ public class ParameterValue
     [JsonIgnore]
     public int Id { get; set; }
 
-    public string? Value { get; set; }
+    public string Value { get; set; } = string.Empty;
 
     [JsonIgnore] public int ParameterId { get; set; }
     [JsonIgnore] public Parameter Parameter { get; set; } = default!;
