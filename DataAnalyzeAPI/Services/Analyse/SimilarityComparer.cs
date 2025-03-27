@@ -8,52 +8,56 @@ public class SimilarityComparer
 {
     private readonly ICompare comparer;
 
+    private readonly Dictionary<long, double> maxRanges = new();
+
     public SimilarityComparer(ICompare comparer)
     {
         this.comparer = comparer;
     }
 
-    public List<SimilarityPairDto> CalculateSimilarity(
-        DatasetDto dataset,
-        SimilarityRequest similarityRequest)
+    public List<SimilarityPairDto> CalculateSimilarity(DatasetDto dataset)
     {
-        var maxRanges = CalculateMaxRanges(dataset.Objects, dataset.Parameters);
+        InitializeMaxRanges(dataset.Objects, dataset.Parameters);
 
-        return CompareObjects(dataset.Objects, maxRanges);
+        return CompareObjects(dataset.Objects, dataset.Parameters);
     }
 
-    private static Dictionary<long, double> CalculateMaxRanges(
+    /// <summary>
+    /// Initializes the max ranges dictionary for numeric parameters across all objects.
+    /// </summary>
+    private void InitializeMaxRanges(
         List<DataObjectDto> objects,
         List<ParameterStateDto> parameterStates)
     {
-        var maxRanges = new Dictionary<long, double>();
+        maxRanges.Clear();
 
-        for (int i = 0; i < parameterStates.Count; ++i)
+        var numericParameters = parameterStates
+            .Where(ps => ps.Type == ParameterType.Numeric)
+            .ToList();
+
+        foreach (var parameterState in numericParameters)
         {
-            if (parameterStates[i].Type == ParameterType.Categorical)
-                continue;
+            var values = objects
+                .SelectMany(obj => obj.Values)
+                .Where(v => v.Parameter.Id == parameterState.Id)
+                .Select(v => Convert.ToDouble(v.Value))
+                .ToList();
 
-            var minValue = double.MinValue;
-            var maxValue = double.MaxValue;
+            var minValue = values.Min();
+            var maxValue = values.Max();
 
-            foreach(var obj in objects)
-            {
-                if (!double.TryParse(obj.Values[i].Value, out var number))
-                    continue;
-
-                minValue = Math.Min(minValue, number);
-                maxValue = Math.Max(maxValue, number);
-            }
-
-            maxRanges[i] = maxValue > minValue ? maxValue - minValue : 1;
+            maxRanges[parameterState.Id] = maxValue > minValue
+                ? maxValue - minValue
+                : 1;
         }
-
-        return maxRanges;
     }
 
+    /// <summary>
+    /// Compares all objects in the dataset and calculates their similarity.
+    /// </summary>
     private List<SimilarityPairDto> CompareObjects(
         List<DataObjectDto> objects,
-        Dictionary<long, double> maxRanges)
+        List<ParameterStateDto> parameterStates)
     {
         var similarities = new List<SimilarityPairDto>();
 
@@ -65,13 +69,13 @@ public class SimilarityComparer
             {
                 var objectB = objects[j];
 
-                var similarity = new SimilarityPairDto()
+                var similarity = new SimilarityPairDto
                 {
                     ObjectAId = objectA.Id,
                     ObjectAName = objectA.Name,
-                    ObjectBId = objectA.Id,
+                    ObjectBId = objectB.Id,
                     ObjectBName = objectB.Name,
-                    SimilarityPercentage = GetSimilarityPercentage(objectA, objectB, maxRanges),
+                    SimilarityPercentage = CalculateSimilarityPercentage(objectA, objectB, parameterStates)
                 };
 
                 similarities.Add(similarity);
@@ -81,28 +85,40 @@ public class SimilarityComparer
         return similarities;
     }
 
-    private double GetSimilarityPercentage(
+    /// <summary>
+    /// Calculates the weighted similarity percentage between two objects.
+    /// </summary>
+    private double CalculateSimilarityPercentage(
         DataObjectDto objectA,
         DataObjectDto objectB,
-        Dictionary<long, double> maxRanges)
+        List<ParameterStateDto> parameterStates)
     {
         if (objectA.Values.Count != objectB.Values.Count)
-            throw new InvalidOperationException("Objects must have the same number of parameters");
+            throw new InvalidOperationException("Objects must have the same number of parameters.");
 
-        var totalWeight = 0d;
+        if (maxRanges.Count == 0)
+            throw new InvalidOperationException("Max ranges must be initialized.");
 
-        for (int i = 0; i < objectA.Values.Count; ++i)
+        var weightedSimilarity = 0d;
+        var totalNormalizedWeight = 0d;
+
+        for (int i = 0; i < parameterStates.Count; ++i)
         {
-            var valueA = objectA.Values[i];
-            var valueB = objectB.Values[i];
-            var maxRange = maxRanges[i];
+            var parameterState = parameterStates[i];
 
-            var similarity = comparer.Compare(valueA.Value, valueB.Value, maxRange);
-            totalWeight += similarity * valueA.Parameter.Weight;
+            if (!parameterState.IsActive)
+                continue;
+
+            var valueA = objectA.Values.First(v => v.Parameter.Id == parameterState.Id).Value;
+            var valueB = objectB.Values.First(v => v.Parameter.Id == parameterState.Id).Value;
+            var maxRange = maxRanges[parameterState.Id];
+
+            var similarity = comparer.Compare(valueA, valueB, maxRange);
+
+            weightedSimilarity += similarity * parameterState.Weight;
+            totalNormalizedWeight += parameterState.Weight;
         }
 
-        totalWeight /= objectA.Values.Count;
-
-        return totalWeight;
+        return totalNormalizedWeight > 0 ? weightedSimilarity / totalNormalizedWeight : 0;
     }
 }

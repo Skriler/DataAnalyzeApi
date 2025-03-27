@@ -1,4 +1,6 @@
+using DataAnalyzeAPI.Controllers;
 using DataAnalyzeAPI.Mappers;
+using DataAnalyzeAPI.Services.Analyse;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(DatasetProfile));
 
 builder.Services.AddScoped<DatasetRepository>();
+builder.Services.AddScoped<DatasetSettingsMapper>();
+
+builder.Services.AddScoped<SimilarityComparer>();
+builder.Services.AddTransient<ICompare, NormalizedValueComparer>();
 
 var app = builder.Build();
 

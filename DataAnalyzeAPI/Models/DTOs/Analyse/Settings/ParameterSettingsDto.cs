@@ -1,10 +1,14 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
+﻿using System.ComponentModel.DataAnnotations;
+using ParamConfig = DataAnalyzeAPI.Models.Config.ParameterSettingsConfig;
+
+namespace DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
 
 public class ParameterSettingsDto
 {
     public long ParameterId { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public bool IsActive { get; set; } = ParamConfig.Activity.Default;
 
-    public double Weight { get; set; } = 1.0;
+    [Range(ParamConfig.Weight.MinAllowed, ParamConfig.Weight.MaxAllowed)]
+    public double Weight { get; set; } = ParamConfig.Weight.Default;
 }
