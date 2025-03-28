@@ -1,21 +1,20 @@
 ﻿using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity;
-using DataAnalyzeAPI.Services.Analyse;
+using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeAPI.Controllers;
 
 [ApiController]
-[Route("api/analyse")]
-public class AnalyseController : Controller
+[Route("api/analyse/similarity")]
+public class SimilarityController : Controller
 {
     private readonly DatasetRepository repository;
     private readonly DatasetSettingsMapper datasetSettingsMapper;
     private readonly SimilarityComparer comparer;
 
-    public AnalyseController(
+    public SimilarityController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
         SimilarityComparer comparer)
@@ -28,7 +27,7 @@ public class AnalyseController : Controller
     /// <summary>
     /// Get similarity results based on full pairwise comparison algorithm.
     /// </summary>
-    [HttpPost("similarity/{datasetId}")]
+    [HttpPost("{datasetId}")]
     public async Task<IActionResult> CalculateSimilarity(
         long datasetId,
         [FromBody] SimilarityRequest? request)

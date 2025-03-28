@@ -1,5 +1,5 @@
 ﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analysis;
+using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Entities;
 using ParamConfig = DataAnalyzeAPI.Models.Config.ParameterSettingsConfig;
 

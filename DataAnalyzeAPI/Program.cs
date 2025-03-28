@@ -1,6 +1,7 @@
 using DataAnalyzeAPI.Controllers;
 using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Services.Analyse;
+using DataAnalyzeAPI.Services.Analyse.Clusterers;
+using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,11 @@ builder.Services.AddScoped<DatasetSettingsMapper>();
 
 builder.Services.AddScoped<SimilarityComparer>();
 builder.Services.AddTransient<ICompare, NormalizedValueComparer>();
+
+builder.Services.AddScoped<ClustererFactory>();
+builder.Services.AddScoped<KMeansClusterer>();
+builder.Services.AddScoped<DBSCANClusterer>();
+builder.Services.AddScoped<AgglomerativeClusterer>();
 
 var app = builder.Build();
 

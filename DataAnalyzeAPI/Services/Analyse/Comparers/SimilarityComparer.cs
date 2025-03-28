@@ -1,8 +1,8 @@
 ﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analysis;
+using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Enum;
 
-namespace DataAnalyzeAPI.Services.Analyse;
+namespace DataAnalyzeAPI.Services.Analyse.Comparers;
 
 public class SimilarityComparer
 {

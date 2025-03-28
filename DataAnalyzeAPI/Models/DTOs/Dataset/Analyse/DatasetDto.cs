@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Dataset.Analysis;
+﻿namespace DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
 
 public record DatasetDto(
     long Id,
