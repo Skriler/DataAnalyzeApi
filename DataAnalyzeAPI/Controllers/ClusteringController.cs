@@ -3,6 +3,7 @@ using DataAnalyzeAPI.Models.DTOs.Analyse.Clusters;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.DAL;
+using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataAnalyzeAPI.Controllers;
@@ -13,15 +14,18 @@ public class ClusteringController : Controller
 {
     private readonly DatasetRepository repository;
     private readonly DatasetSettingsMapper datasetSettingsMapper;
+    private readonly DatasetNormalizer datasetNormalizer;
     private readonly ClustererFactory clustererFactory;
 
     public ClusteringController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
+        DatasetNormalizer datasetNormalizer,
         ClustererFactory clustererFactory)
     {
         this.repository = repository;
         this.datasetSettingsMapper = datasetSettingsMapper;
+        this.datasetNormalizer = datasetNormalizer;
         this.clustererFactory = clustererFactory;
     }
 
@@ -71,8 +75,10 @@ public class ClusteringController : Controller
         }
 
         var mappedDataset = datasetSettingsMapper.MapObjects(dataset, request.ParameterSettings);
+        var normalizedDataset = datasetNormalizer.Normalize(mappedDataset);
+
         var clusterer = clustererFactory.Get(algorithm);
-        var clusters = clusterer.Cluster(mappedDataset);
+        var clusters = clusterer.Cluster(normalizedDataset);
 
         var clusteringResult = new ClusteringResult()
         {

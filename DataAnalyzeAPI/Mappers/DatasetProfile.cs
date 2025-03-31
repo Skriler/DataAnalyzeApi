@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analysis;
 using DataAnalyzeAPI.Models.DTOs.Dataset.Create;
 using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Models.Enum;

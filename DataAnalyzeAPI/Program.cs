@@ -1,8 +1,8 @@
-using DataAnalyzeAPI.Controllers;
 using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.DAL;
+using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +18,7 @@ builder.Services.AddAutoMapper(typeof(DatasetProfile));
 
 builder.Services.AddScoped<DatasetRepository>();
 builder.Services.AddScoped<DatasetSettingsMapper>();
+builder.Services.AddScoped<DatasetNormalizer>();
 
 builder.Services.AddScoped<SimilarityComparer>();
 builder.Services.AddTransient<ICompare, NormalizedValueComparer>();
