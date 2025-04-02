@@ -1,5 +1,5 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
 using DataAnalyzeAPI.Models.Entities;
 using ParamConfig = DataAnalyzeAPI.Models.Config.ParameterSettingsConfig;
 
@@ -8,16 +8,16 @@ namespace DataAnalyzeAPI.Mappers;
 public class DatasetSettingsMapper
 {
     /// <summary>
-    /// Maps dataset to DTO.
+    /// Maps dataset entity to dataset model with parameter settings.
     /// </summary>
-    public DatasetDto MapObjects(
+    public DatasetModel MapObjects(
         Dataset dataset,
         List<ParameterSettingsDto>? parameterSettings)
     {
         var parameterStates = MapParameterStates(dataset.Parameters, parameterSettings);
         var mappedObjects = MapDataObjects(dataset.Objects, parameterStates);
 
-        return new DatasetDto(
+        return new DatasetModel(
             dataset.Id,
             dataset.Name,
             parameterStates,
@@ -25,13 +25,13 @@ public class DatasetSettingsMapper
     }
 
     /// <summary>
-    /// Maps parameters and their settings to Dto objects.
+    /// Maps parameters and parameter settings to their models.
     /// </summary>
-    private static List<ParameterStateDto> MapParameterStates(
+    private static List<ParameterStateModel> MapParameterStates(
         List<Parameter> parameters,
         List<ParameterSettingsDto>? parameterSettings)
     {
-        var parameterStates = new List<ParameterStateDto>();
+        var parameterStates = new List<ParameterStateModel>();
 
         var totalParameterWeight = parameters
             .ConvertAll(p => GetParameterWeight(p, parameterSettings))
@@ -47,7 +47,7 @@ public class DatasetSettingsMapper
                     ParameterId = parameter.Id,
                 };
 
-            var parameterState = new ParameterStateDto(
+            var parameterState = new ParameterStateModel(
                 parameter.Id,
                 parameter.Type,
                 parameterSetting.IsActive,
@@ -74,19 +74,19 @@ public class DatasetSettingsMapper
     }
 
     /// <summary>
-    /// Maps data objects to DTO.
+    /// Maps data objects to their models.
     /// </summary>
-    private static List<DataObjectDto> MapDataObjects(
+    private static List<DataObjectModel> MapDataObjects(
         List<DataObject> sourceObjects,
-        List<ParameterStateDto> parameterStates)
+        List<ParameterStateModel> parameterStates)
     {
-        var mappedObjects = new List<DataObjectDto>();
+        var mappedObjects = new List<DataObjectModel>();
 
         foreach (var sourceObject in sourceObjects)
         {
             var mappedValues = MapParameterValues(sourceObject.Values, parameterStates);
 
-            var mappedObject = new DataObjectDto(
+            var mappedObject = new DataObjectModel(
                 sourceObject.Id,
                 sourceObject.Name,
                 mappedValues
@@ -98,20 +98,20 @@ public class DatasetSettingsMapper
     }
 
     /// <summary>
-    /// Maps parameter values to DTO.
+    /// Maps parameter values to their models.
     /// </summary>
-    private static List<ParameterValueDto> MapParameterValues(
+    private static List<ParameterValueModel> MapParameterValues(
         List<ParameterValue> sourceValues,
-        List<ParameterStateDto> parameterStates)
+        List<ParameterStateModel> parameterStates)
     {
-        var mappedValues = new List<ParameterValueDto>();
+        var mappedValues = new List<ParameterValueModel>();
 
         foreach (var sourceValue in sourceValues)
         {
             var parameterState = parameterStates
                 .First(ps => ps.Id == sourceValue.ParameterId);
 
-            var mappedValue = new ParameterValueDto(
+            var mappedValue = new ParameterValueModel(
                 sourceValue.Value,
                 parameterState);
             mappedValues.Add(mappedValue);

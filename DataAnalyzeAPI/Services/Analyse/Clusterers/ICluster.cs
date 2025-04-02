@@ -1,9 +1,9 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Clusters;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Clustering;
+using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public interface ICluster
 {
-    List<ClusterDto> Cluster(DatasetDto dataset);
+    List<Cluster> Cluster(DatasetModel dataset);
 }

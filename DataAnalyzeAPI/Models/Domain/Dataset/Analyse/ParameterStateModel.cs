@@ -1,8 +1,8 @@
 ﻿using DataAnalyzeAPI.Models.Enum;
 
-namespace DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+namespace DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 
-public record ParameterStateDto(
+public record ParameterStateModel(
     long Id,
     ParameterType Type,
     bool IsActive,

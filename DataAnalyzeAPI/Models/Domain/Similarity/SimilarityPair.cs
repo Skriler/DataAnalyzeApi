@@ -1,6 +1,6 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Similarity;
+﻿namespace DataAnalyzeAPI.Models.Domain.Similarity;
 
-public class SimilarityPairDto
+public class SimilarityPair
 {
     public long ObjectAId { get; set; }
     public string ObjectAName { get; set; } = string.Empty;

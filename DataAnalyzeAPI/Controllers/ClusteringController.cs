@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clusters;
+using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
+using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.DAL;

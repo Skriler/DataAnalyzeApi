@@ -1,5 +1,5 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+using DataAnalyzeAPI.Models.Domain.Similarity;
 using DataAnalyzeAPI.Models.Enum;
 
 namespace DataAnalyzeAPI.Services.Analyse.Comparers;
@@ -15,7 +15,7 @@ public class SimilarityComparer
         this.comparer = comparer;
     }
 
-    public List<SimilarityPairDto> CalculateSimilarity(DatasetDto dataset)
+    public List<SimilarityPair> CalculateSimilarity(DatasetModel dataset)
     {
         InitializeMaxRanges(dataset.Objects, dataset.Parameters);
 
@@ -26,8 +26,8 @@ public class SimilarityComparer
     /// Initializes the max ranges dictionary for numeric parameters across all objects.
     /// </summary>
     private void InitializeMaxRanges(
-        List<DataObjectDto> objects,
-        List<ParameterStateDto> parameterStates)
+        List<DataObjectModel> objects,
+        List<ParameterStateModel> parameterStates)
     {
         maxRanges.Clear();
 
@@ -55,11 +55,11 @@ public class SimilarityComparer
     /// <summary>
     /// Compares all objects in the dataset and calculates their similarity.
     /// </summary>
-    private List<SimilarityPairDto> CompareObjects(
-        List<DataObjectDto> objects,
-        List<ParameterStateDto> parameterStates)
+    private List<SimilarityPair> CompareObjects(
+        List<DataObjectModel> objects,
+        List<ParameterStateModel> parameterStates)
     {
-        var similarities = new List<SimilarityPairDto>();
+        var similarities = new List<SimilarityPair>();
 
         for (int i = 0; i < objects.Count; ++i)
         {
@@ -69,7 +69,7 @@ public class SimilarityComparer
             {
                 var objectB = objects[j];
 
-                var similarity = new SimilarityPairDto
+                var similarity = new SimilarityPair
                 {
                     ObjectAId = objectA.Id,
                     ObjectAName = objectA.Name,
@@ -89,9 +89,9 @@ public class SimilarityComparer
     /// Calculates the weighted similarity percentage between two objects.
     /// </summary>
     private double CalculateSimilarityPercentage(
-        DataObjectDto objectA,
-        DataObjectDto objectB,
-        List<ParameterStateDto> parameterStates)
+        DataObjectModel objectA,
+        DataObjectModel objectB,
+        List<ParameterStateModel> parameterStates)
     {
         if (objectA.Values.Count != objectB.Values.Count)
             throw new InvalidOperationException("Objects must have the same number of parameters.");

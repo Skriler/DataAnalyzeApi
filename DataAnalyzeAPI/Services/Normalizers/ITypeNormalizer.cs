@@ -1,4 +1,4 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 
 namespace DataAnalyzeAPI.Services.Normalizers;
 
@@ -8,5 +8,5 @@ public interface ITypeNormalizer
 
     void AddValue(string value);
 
-    ParameterValueDto Normalize(ParameterValueDto parameterValue);
+    ParameterValueModel Normalize(ParameterValueModel parameterValue);
 }

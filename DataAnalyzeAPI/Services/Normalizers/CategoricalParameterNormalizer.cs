@@ -1,4 +1,4 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.DTOs.Dataset.Normalized;
 
 namespace DataAnalyzeAPI.Services.Normalizers;
@@ -34,7 +34,7 @@ public class CategoricalParameterNormalizer : ITypeNormalizer
         }
     }
 
-    public ParameterValueDto Normalize(ParameterValueDto parameterValue)
+    public ParameterValueModel Normalize(ParameterValueModel parameterValue)
     {
         var oneHotValues = ConvertValueToOneHot(parameterValue.Value);
 

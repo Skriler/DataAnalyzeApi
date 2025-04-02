@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clusters;
+﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 
 public class KMeansClusteringRequest : BaseClusteringRequest
 {

@@ -1,12 +1,12 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Clusters;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Clustering;
+using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public class DBSCANClusterer : ICluster
 {
     //TODO
-    public List<ClusterDto> Cluster(DatasetDto dataset)
+    public List<Cluster> Cluster(DatasetModel dataset)
     {
         throw new NotImplementedException();
     }

@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity;
+using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
+using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.AspNetCore.Mvc;

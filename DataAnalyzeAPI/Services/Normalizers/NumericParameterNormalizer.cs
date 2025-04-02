@@ -1,4 +1,4 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.DTOs.Dataset.Normalized;
 
 namespace DataAnalyzeAPI.Services.Normalizers;
@@ -34,7 +34,7 @@ public class NumericParameterNormalizer : ITypeNormalizer
         Average = (Min + Max) / 2;
     }
 
-    public ParameterValueDto Normalize(ParameterValueDto parameterValue)
+    public ParameterValueModel Normalize(ParameterValueModel parameterValue)
     {
         var value = string.IsNullOrEmpty(parameterValue.Value)
             ? Convert.ToDouble(parameterValue.Value)

@@ -1,4 +1,4 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Enum;
 
 namespace DataAnalyzeAPI.Services.Normalizers;
@@ -7,7 +7,7 @@ public class DatasetNormalizer
 {
     private readonly Dictionary<long, ITypeNormalizer> normalizers = new();
 
-    public DatasetDto Normalize(DatasetDto dataset)
+    public DatasetModel Normalize(DatasetModel dataset)
     {
         InitializeNormalizers(dataset.Objects);
 
@@ -17,7 +17,7 @@ public class DatasetNormalizer
     /// <summary>
     /// Initializes normalizers for all values in the dataset.
     /// </summary>
-    private void InitializeNormalizers(List<DataObjectDto> objects)
+    private void InitializeNormalizers(List<DataObjectModel> objects)
     {
         foreach (var obj in objects)
         {
@@ -31,7 +31,7 @@ public class DatasetNormalizer
     /// <summary>
     /// Adds a value to the corresponding normalizer or creates a new one if it doesn't exist.
     /// </summary>
-    private void AddValueToNormalizer(ParameterValueDto parameterValue)
+    private void AddValueToNormalizer(ParameterValueModel parameterValue)
     {
         if (normalizers.TryGetValue(parameterValue.Parameter.Id, out var normalizer))
         {
@@ -46,12 +46,12 @@ public class DatasetNormalizer
     /// <summary>
     /// Creates a normalized dataset based on the original dataset.
     /// </summary>
-    private DatasetDto CreateNormalizedDataset(DatasetDto datasetDto)
+    private DatasetModel CreateNormalizedDataset(DatasetModel datasetDto)
     {
         var normalizedObjects = datasetDto.Objects
             .ConvertAll(CreateNormalizedObject);
 
-        return new DatasetDto(
+        return new DatasetModel(
             datasetDto.Id,
             datasetDto.Name,
             datasetDto.Parameters,
@@ -62,12 +62,12 @@ public class DatasetNormalizer
     /// <summary>
     /// Creates a normalized object from the original object.
     /// </summary>
-    private DataObjectDto CreateNormalizedObject(DataObjectDto obj)
+    private DataObjectModel CreateNormalizedObject(DataObjectModel obj)
     {
         var normalizedValues = obj.Values
             .ConvertAll(pv => normalizers[pv.Parameter.Id].Normalize(pv))
 ;
-        return new DataObjectDto(
+        return new DataObjectModel(
             obj.Id,
             obj.Name,
             normalizedValues
@@ -77,7 +77,7 @@ public class DatasetNormalizer
     /// <summary>
     /// Creates a normalizer based on the parameter type.
     /// </summary>
-    private static ITypeNormalizer CreateNormalizer(ParameterValueDto parameterValue)
+    private static ITypeNormalizer CreateNormalizer(ParameterValueModel parameterValue)
     {
         return parameterValue.Parameter.Type switch
         {
