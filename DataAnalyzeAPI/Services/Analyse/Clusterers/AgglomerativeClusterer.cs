@@ -1,21 +1,19 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Clustering;
 using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
-public class AgglomerativeClusterer : ICluster
+public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
 {
-    private readonly IDistanceCalculator distanceCalculator;
-
     private List<AgglomerativeCluster> clusters = new();
 
     public AgglomerativeClusterer(IDistanceCalculator distanceCalculator)
-    {
-        this.distanceCalculator = distanceCalculator;
-    }
+        : base(distanceCalculator)
+    { }
 
-    public List<Cluster> Cluster(DatasetModel dataset)
+    public override List<Cluster> Cluster(DatasetModel dataset, AgglomerativeSettings settings)
     {
         clusters = dataset.Objects
             .ConvertAll(obj => new AgglomerativeCluster(obj));

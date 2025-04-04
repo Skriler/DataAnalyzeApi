@@ -14,4 +14,12 @@ public class Cluster
     {
         Id = nextId++;
     }
+
+    public void AddObject(DataObjectModel obj)
+    {
+        if (Objects.Contains(obj))
+            return;
+
+        Objects.Add(obj);
+    }
 }

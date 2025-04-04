@@ -1,4 +1,5 @@
 ﻿using DataAnalyzeAPI.Mappers;
+using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
@@ -6,6 +7,7 @@ using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime;
 
 namespace DataAnalyzeAPI.Controllers;
 
@@ -35,10 +37,17 @@ public class ClusteringController : Controller
         long datasetId,
         [FromBody] KMeansClusteringRequest request)
     {
+        var settings = new KMeansSettings
+        {
+            MaxIterations = request.MaxIterations,
+            NumberOfClusters = request.NumberOfClusters
+        };
+
         return await CalculateClusters(
             datasetId,
             request,
-            ClusterAlgorithm.KMeans);
+            ClusterAlgorithm.KMeans,
+            settings);
     }
 
     [HttpPost("dbscan/{datasetId}")]
@@ -46,10 +55,17 @@ public class ClusteringController : Controller
         long datasetId,
         [FromBody] DBSCANClusteringRequest request)
     {
+        var settings = new DBSCANSettings
+        {
+            Epsilon = request.Epsilon,
+            MinPoints = request.MinPoints
+        };
+
         return await CalculateClusters(
             datasetId,
             request,
-            ClusterAlgorithm.DBSCAN);
+            ClusterAlgorithm.DBSCAN,
+            settings);
     }
 
     [HttpPost("agglomerative/{datasetId}")]
@@ -57,16 +73,23 @@ public class ClusteringController : Controller
         long datasetId,
         [FromBody] AgglomerativeClusteringRequest request)
     {
+        var settings = new AgglomerativeSettings
+        {
+            Threshold = request.Threshold
+        };
+
         return await CalculateClusters(
             datasetId,
             request,
-            ClusterAlgorithm.HierarchicalAgglomerative);
+            ClusterAlgorithm.HierarchicalAgglomerative,
+            settings);
     }
 
-    private async Task<IActionResult> CalculateClusters(
+    private async Task<IActionResult> CalculateClusters<TSettings>(
         long datasetId,
         BaseClusteringRequest request,
-        ClusterAlgorithm algorithm)
+        ClusterAlgorithm algorithm,
+        TSettings settings) where TSettings : IClusterSettings
     {
         var dataset = await repository.GetByIdAsync(datasetId);
 
@@ -78,8 +101,8 @@ public class ClusteringController : Controller
         var mappedDataset = datasetSettingsMapper.MapObjects(dataset, request.ParameterSettings);
         var normalizedDataset = datasetNormalizer.Normalize(mappedDataset);
 
-        var clusterer = clustererFactory.Get(algorithm);
-        var clusters = clusterer.Cluster(normalizedDataset);
+        var clusterer = clustererFactory.Get<TSettings>(algorithm);
+        var clusters = clusterer.Cluster(normalizedDataset, settings);
 
         var clusteringResult = new ClusteringResult()
         {

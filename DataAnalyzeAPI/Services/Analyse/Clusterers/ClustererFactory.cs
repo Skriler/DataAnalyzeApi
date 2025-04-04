@@ -1,4 +1,5 @@
-﻿using DataAnalyzeAPI.Models.Enums;
+﻿using DataAnalyzeAPI.Models.Domain.Settings;
+using DataAnalyzeAPI.Models.Enums;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
@@ -11,13 +12,13 @@ public class ClustererFactory
         this.serviceProvider = serviceProvider;
     }
 
-    public ICluster Get(ClusterAlgorithm algorithm)
+    public BaseClusterer<TSettings> Get<TSettings>(ClusterAlgorithm algorithm) where TSettings : IClusterSettings
     {
         return algorithm switch
         {
-            ClusterAlgorithm.KMeans => serviceProvider.GetRequiredService<KMeansClusterer>(),
-            ClusterAlgorithm.DBSCAN => serviceProvider.GetRequiredService<DBSCANClusterer>(),
-            ClusterAlgorithm.HierarchicalAgglomerative => serviceProvider.GetRequiredService<AgglomerativeClusterer>(),
+            ClusterAlgorithm.KMeans => serviceProvider.GetRequiredService<KMeansClusterer>() as BaseClusterer<TSettings>,
+            ClusterAlgorithm.DBSCAN => serviceProvider.GetRequiredService<DBSCANClusterer>() as BaseClusterer<TSettings>,
+            ClusterAlgorithm.HierarchicalAgglomerative => serviceProvider.GetRequiredService<AgglomerativeClusterer>() as BaseClusterer<TSettings>,
             _ => throw new ArgumentOutOfRangeException(nameof(algorithm))
         };
     }
