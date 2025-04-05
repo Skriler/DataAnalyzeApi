@@ -22,8 +22,7 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
         {
             var mostSimilarPair = FindMostSimilarClusters();
 
-            // TODO add threshold
-            if (mostSimilarPair.Similarity > 0.5)
+            if (mostSimilarPair.Similarity > settings.Threshold)
                 break;
 
             clusters[mostSimilarPair.ClusterAId]
