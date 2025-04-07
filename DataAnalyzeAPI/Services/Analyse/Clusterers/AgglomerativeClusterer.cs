@@ -20,7 +20,7 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
 
         while (clusters.Count(c => !c.IsMerged) > 1)
         {
-            var mostSimilarPair = FindMostSimilarClusters();
+            var mostSimilarPair = FindMostSimilarClusters(settings);
 
             if (mostSimilarPair.Similarity > settings.Threshold)
                 break;
@@ -35,7 +35,7 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
             .ToList();
     }
 
-    private ClusterPairSimilarity FindMostSimilarClusters()
+    private ClusterPairSimilarity FindMostSimilarClusters(AgglomerativeSettings settings)
     {
         var clusterSimilarity = new ClusterPairSimilarity();
 
@@ -51,8 +51,8 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
 
                 var similarity = GetAverageDistance(
                     clusters[i],
-                    clusters[j]
-                    );
+                    clusters[j],
+                    settings);
 
                 if (similarity > clusterSimilarity.Similarity)
                     continue;
@@ -64,10 +64,11 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
         return clusterSimilarity;
     }
 
-    private double GetAverageDistance(AgglomerativeCluster clusterA, AgglomerativeCluster clusterB)
+    private double GetAverageDistance(AgglomerativeCluster clusterA, AgglomerativeCluster clusterB, AgglomerativeSettings settings)
     {
         return clusterA.Objects
-            .SelectMany(objA => clusterB.Objects, distanceCalculator.Calculate)
+            .SelectMany(_ => clusterB.Objects,
+                (objA, objB) => distanceCalculator.Calculate(objA, objB, settings.NumericMetric, settings.CategoricalMetric))
             .Average();
     }
 }

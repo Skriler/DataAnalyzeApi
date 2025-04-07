@@ -7,7 +7,6 @@ namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 {
-
     private readonly HashSet<DataObjectModel> visitedObjects = new();
 
     public DBSCANClusterer(IDistanceCalculator distanceCalculator)
@@ -26,9 +25,7 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 
             visitedObjects.Add(obj);
 
-            var neighbors = dataset.Objects
-                .Where(other => IsNeighbor(obj, other, settings.Epsilon))
-                .ToList();
+            var neighbors = GetNeighbors(obj, dataset.Objects, settings);
 
             if (neighbors.Count < settings.MinPoints)
                 continue;
@@ -45,18 +42,22 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
     private List<DataObjectModel> GetNeighbors(
         DataObjectModel obj,
         List<DataObjectModel> objects,
-        double epsilon)
+        DBSCANSettings settings)
     {
         return objects
-            .Where(other => IsNeighbor(obj, other, epsilon))
+            .Where(other => IsNeighbor(obj, other, settings))
             .ToList();
     }
 
-    private bool IsNeighbor(DataObjectModel obj, DataObjectModel other, double epsilon)
+    private bool IsNeighbor(DataObjectModel obj, DataObjectModel other, DBSCANSettings settings)
     {
-        var distance = distanceCalculator.Calculate(obj, other);
+        var distance = distanceCalculator.Calculate(
+            obj,
+            other,
+            settings.NumericMetric,
+            settings.CategoricalMetric);
 
-        return distance <= epsilon;
+        return distance <= settings.Epsilon;
     }
 
     private void ExpandCluster(
@@ -78,7 +79,7 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
                 continue;
 
             visitedObjects.Add(neighbor);
-            var neighborNeighbors = GetNeighbors(neighbor, objects, settings.Epsilon);
+            var neighborNeighbors = GetNeighbors(neighbor, objects, settings);
 
 
             if (neighborNeighbors.Count >= settings.MinPoints)

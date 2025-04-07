@@ -22,7 +22,7 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
             throw new InvalidOperationException("Objects amount is less than the number of clusters");
 
         clusters = new List<KMeansCluster>(settings.NumberOfClusters);
-        InitializeClusters(dataset.Objects, parametersCount);
+        InitializeClusters(dataset.Objects, settings.NumberOfClusters);
 
         for (int iteration = 0; iteration < settings.MaxIterations; ++iteration)
         {
@@ -54,14 +54,11 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
             .ToList();
     }
 
-    private void InitializeClusters(List<DataObjectModel> nodes, int parametersCount)
+    private void InitializeClusters(List<DataObjectModel> nodes, int numberOfClusters)
     {
         var selectedIndices = new HashSet<int>();
 
-        // TODO
-        //for (int i = 0; i < settings.AlgorithmSettings.NumberOfClusters; ++i)
-
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < numberOfClusters; ++i)
         {
             int randomIndex;
             do

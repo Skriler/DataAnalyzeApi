@@ -4,5 +4,9 @@ namespace DataAnalyzeAPI.Models.Domain.Settings;
 
 public interface IClusterSettings
 {
-    ClusterAlgorithm GetAlgorithm();
+    NumericDistanceMetricType NumericMetric { get; set; }
+
+    CategoricalDistanceMetricType CategoricalMetric { get; set; }
+
+    public ClusterAlgorithm GetAlgorithm();
 }

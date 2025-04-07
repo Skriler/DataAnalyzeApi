@@ -7,7 +7,6 @@ using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime;
 
 namespace DataAnalyzeAPI.Controllers;
 
@@ -39,8 +38,10 @@ public class ClusteringController : Controller
     {
         var settings = new KMeansSettings
         {
+            NumericMetric = request.NumericMetric,
+            CategoricalMetric = request.CategoricalMetric,
             MaxIterations = request.MaxIterations,
-            NumberOfClusters = request.NumberOfClusters
+            NumberOfClusters = request.NumberOfClusters,
         };
 
         return await CalculateClusters(
@@ -57,8 +58,10 @@ public class ClusteringController : Controller
     {
         var settings = new DBSCANSettings
         {
+            NumericMetric = request.NumericMetric,
+            CategoricalMetric = request.CategoricalMetric,
             Epsilon = request.Epsilon,
-            MinPoints = request.MinPoints
+            MinPoints = request.MinPoints,
         };
 
         return await CalculateClusters(
@@ -75,7 +78,9 @@ public class ClusteringController : Controller
     {
         var settings = new AgglomerativeSettings
         {
-            Threshold = request.Threshold
+            NumericMetric = request.NumericMetric,
+            CategoricalMetric = request.CategoricalMetric,
+            Threshold = request.Threshold,  
         };
 
         return await CalculateClusters(
