@@ -52,8 +52,8 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
     private bool IsNeighbor(DataObjectModel obj, DataObjectModel other, DBSCANSettings settings)
     {
         var distance = distanceCalculator.Calculate(
-            obj,
-            other,
+            obj.Values,
+            other.Values,
             settings.NumericMetric,
             settings.CategoricalMetric);
 

@@ -20,22 +20,22 @@ public class DistanceCalculator : IDistanceCalculator
     }
 
     /// <summary>
-    /// Calculates the distance between two objects.
+    /// Calculates the distance between two value vectors.
     /// Returns a value between 0 and 1.
     /// 0 indicates identical, 1 indicates completely different objects.
     /// </summary>
     public double Calculate(
-        DataObjectModel objectA,
-        DataObjectModel objectB,
+        List<ParameterValueModel> valuesA,
+        List<ParameterValueModel> valuesB,
         NumericDistanceMetricType numericMetricType,
         CategoricalDistanceMetricType categoricalMetricType)
     {
-        ValidateObjects(objectA, objectB);
+        ValidateVectors(valuesA, valuesB);
 
-        var numericParamsA = GetNumericParameters(objectA);
-        var numericParamsB = GetNumericParameters(objectB);
-        var categoricalParamsA = GetCategoricalParameters(objectA);
-        var categoricalParamsB = GetCategoricalParameters(objectB);
+        var numericParamsA = GetNumericParameters(valuesA);
+        var numericParamsB = GetNumericParameters(valuesB);
+        var categoricalParamsA = GetCategoricalParameters(valuesA);
+        var categoricalParamsB = GetCategoricalParameters(valuesB);
 
         var numericDistance = CalculateNumericDistance(numericParamsA, numericParamsB, numericMetricType);
         var categoricalDistance = CalculateCategoricalDistance(categoricalParamsA, categoricalParamsB, categoricalMetricType);
@@ -49,17 +49,20 @@ public class DistanceCalculator : IDistanceCalculator
     }
 
     /// <summary>
-    /// Validates input objects.
-    /// Throws exceptions if objects have different parameter counts.
+    /// Validates input vectors.
+    /// Throws exceptions if objects have different parameter counts or are empty.
     /// </summary>
-    private void ValidateObjects(DataObjectModel objectA, DataObjectModel objectB)
+    private void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
     {
-        if (objectA.Values.Count != objectB.Values.Count)
-            throw new ArgumentException("The objects must have the same number of parameters.");
+        if (valuesA.Count != valuesB.Count)
+            throw new ArgumentException("The vectors must have the same number of parameters.");
+
+        if (valuesA.Count == 0)
+            throw new ArgumentException("The vectors cannot be empty.");
     }
 
     /// <summary>
-    /// Calculates distance between numeric parameters of two objects.
+    /// Calculates distance between numeric parameters of two vectors.
     /// </summary>
     private double CalculateNumericDistance(
         List<NormalizedNumericValueModel> parametersA,
@@ -76,7 +79,7 @@ public class DistanceCalculator : IDistanceCalculator
     }
 
     /// <summary>
-    /// Calculates distance between categorical parameters of two objects.
+    /// Calculates distance between categorical parameters of two vectors.
     /// </summary>
     private double CalculateCategoricalDistance(
         List<NormalizedCategoricalValueModel> parametersA,
@@ -119,9 +122,9 @@ public class DistanceCalculator : IDistanceCalculator
         return (weightedNumericDistance + weightedCategoricalDistance) / totalCount;
     }
 
-    private static List<NormalizedNumericValueModel> GetNumericParameters(DataObjectModel dataObject)
-        => dataObject.Values.OfType<NormalizedNumericValueModel>().ToList();
+    private static List<NormalizedNumericValueModel> GetNumericParameters(List<ParameterValueModel> values)
+        => values.OfType<NormalizedNumericValueModel>().ToList();
 
-    private static List<NormalizedCategoricalValueModel> GetCategoricalParameters(DataObjectModel dataObject)
-        => dataObject.Values.OfType<NormalizedCategoricalValueModel>().ToList();
+    private static List<NormalizedCategoricalValueModel> GetCategoricalParameters(List<ParameterValueModel> values)
+        => values.OfType<NormalizedCategoricalValueModel>().ToList();
 }

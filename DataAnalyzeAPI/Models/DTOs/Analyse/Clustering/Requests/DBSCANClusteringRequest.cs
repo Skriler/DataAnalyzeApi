@@ -1,8 +1,13 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
+﻿using DataAnalyzeAPI.Models.Config.Clustering;
+using System.ComponentModel.DataAnnotations;
+
+namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 
 public class DBSCANClusteringRequest : BaseClusteringRequest
 {
-    public double Epsilon { get; set; }
+    [Range(DBSCANConfig.Epsilon.MinAllowed, DBSCANConfig.Epsilon.MaxAllowed)]
+    public double Epsilon { get; set; } = DBSCANConfig.Epsilon.Default;
 
-    public int MinPoints { get; set; }
+    [Range(DBSCANConfig.MinPoints.MinAllowed, DBSCANConfig.MinPoints.MaxAllowed)]
+    public int MinPoints { get; set; } = DBSCANConfig.MinPoints.Default;
 }

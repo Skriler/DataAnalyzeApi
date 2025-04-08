@@ -6,8 +6,8 @@ namespace DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 public interface IDistanceCalculator
 {
     double Calculate(
-        DataObjectModel objectA,
-        DataObjectModel objectB,
+        List<ParameterValueModel> valuesA,
+        List<ParameterValueModel> valuesB,
         NumericDistanceMetricType numericMetricType,
         CategoricalDistanceMetricType categoricalMetricType);
 }

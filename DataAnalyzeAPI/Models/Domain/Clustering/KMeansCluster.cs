@@ -15,5 +15,4 @@ public class KMeansCluster : Cluster
     {
         Centroid.Recalculate(Objects);
     }
-
 }

@@ -33,7 +33,7 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
 
             for (int i = 0; i < dataset.Objects.Count; ++i)
             {
-                var clusterIndex = GetNearestClusterIndex(dataset.Objects[i]);
+                var clusterIndex = GetNearestClusterIndex(dataset.Objects[i], settings);
 
                 if (clusters[clusterIndex].Objects.Contains(dataset.Objects[i]))
                     continue;
@@ -71,17 +71,18 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
         }
     }
 
-    private int GetNearestClusterIndex(DataObjectModel obj)
+    private int GetNearestClusterIndex(DataObjectModel obj, KMeansSettings settings)
     {
         var clusterIndex = 0;
         var minDistance = double.MaxValue;
 
         for (int i = 0; i < clusters.Count; ++i)
         {
-            // TODO
-            //var distance = distanceCalculator.Calculate(obj, clusters[i].Centroid);
-
-            var distance = 0;
+           var distance = distanceCalculator.Calculate(
+               obj.Values,
+               clusters[i].Centroid.Values,
+               settings.NumericMetric,
+               settings.CategoricalMetric);
 
             if (distance >= minDistance)
                 continue;

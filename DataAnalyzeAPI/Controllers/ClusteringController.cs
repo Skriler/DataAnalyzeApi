@@ -80,7 +80,7 @@ public class ClusteringController : Controller
         {
             NumericMetric = request.NumericMetric,
             CategoricalMetric = request.CategoricalMetric,
-            Threshold = request.Threshold,  
+            Threshold = request.Threshold,
         };
 
         return await CalculateClusters(

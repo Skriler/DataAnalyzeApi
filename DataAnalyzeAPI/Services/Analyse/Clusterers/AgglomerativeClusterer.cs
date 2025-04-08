@@ -68,7 +68,7 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
     {
         return clusterA.Objects
             .SelectMany(_ => clusterB.Objects,
-                (objA, objB) => distanceCalculator.Calculate(objA, objB, settings.NumericMetric, settings.CategoricalMetric))
+                (objA, objB) => distanceCalculator.Calculate(objA.Values, objB.Values, settings.NumericMetric, settings.CategoricalMetric))
             .Average();
     }
 }
