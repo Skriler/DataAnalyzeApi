@@ -16,17 +16,20 @@ public class ClusteringController : Controller
 {
     private readonly DatasetRepository repository;
     private readonly DatasetSettingsMapper datasetSettingsMapper;
+    private readonly ClusterMapper clusterMapper;
     private readonly DatasetNormalizer datasetNormalizer;
     private readonly ClustererFactory clustererFactory;
 
     public ClusteringController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
+        ClusterMapper clusterMapper,
         DatasetNormalizer datasetNormalizer,
         ClustererFactory clustererFactory)
     {
         this.repository = repository;
         this.datasetSettingsMapper = datasetSettingsMapper;
+        this.clusterMapper = clusterMapper;
         this.datasetNormalizer = datasetNormalizer;
         this.clustererFactory = clustererFactory;
     }
@@ -40,6 +43,7 @@ public class ClusteringController : Controller
         {
             NumericMetric = request.NumericMetric,
             CategoricalMetric = request.CategoricalMetric,
+            IncludeParameters = request.IncludeParameters,
             MaxIterations = request.MaxIterations,
             NumberOfClusters = request.NumberOfClusters,
         };
@@ -60,6 +64,7 @@ public class ClusteringController : Controller
         {
             NumericMetric = request.NumericMetric,
             CategoricalMetric = request.CategoricalMetric,
+            IncludeParameters = request.IncludeParameters,
             Epsilon = request.Epsilon,
             MinPoints = request.MinPoints,
         };
@@ -80,6 +85,7 @@ public class ClusteringController : Controller
         {
             NumericMetric = request.NumericMetric,
             CategoricalMetric = request.CategoricalMetric,
+            IncludeParameters = request.IncludeParameters,
             Threshold = request.Threshold,
         };
 
@@ -103,16 +109,17 @@ public class ClusteringController : Controller
             return NotFound($"Dataset with ID {datasetId} not found.");
         }
 
-        var mappedDataset = datasetSettingsMapper.MapObjects(dataset, request.ParameterSettings);
+        var mappedDataset = datasetSettingsMapper.Map(dataset, request.ParameterSettings);
         var normalizedDataset = datasetNormalizer.Normalize(mappedDataset);
 
         var clusterer = clustererFactory.Get<TSettings>(algorithm);
         var clusters = clusterer.Cluster(normalizedDataset, settings);
+        var clustersDto = clusterMapper.MapList(clusters, settings.IncludeParameters);
 
         var clusteringResult = new ClusteringResult()
         {
             DatasetId = datasetId,
-            Clusters = clusters,
+            Clusters = clustersDto,
         };
 
         return Ok(clusteringResult);

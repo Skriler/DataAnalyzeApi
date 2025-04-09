@@ -10,5 +10,7 @@ public class AgglomerativeSettings : IClusterSettings
 
     public double Threshold { get; set; }
 
+    public bool IncludeParameters { get; set; }
+
     public ClusterAlgorithm GetAlgorithm() => ClusterAlgorithm.HierarchicalAgglomerative;
 }

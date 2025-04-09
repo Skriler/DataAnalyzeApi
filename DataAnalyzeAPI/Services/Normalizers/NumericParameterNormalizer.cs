@@ -7,9 +7,9 @@ public class NumericParameterNormalizer : ITypeNormalizer
 {
     public long ParameterId { get; }
 
-    public double Min { get; private set; }
+    public double Min { get; private set; } = double.MaxValue;
 
-    public double Max { get; private set; }
+    public double Max { get; private set; } = double.MinValue;
 
     public double Average { get; private set; }
 
@@ -37,14 +37,15 @@ public class NumericParameterNormalizer : ITypeNormalizer
     public ParameterValueModel Normalize(ParameterValueModel parameterValue)
     {
         var value = string.IsNullOrEmpty(parameterValue.Value)
-            ? Convert.ToDouble(parameterValue.Value)
-            : Average;
+            ? Average
+            : Convert.ToDouble(parameterValue.Value);
 
         var normalizedValue = NormalizeMinMax(value);
 
         return new NormalizedNumericValueModel(
             normalizedValue,
-            parameterValue.Parameter
+            parameterValue.Parameter,
+            parameterValue.Value
             );
     }
 

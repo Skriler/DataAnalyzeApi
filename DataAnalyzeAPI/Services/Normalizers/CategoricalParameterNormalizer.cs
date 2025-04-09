@@ -40,7 +40,8 @@ public class CategoricalParameterNormalizer : ITypeNormalizer
 
         return new NormalizedCategoricalValueModel(
             oneHotValues,
-            parameterValue.Parameter
+            parameterValue.Parameter,
+            parameterValue.Value
             );
     }
 

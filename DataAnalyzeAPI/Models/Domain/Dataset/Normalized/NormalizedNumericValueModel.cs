@@ -2,14 +2,25 @@
 
 namespace DataAnalyzeAPI.Models.Domain.Dataset.Normalized;
 
-public record NormalizedNumericValueModel(
-    double NormalizedValue,
-    ParameterStateModel Parameter
-    ) : ParameterValueModel(
-        NormalizedValue.ToString(),
-        Parameter
-    )
+public record NormalizedNumericValueModel : ParameterValueModel
 {
-    public override ParameterValueModel DeepClone() =>
-        new NormalizedNumericValueModel(NormalizedValue, Parameter);
+    public double NormalizedValue { get; }
+    
+    public NormalizedNumericValueModel(
+        double normalizedValue,
+        ParameterStateModel parameter,
+        string value
+        ) : base(value, parameter)
+    {
+        NormalizedValue = normalizedValue;
+    }
+
+    public override ParameterValueModel DeepClone()
+    {
+        return new NormalizedNumericValueModel(
+            NormalizedValue,
+            Parameter,
+            Value
+            );
+    }
 }

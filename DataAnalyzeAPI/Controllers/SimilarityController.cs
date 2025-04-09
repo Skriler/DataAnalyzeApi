@@ -40,7 +40,7 @@ public class SimilarityController : Controller
             return NotFound($"Dataset with ID {datasetId} not found.");
         }
 
-        var mappedDataset = datasetSettingsMapper.MapObjects(dataset, request?.ParameterSettings);
+        var mappedDataset = datasetSettingsMapper.Map(dataset, request?.ParameterSettings);
         var similarities = comparer.CalculateSimilarity(mappedDataset);
 
         var similarityResult = new SimilarityResult()

@@ -13,4 +13,9 @@ public abstract class BaseClusteringRequest
 
     [EnumDataType(typeof(CategoricalDistanceMetricType))]
     public CategoricalDistanceMetricType CategoricalMetric { get; set; } = CategoricalDistanceMetricType.Hamming;
+
+    /// <summary>
+    /// Include ParameterValues dictionary in responce.
+    /// </summary>
+    public bool IncludeParameters { get; set; } = false;
 }

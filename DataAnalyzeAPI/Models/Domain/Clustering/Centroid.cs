@@ -43,12 +43,14 @@ public class Centroid
             NormalizedNumericValueModel numericBase when mergeValue is NormalizedNumericValueModel numericMerge =>
                 new NormalizedNumericValueModel(
                     CalculateWeightedAverage(numericBase.NormalizedValue, numericMerge.NormalizedValue),
-                    numericBase.Parameter
+                    numericBase.Parameter,
+                    numericBase.Value
                 ),
             NormalizedCategoricalValueModel categoricalBase when mergeValue is NormalizedCategoricalValueModel categoricalMerge =>
                 new NormalizedCategoricalValueModel(
                     CalculateCategoricalAverage(categoricalBase.OneHotValues, categoricalMerge.OneHotValues),
-                    categoricalBase.Parameter
+                    categoricalBase.Parameter,
+                    categoricalBase.Value
                 ),
             _ => origValue
         };

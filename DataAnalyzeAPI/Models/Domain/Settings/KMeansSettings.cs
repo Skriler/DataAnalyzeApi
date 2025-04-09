@@ -12,5 +12,7 @@ public class KMeansSettings : IClusterSettings
 
     public int NumberOfClusters { get; set; }
 
+    public bool IncludeParameters { get; set; }
+
     public ClusterAlgorithm GetAlgorithm() => ClusterAlgorithm.KMeans;
 }

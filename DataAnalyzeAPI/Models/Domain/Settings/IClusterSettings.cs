@@ -8,5 +8,7 @@ public interface IClusterSettings
 
     CategoricalDistanceMetricType CategoricalMetric { get; set; }
 
+    bool IncludeParameters { get; set; }
+
     public ClusterAlgorithm GetAlgorithm();
 }
