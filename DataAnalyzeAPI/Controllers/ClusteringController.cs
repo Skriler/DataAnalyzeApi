@@ -16,20 +16,20 @@ public class ClusteringController : Controller
 {
     private readonly DatasetRepository repository;
     private readonly DatasetSettingsMapper datasetSettingsMapper;
-    private readonly ClusterMapper clusterMapper;
+    private readonly AnalysisMapper analysisMapper;
     private readonly DatasetNormalizer datasetNormalizer;
     private readonly ClustererFactory clustererFactory;
 
     public ClusteringController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
-        ClusterMapper clusterMapper,
+        AnalysisMapper analysisMapper,
         DatasetNormalizer datasetNormalizer,
         ClustererFactory clustererFactory)
     {
         this.repository = repository;
         this.datasetSettingsMapper = datasetSettingsMapper;
-        this.clusterMapper = clusterMapper;
+        this.analysisMapper = analysisMapper;
         this.datasetNormalizer = datasetNormalizer;
         this.clustererFactory = clustererFactory;
     }
@@ -114,7 +114,7 @@ public class ClusteringController : Controller
 
         var clusterer = clustererFactory.Get<TSettings>(algorithm);
         var clusters = clusterer.Cluster(normalizedDataset, settings);
-        var clustersDto = clusterMapper.MapList(clusters, settings.IncludeParameters);
+        var clustersDto = analysisMapper.MapClusterList(clusters, settings.IncludeParameters);
 
         var clusteringResult = new ClusteringResult()
         {

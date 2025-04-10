@@ -1,12 +1,9 @@
-﻿namespace DataAnalyzeAPI.Models.Domain.Similarity;
+﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 
-public class SimilarityPair
-{
-    public long ObjectAId { get; set; }
-    public string ObjectAName { get; set; } = string.Empty;
+namespace DataAnalyzeAPI.Models.Domain.Similarity;
 
-    public long ObjectBId { get; set; }
-    public string ObjectBName { get; set; } = string.Empty;
-
-    public double SimilarityPercentage { get; set; }
-}
+public record SimilarityPair(
+    DataObjectModel ObjectA,
+    DataObjectModel ObjectB,
+    double SimilarityPercentage
+);

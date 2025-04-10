@@ -13,15 +13,18 @@ public class SimilarityController : Controller
 {
     private readonly DatasetRepository repository;
     private readonly DatasetSettingsMapper datasetSettingsMapper;
+    private readonly AnalysisMapper analysisMapper;
     private readonly SimilarityComparer comparer;
 
     public SimilarityController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
+        AnalysisMapper analysisMapper,
         SimilarityComparer comparer)
     {
         this.repository = repository;
         this.datasetSettingsMapper = datasetSettingsMapper;
+        this.analysisMapper = analysisMapper;
         this.comparer = comparer;
     }
 
@@ -43,10 +46,13 @@ public class SimilarityController : Controller
         var mappedDataset = datasetSettingsMapper.Map(dataset, request?.ParameterSettings);
         var similarities = comparer.CalculateSimilarity(mappedDataset);
 
+        var includeParameters = request?.IncludeParameters ?? false;
+        var similaritiesDto = analysisMapper.MapSimilarityPairList(similarities, includeParameters);
+
         var similarityResult = new SimilarityResult()
         {
             DatasetId = datasetId,
-            Similarities = similarities,
+            Similarities = similaritiesDto,
         };
 
         return Ok(similarityResult);

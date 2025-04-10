@@ -53,7 +53,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddAutoMapper(typeof(DatasetProfile));
         services.AddScoped<DatasetSettingsMapper>();
-        services.AddScoped<ClusterMapper>();
+        services.AddScoped<AnalysisMapper>();
 
         return services;
     }

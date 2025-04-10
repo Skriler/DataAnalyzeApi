@@ -69,14 +69,11 @@ public class SimilarityComparer
             {
                 var objectB = objects[j];
 
-                var similarity = new SimilarityPair
-                {
-                    ObjectAId = objectA.Id,
-                    ObjectAName = objectA.Name,
-                    ObjectBId = objectB.Id,
-                    ObjectBName = objectB.Name,
-                    SimilarityPercentage = CalculateSimilarityPercentage(objectA, objectB, parameterStates)
-                };
+                var similarity = new SimilarityPair(
+                    objectA,
+                    objectB,
+                    CalculateSimilarityPercentage(objectA, objectB, parameterStates)
+                );
 
                 similarities.Add(similarity);
             }

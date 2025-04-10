@@ -17,5 +17,5 @@ public abstract class BaseClusteringRequest
     /// <summary>
     /// Include ParameterValues dictionary in responce.
     /// </summary>
-    public bool IncludeParameters { get; set; } = false;
+    public bool IncludeParameters { get; set; }
 }
