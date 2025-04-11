@@ -14,5 +14,5 @@ public abstract class BaseClusterer<TSettings> where TSettings : IClusterSetting
         this.distanceCalculator = distanceCalculator;
     }
 
-    public abstract List<Cluster> Cluster(DatasetModel dataset, TSettings settings);
+    public abstract List<Cluster> Cluster(List<DataObjectModel> Objects, TSettings settings);
 }

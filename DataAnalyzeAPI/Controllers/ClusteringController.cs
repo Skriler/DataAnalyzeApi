@@ -113,7 +113,7 @@ public class ClusteringController : Controller
         var normalizedDataset = datasetNormalizer.Normalize(mappedDataset);
 
         var clusterer = clustererFactory.Get<TSettings>(algorithm);
-        var clusters = clusterer.Cluster(normalizedDataset, settings);
+        var clusters = clusterer.Cluster(normalizedDataset.Objects, settings);
         var clustersDto = analysisMapper.MapClusterList(clusters, settings.IncludeParameters);
 
         var clusteringResult = new ClusteringResult()

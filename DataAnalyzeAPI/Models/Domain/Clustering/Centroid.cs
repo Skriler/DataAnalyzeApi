@@ -9,13 +9,16 @@ public class Centroid
 
     public List<ParameterValueModel> Values { get; }
 
-    public int MergedObjectsCount { get; private set; }
+    public int MergedObjectsCount { get; private set; } = 1;
 
     public Centroid(DataObjectModel obj)
     {
         Values = obj.Values.ConvertAll(v => v.DeepClone());
     }
 
+    /// <summary>
+    /// Recalculates the centroid values based on a merged objects list.
+    /// </summary>
     public void Recalculate(List<DataObjectModel> mergeObjects)
     {
         if (mergeObjects.Any(obj => obj.Values.Count != Values.Count))
@@ -32,42 +35,74 @@ public class Centroid
 
             ++MergedObjectsCount;
         }
+
+        NormalizeCategoricalValues();
     }
 
+    /// <summary>
+    /// Merges parameter value from another object into the centroid.
+    /// Handles both numeric and categorical parameter types.
+    /// </summary>
     private void MergeParameterValue(int index, ParameterValueModel mergeValue)
     {
-        var origValue = Values[index];
+        var baseValue = Values[index];
 
-        Values[index] = origValue switch
+        Values[index] = baseValue switch
         {
             NormalizedNumericValueModel numericBase when mergeValue is NormalizedNumericValueModel numericMerge =>
-                new NormalizedNumericValueModel(
-                    CalculateWeightedAverage(numericBase.NormalizedValue, numericMerge.NormalizedValue),
-                    numericBase.Parameter,
-                    numericBase.Value
-                ),
+                MergeNumericValues(numericBase, numericMerge),
+
             NormalizedCategoricalValueModel categoricalBase when mergeValue is NormalizedCategoricalValueModel categoricalMerge =>
-                new NormalizedCategoricalValueModel(
-                    CalculateCategoricalAverage(categoricalBase.OneHotValues, categoricalMerge.OneHotValues),
-                    categoricalBase.Parameter,
-                    categoricalBase.Value
-                ),
-            _ => origValue
+                MergeCategoricalValues(categoricalBase, categoricalMerge),
+
+            _ => baseValue
         };
     }
 
-    private double CalculateWeightedAverage(double origValue, double mergeValue)
+    /// <summary>
+    /// Merges two normalized numeric values using weighted averaging.
+    /// </summary>
+    private NormalizedNumericValueModel MergeNumericValues(
+        NormalizedNumericValueModel baseValue,
+        NormalizedNumericValueModel mergeValue)
     {
-        var weightedSum = (origValue * MergedObjectsCount) + mergeValue;
-        var totalCount = MergedObjectsCount + 1;
-        return weightedSum / totalCount;
+        var weightedSum = (baseValue.NormalizedValue * MergedObjectsCount) + mergeValue.NormalizedValue;
+        var mergedNormalized = weightedSum / (MergedObjectsCount + 1);
+
+        return new NormalizedNumericValueModel(mergedNormalized, baseValue.Parameter, baseValue.Value);
     }
 
-    private int[] CalculateCategoricalAverage(int[] origValues, int[] mergeValues)
+    /// <summary>
+    /// Merges two normalized categorical values by summing their one-hot encoded vectors.
+    /// </summary>
+    private NormalizedCategoricalValueModel MergeCategoricalValues(
+        NormalizedCategoricalValueModel baseValue,
+        NormalizedCategoricalValueModel mergeValue)
     {
-        return origValues
-            .Zip(mergeValues, (origVal, mergeVal) => origVal + mergeVal)
-            .Select(val => val / (float)(MergedObjectsCount + 1) > MinThreshold ? 1 : 0)
+        var mergedOneHot = baseValue.OneHotValues
+            .Zip(mergeValue.OneHotValues, (origVal, mergeVal) => origVal + mergeVal)
             .ToArray();
+
+        return new NormalizedCategoricalValueModel(mergedOneHot, baseValue.Parameter, baseValue.Value);
+    }
+
+    /// <summary>
+    /// Normalizes the one-hot encoded categorical values by averaging
+    /// and applying a threshold to determine the final value.
+    /// </summary>
+    private void NormalizeCategoricalValues()
+    {
+        foreach (var value in Values)
+        {
+            if (value is not NormalizedCategoricalValueModel categoricalValue)
+                continue;
+
+            for (int i = 0; i < categoricalValue.OneHotValues.Length; ++i)
+            {
+                var avgValue = (double)categoricalValue.OneHotValues[i] / MergedObjectsCount;
+
+                categoricalValue.OneHotValues[i] = avgValue >= MinThreshold ? 1 : 0;
+            }
+        }
     }
 }

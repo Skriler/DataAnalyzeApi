@@ -13,19 +13,19 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
         : base(distanceCalculator)
     { }
 
-    public override List<Cluster> Cluster(DatasetModel dataset, DBSCANSettings settings)
+    public override List<Cluster> Cluster(List<DataObjectModel> objects, DBSCANSettings settings)
     {
         var clusters = new List<Cluster>();
         visitedObjects.Clear();
 
-        foreach (var obj in dataset.Objects)
+        foreach (var obj in objects)
         {
             if (visitedObjects.Contains(obj))
                 continue;
 
             visitedObjects.Add(obj);
 
-            var neighbors = GetNeighbors(obj, dataset.Objects, settings);
+            var neighbors = GetNeighbors(obj, objects, settings);
 
             if (neighbors.Count < settings.MinPoints)
                 continue;
@@ -33,7 +33,7 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
             var cluster = new Cluster();
             clusters.Add(cluster);
 
-            ExpandCluster(cluster, obj, neighbors, dataset.Objects, settings);
+            ExpandCluster(cluster, obj, neighbors, objects, settings);
         }
 
         return clusters;

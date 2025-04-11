@@ -8,70 +8,105 @@ namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 public class KMeansClusterer : BaseClusterer<KMeansSettings>
 {
     private readonly Random random = new();
+
     private List<KMeansCluster> clusters = new();
+    private KMeansSettings settings = default!;
+
+    /// <summary>
+    /// A dictionary that maps each object to the index of the cluster it is assigned to.
+    /// Used to track the current cluster assignment of each object, enabling the detection
+    /// of changes in object assignments during the clustering process.
+    /// </summary>
+    private Dictionary<DataObjectModel, int> objectClusterMap = new();
 
     public KMeansClusterer(IDistanceCalculator distanceCalculator)
         : base(distanceCalculator)
     { }
 
-    public override List<Cluster> Cluster(DatasetModel dataset, KMeansSettings settings)
+    public override List<Cluster> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
     {
-        var parametersCount = dataset.Parameters.Count;
+        Validate(objects, settings);
 
-        if (dataset.Objects.Count < settings.NumberOfClusters)
-            throw new InvalidOperationException("Objects amount is less than the number of clusters");
-
+        this.settings = settings;
         clusters = new List<KMeansCluster>(settings.NumberOfClusters);
-        InitializeClusters(dataset.Objects, settings.NumberOfClusters);
+        objectClusterMap = new Dictionary<DataObjectModel, int>(objects.Count);
 
+        InitializeClusters(objects);
+        return PerformClustering(objects);
+    }
+
+    /// <summary>
+    /// Initializes the clusters by selecting random objects as the initial centroids.
+    /// </summary>
+    private void InitializeClusters(List<DataObjectModel> objects)
+    {
+        var selectedIndices = new HashSet<int>();
+
+        var randomIndices = Enumerable.Range(0, objects.Count)
+            .OrderBy(_ => random.Next())
+            .Take(settings.NumberOfClusters)
+            .ToList();
+
+        foreach (var index in randomIndices)
+        {
+            var cluster = new KMeansCluster(objects[index]);
+            clusters.Add(cluster);
+        }
+    }
+
+    /// <summary>
+    /// Performs a clustering process, assigning objects to clusters
+    /// and recalculating centroids until convergence
+    /// or the maximum number of iterations is reached.
+    /// </summary>
+    private List<Cluster> PerformClustering(List<DataObjectModel> objects)
+    {
         for (int iteration = 0; iteration < settings.MaxIterations; ++iteration)
         {
-            var assignmentsChanged = false;
+            clusters.ForEach(c => c.Objects.Clear());
 
-            foreach (var cluster in clusters)
-                cluster.Objects.Clear();
-
-            for (int i = 0; i < dataset.Objects.Count; ++i)
-            {
-                var clusterIndex = GetNearestClusterIndex(dataset.Objects[i], settings);
-
-                if (clusters[clusterIndex].Objects.Contains(dataset.Objects[i]))
-                    continue;
-
-                assignmentsChanged = true;
-                clusters[clusterIndex].AddObject(dataset.Objects[i]);
-            }
-
-            if (!assignmentsChanged)
+            if (!TryAssignObjectsToClusters(objects))
                 break;
 
-            RecalculateClusters(dataset.Objects);
+            clusters.ForEach(c => c.RecalculateCentroid());
         }
-
 
         return clusters
             .Cast<Cluster>()
             .ToList();
     }
 
-    private void InitializeClusters(List<DataObjectModel> nodes, int numberOfClusters)
+    /// <summary>
+    /// Attempts to assign each object to the nearest cluster.
+    /// Returns true if any object assignment changes.
+    /// </summary>
+    private bool TryAssignObjectsToClusters(List<DataObjectModel> objects)
     {
-        var selectedIndices = new HashSet<int>();
+        var assignmentsChanged = false;
 
-        for (int i = 0; i < numberOfClusters; ++i)
+        foreach (var obj in objects)
         {
-            int randomIndex;
-            do
-            {
-                randomIndex = random.Next(nodes.Count);
-            } while (!selectedIndices.Add(randomIndex));
+            int nearestClusterIndex = GetNearestClusterIndex(obj);
+            clusters[nearestClusterIndex].AddObject(obj);
 
-            var cluster = new KMeansCluster(nodes[randomIndex]);
-            clusters.Add(cluster);
+            if (objectClusterMap.TryGetValue(obj, out int previousClusterIndex) ||
+                previousClusterIndex != nearestClusterIndex)
+            {
+                continue;
+            }
+
+            objectClusterMap[obj] = nearestClusterIndex;
+            assignmentsChanged = true;
         }
+
+        return assignmentsChanged;
     }
 
-    private int GetNearestClusterIndex(DataObjectModel obj, KMeansSettings settings)
+    /// <summary>
+    /// Calculates the index of the cluster that is closest to the object
+    /// based on the distance to the cluster's centroid.
+    /// </summary>
+    private int GetNearestClusterIndex(DataObjectModel obj)
     {
         var clusterIndex = 0;
         var minDistance = double.MaxValue;
@@ -94,11 +129,13 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
         return clusterIndex;
     }
 
-    private void RecalculateClusters(List<DataObjectModel> data)
+    /// <summary>
+    /// Validates input parameters.
+    /// Throws an exception if there are fewer objects than clusters.
+    /// </summary>
+    private static void Validate(List<DataObjectModel> Objects, KMeansSettings settings)
     {
-        foreach (var cluster in clusters)
-        {
-            cluster.RecalculateCentroid();
-        }
+        if (Objects.Count < settings.NumberOfClusters)
+            throw new InvalidOperationException("Objects amount is less than the number of clusters");
     }
 }
