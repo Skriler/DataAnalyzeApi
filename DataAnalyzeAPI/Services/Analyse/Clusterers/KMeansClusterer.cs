@@ -1,12 +1,17 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Clustering;
+using DataAnalyzeAPI.Models.Domain.Clustering.KMeans;
 using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+using DataAnalyzeAPI.Services.Helpers;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public class KMeansClusterer : BaseClusterer<KMeansSettings>
 {
+    protected override string ClusterPrefix => "KMeans";
+
+    private readonly ClusterNameGenerator nameGenerator;
     private readonly Random random = new();
 
     private List<KMeansCluster> clusters = new();
@@ -19,9 +24,13 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
     /// </summary>
     private Dictionary<DataObjectModel, int> objectClusterMap = new();
 
-    public KMeansClusterer(IDistanceCalculator distanceCalculator)
-        : base(distanceCalculator)
-    { }
+    public KMeansClusterer(
+        IDistanceCalculator distanceCalculator,
+        ClusterNameGenerator nameGenerator
+        ) : base(distanceCalculator)
+    {
+        this.nameGenerator = nameGenerator;
+    }
 
     public override List<Cluster> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
     {
@@ -49,7 +58,7 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
 
         foreach (var index in randomIndices)
         {
-            var cluster = new KMeansCluster(objects[index]);
+            var cluster = new KMeansCluster(objects[index], nameGenerator.GenerateName(ClusterPrefix));
             clusters.Add(cluster);
         }
     }
@@ -73,6 +82,7 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
 
         return clusters
             .Cast<Cluster>()
+            .OrderByDescending(c => c.Objects.Count)
             .ToList();
     }
 

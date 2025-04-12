@@ -2,21 +2,47 @@
 using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+using DataAnalyzeAPI.Services.Helpers;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 {
+    protected override string ClusterPrefix => "DBSCAN";
+    protected string NoiseClusterPrefix => "Noise";
+
+    private readonly ClusterNameGenerator nameGenerator;
+
+    /// <summary>
+    /// A set of visited objects to prevent reprocessing.
+    /// </summary>
     private readonly HashSet<DataObjectModel> visitedObjects = new();
 
-    public DBSCANClusterer(IDistanceCalculator distanceCalculator)
-        : base(distanceCalculator)
-    { }
+    /// <summary>
+    /// A set of objects classified as noise.
+    /// </summary>
+    private readonly HashSet<DataObjectModel> noiseObjects = new();
 
+    private DBSCANSettings settings = default!;
+
+    public DBSCANClusterer(
+        IDistanceCalculator distanceCalculator,
+        ClusterNameGenerator nameGenerator
+        ) : base(distanceCalculator)
+    {
+        this.nameGenerator = nameGenerator;
+    }
+
+    /// <summary>
+    /// Performs a clustering process by iterating over all objects.
+    /// For each unvisited object, it checks if it has enough neighbors to form a cluster.
+    /// If it does, a new cluster is created, and the cluster is expanded by adding neighboring objects.
+    /// Objects with insufficient neighbors are marked as noise.
+    /// </summary>
     public override List<Cluster> Cluster(List<DataObjectModel> objects, DBSCANSettings settings)
     {
+        this.settings = settings;
         var clusters = new List<Cluster>();
-        visitedObjects.Clear();
 
         foreach (var obj in objects)
         {
@@ -25,31 +51,46 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 
             visitedObjects.Add(obj);
 
-            var neighbors = GetNeighbors(obj, objects, settings);
+            var neighbors = GetNeighbors(obj, objects);
 
             if (neighbors.Count < settings.MinPoints)
+            {
+                noiseObjects.Add(obj);
                 continue;
+            }
 
-            var cluster = new Cluster();
+            var cluster = new Cluster(nameGenerator.GenerateName(ClusterPrefix));
+            cluster.AddObject(obj);
+            noiseObjects.Remove(obj);
+
             clusters.Add(cluster);
 
-            ExpandCluster(cluster, obj, neighbors, objects, settings);
+            ExpandCluster(cluster, neighbors, objects);
         }
 
-        return clusters;
-    }
+        AddNoiseCluster(clusters);
 
-    private List<DataObjectModel> GetNeighbors(
-        DataObjectModel obj,
-        List<DataObjectModel> objects,
-        DBSCANSettings settings)
-    {
-        return objects
-            .Where(other => IsNeighbor(obj, other, settings))
+        return clusters
+            .OrderByDescending(c => c.Objects.Count)
             .ToList();
     }
 
-    private bool IsNeighbor(DataObjectModel obj, DataObjectModel other, DBSCANSettings settings)
+    /// <summary>
+    /// Retrieves the neighbors of a given object from the list of all objects.
+    /// </summary>
+    private List<DataObjectModel> GetNeighbors(
+        DataObjectModel obj,
+        List<DataObjectModel> objects)
+    {
+        return objects
+            .Where(other => other != obj && IsNeighbor(obj, other))
+            .ToList();
+    }
+
+    /// <summary>
+    /// Checks if two objects are neighbors based on the distance metric.
+    /// </summary>
+    private bool IsNeighbor(DataObjectModel obj, DataObjectModel other)
     {
         var distance = distanceCalculator.Calculate(
             obj.Values,
@@ -60,43 +101,59 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
         return distance <= settings.Epsilon;
     }
 
+    /// <summary>
+    /// Expands the cluster by adding neighbors
+    /// and their neighbors recursively.
+    /// </summary>
     private void ExpandCluster(
         Cluster cluster,
-        DataObjectModel obj,
         List<DataObjectModel> neighbors,
-        List<DataObjectModel> objects,
-        DBSCANSettings settings)
+        List<DataObjectModel> objects)
     {
-        cluster.AddObject(obj);
+        var neighborsToProcess = new Queue<DataObjectModel>(neighbors);
 
-        var сonnectedNodes = new Queue<DataObjectModel>(neighbors);
-
-        while (сonnectedNodes.Count > 0)
+        while (neighborsToProcess.Count > 0)
         {
-            var neighbor = сonnectedNodes.Dequeue();
+            var currentNeighbor = neighborsToProcess.Dequeue();
 
-            if (visitedObjects.Contains(neighbor))
+            if (visitedObjects.Contains(currentNeighbor))
                 continue;
 
-            visitedObjects.Add(neighbor);
-            var neighborNeighbors = GetNeighbors(neighbor, objects, settings);
+            cluster.AddObject(currentNeighbor);
+            visitedObjects.Add(currentNeighbor);
+            noiseObjects.Remove(currentNeighbor);
 
+            var currentNeighbors = GetNeighbors(currentNeighbor, objects);
 
-            if (neighborNeighbors.Count >= settings.MinPoints)
+            if (currentNeighbors.Count < settings.MinPoints)
+                continue;
+
+            foreach (var neighbor in currentNeighbors)
             {
-                foreach (var newNeighbor in neighborNeighbors)
+                if (visitedObjects.Contains(neighbor) ||
+                    neighborsToProcess.Contains(neighbor))
                 {
-                    if (!cluster.Objects.Contains(newNeighbor) && !сonnectedNodes.Contains(newNeighbor))
-                    {
-                        сonnectedNodes.Enqueue(newNeighbor);
-                    }
+                    continue;
                 }
-            }
 
-            if (!cluster.Objects.Contains(neighbor))
-            {
-                cluster.AddObject(neighbor);
+                neighborsToProcess.Enqueue(neighbor);
             }
         }
+    }
+
+
+    /// <summary>
+    /// Adds a noise cluster to the list of clusters
+    /// if there are any noise objects.
+    /// </summary>
+    private void AddNoiseCluster(List<Cluster> clusters)
+    {
+        if (noiseObjects.Count == 0)
+            return;
+
+        var noiseCluster = new Cluster(nameGenerator.GenerateName(NoiseClusterPrefix));
+        noiseCluster.AddObjects(noiseObjects.ToList());
+
+        clusters.Add(noiseCluster);
     }
 }

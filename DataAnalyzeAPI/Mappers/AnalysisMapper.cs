@@ -23,7 +23,7 @@ public class AnalysisMapper
         var objectsDto = cluster.Objects
             .ConvertAll(obj => MapDataObject(obj, includeParameters));
 
-        return new ClusterDto(cluster.Id, objectsDto);
+        return new ClusterDto(cluster.Name, objectsDto);
     }
 
     /// <summary>

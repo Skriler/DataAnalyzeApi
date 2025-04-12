@@ -30,7 +30,13 @@ public class SimilarityController : Controller
 
     /// <summary>
     /// Get similarity results based on full pairwise comparison algorithm.
+    /// This method computes the pairwise similarity between objects in the dataset,
+    /// using the configured comparison algorithm. It returns the similarity score
+    /// for each pair of objects based on the selected settings.
     /// </summary>
+    /// <param name="datasetId">The ID of the dataset to analyze</param>
+    /// <param name="request">Similarity configuration parameters (optional)</param>
+    /// <returns>An action result containing the similarity results or an error response</returns>
     [HttpPost("{datasetId}")]
     public async Task<IActionResult> CalculateSimilarity(
         long datasetId,

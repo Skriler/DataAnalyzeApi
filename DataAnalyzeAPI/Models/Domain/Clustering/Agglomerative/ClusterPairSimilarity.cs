@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.Domain.Clustering;
+﻿namespace DataAnalyzeAPI.Models.Domain.Clustering.Agglomerative;
 
 public class ClusterPairSimilarity
 {

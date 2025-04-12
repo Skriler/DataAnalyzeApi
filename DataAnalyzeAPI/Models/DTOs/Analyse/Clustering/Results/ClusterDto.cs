@@ -3,6 +3,6 @@
 namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 
 public record ClusterDto(
-    int Id,
+    string Name,
     List<DataObjectDto> Objects
 );

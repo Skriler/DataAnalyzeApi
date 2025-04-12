@@ -7,6 +7,8 @@ namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public abstract class BaseClusterer<TSettings> where TSettings : IClusterSettings
 {
+    protected abstract string ClusterPrefix { get; }
+
     protected readonly IDistanceCalculator distanceCalculator;
 
     protected BaseClusterer(IDistanceCalculator distanceCalculator)

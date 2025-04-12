@@ -4,15 +4,13 @@ namespace DataAnalyzeAPI.Models.Domain.Clustering;
 
 public class Cluster
 {
-    private static int nextId = 0;
-
-    public int Id { get; }
+    public string Name { get; }
 
     public List<DataObjectModel> Objects { get; } = new();
 
-    public Cluster()
+    public Cluster(string name)
     {
-        Id = nextId++;
+        Name = name;
     }
 
     public void AddObject(DataObjectModel obj)
@@ -21,5 +19,13 @@ public class Cluster
             return;
 
         Objects.Add(obj);
+    }
+
+    public void AddObjects(List<DataObjectModel> objects)
+    {
+        foreach(var obj in objects)
+        {
+            AddObject(obj);
+        }
     }
 }

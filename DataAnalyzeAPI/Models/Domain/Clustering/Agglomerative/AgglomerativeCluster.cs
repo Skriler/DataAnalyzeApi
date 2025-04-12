@@ -1,12 +1,13 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeAPI.Models.Domain.Clustering;
+namespace DataAnalyzeAPI.Models.Domain.Clustering.Agglomerative;
 
 public class AgglomerativeCluster : Cluster
 {
     public bool IsMerged { get; private set; }
 
-    public AgglomerativeCluster(DataObjectModel obj)
+    public AgglomerativeCluster(DataObjectModel obj, string name)
+        : base(name)
     {
         Objects.Add(obj);
         IsMerged = false;

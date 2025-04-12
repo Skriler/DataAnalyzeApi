@@ -34,6 +34,12 @@ public class ClusteringController : Controller
         this.clustererFactory = clustererFactory;
     }
 
+    /// <summary>
+    /// Performs K-Means clustering on the specified dataset.
+    /// </summary>
+    /// <param name="datasetId">The ID of the dataset to analyze</param>
+    /// <param name="request">K-Means clustering configuration parameters</param>
+    /// <returns>An action result containing the clustering results or an error response</returns>
     [HttpPost("kmeans/{datasetId}")]
     public async Task<IActionResult> CalculateKMeansClusters(
         long datasetId,
@@ -55,6 +61,13 @@ public class ClusteringController : Controller
             settings);
     }
 
+    /// <summary>
+    /// Performs DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
+    /// clustering on the specified dataset.
+    /// </summary>
+    /// <param name="datasetId">The ID of the dataset to analyze</param>
+    /// <param name="request">DBSCAN clustering configuration parameters</param>
+    /// <returns>An action result containing the clustering results or an error response</returns>
     [HttpPost("dbscan/{datasetId}")]
     public async Task<IActionResult> CalculateDBSCANClusters(
         long datasetId,
@@ -76,6 +89,12 @@ public class ClusteringController : Controller
             settings);
     }
 
+    /// <summary>
+    /// Performs Agglomerative Hierarchical clustering on the specified dataset.
+    /// </summary>
+    /// <param name="datasetId">The ID of the dataset to analyze</param>
+    /// <param name="request">Agglomerative clustering configuration parameters</param>
+    /// <returns>An action result containing the clustering results or an error response</returns>
     [HttpPost("agglomerative/{datasetId}")]
     public async Task<IActionResult> CalculateAgglomerativeClusters(
         long datasetId,
@@ -96,6 +115,20 @@ public class ClusteringController : Controller
             settings);
     }
 
+    /// <summary>
+    /// Generic method that performs clustering analysis on a dataset using the specified algorithm and settings.
+    /// This private method handles the common workflow for all clustering algorithms:
+    /// 1. Retrieves the dataset
+    /// 2. Maps and normalizes the dataset
+    /// 3. Performs clustering using the appropriate algorithm
+    /// 4. Maps the results to DTOs for response
+    /// </summary>
+    /// <typeparam name="TSettings">The type of clustering settings</typeparam>
+    /// <param name="datasetId">The ID of the dataset to analyze</param>
+    /// <param name="request">The base clustering request containing configuration parameters</param>
+    /// <param name="algorithm">The clustering algorithm to use</param>
+    /// <param name="settings">The specific settings for the selected algorithm</param>
+    /// <returns>An action result containing the clustering results or an error response</returns>
     private async Task<IActionResult> CalculateClusters<TSettings>(
         long datasetId,
         BaseClusteringRequest request,

@@ -1,11 +1,16 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeAPI.Models.Config.Clustering;
+using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Domain.Dataset.Normalized;
 
-namespace DataAnalyzeAPI.Models.Domain.Clustering;
+namespace DataAnalyzeAPI.Models.Domain.Clustering.KMeans;
 
 public class Centroid
 {
-    private const float MinThreshold = 0.5f;
+    /// <summary>
+    /// Threshold used to convert averaged one-hot values to 1 or 0.
+    /// If the average is greater than or equal to the threshold, set to 1; otherwise, 0.
+    /// </summary>
+    private const double OneHotThreshold = KMeansConfig.CentroidConfig.OneHotThreshold;
 
     public List<ParameterValueModel> Values { get; }
 
@@ -66,7 +71,7 @@ public class Centroid
         NormalizedNumericValueModel baseValue,
         NormalizedNumericValueModel mergeValue)
     {
-        var weightedSum = (baseValue.NormalizedValue * MergedObjectsCount) + mergeValue.NormalizedValue;
+        var weightedSum = baseValue.NormalizedValue * MergedObjectsCount + mergeValue.NormalizedValue;
         var mergedNormalized = weightedSum / (MergedObjectsCount + 1);
 
         return new NormalizedNumericValueModel(mergedNormalized, baseValue.Parameter, baseValue.Value);
@@ -101,7 +106,7 @@ public class Centroid
             {
                 var avgValue = (double)categoricalValue.OneHotValues[i] / MergedObjectsCount;
 
-                categoricalValue.OneHotValues[i] = avgValue >= MinThreshold ? 1 : 0;
+                categoricalValue.OneHotValues[i] = avgValue >= OneHotThreshold ? 1 : 0;
             }
         }
     }

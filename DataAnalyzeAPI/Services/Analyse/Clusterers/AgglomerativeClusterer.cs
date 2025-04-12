@@ -1,23 +1,34 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Clustering;
+using DataAnalyzeAPI.Models.Domain.Clustering.Agglomerative;
 using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+using DataAnalyzeAPI.Services.Helpers;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 
 public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
 {
+    protected override string ClusterPrefix => "Agglomerative";
+
+    private readonly ClusterNameGenerator nameGenerator;
+
     private List<AgglomerativeCluster> clusters = new();
     private AgglomerativeSettings settings = default!;
 
-    public AgglomerativeClusterer(IDistanceCalculator distanceCalculator)
-        : base(distanceCalculator)
-    { }
+    public AgglomerativeClusterer(
+        IDistanceCalculator distanceCalculator,
+        ClusterNameGenerator nameGenerator
+        ) : base(distanceCalculator)
+    {
+        this.nameGenerator = nameGenerator;
+    }
 
     public override List<Cluster> Cluster(List<DataObjectModel> objects, AgglomerativeSettings settings)
     {
         this.settings = settings;
-        clusters = objects.ConvertAll(obj => new AgglomerativeCluster(obj));
+        clusters = objects.ConvertAll(
+            obj => new AgglomerativeCluster(obj, nameGenerator.GenerateName(ClusterPrefix)));
 
         return PerformClustering();
     }
@@ -41,6 +52,7 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
 
         return clusters
             .Where(c => !c.IsMerged)
+            .OrderByDescending(c => c.Objects.Count)
             .Cast<Cluster>()
             .ToList();
     }

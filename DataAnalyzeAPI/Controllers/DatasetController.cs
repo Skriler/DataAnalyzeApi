@@ -22,6 +22,7 @@ public class DatasetController : ControllerBase
     /// <summary>
     /// Get all datasets.
     /// </summary>
+    /// <returns>An action result containing the list of datasets or an error response</returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -33,6 +34,8 @@ public class DatasetController : ControllerBase
     /// <summary>
     /// Get dataset by id.
     /// </summary>
+    /// <param name="id">The ID of the dataset to retrieve</param>
+    /// <returns>An action result containing the dataset DTO or a NotFound response</returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(long id)
     {
@@ -51,6 +54,8 @@ public class DatasetController : ControllerBase
     /// <summary>
     /// Create new dataset.
     /// </summary>
+    /// <param name="dto">The dataset creation details (DatasetCreateDto)</param>
+    /// <returns>An action result indicating the outcome of the creation process</returns>
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] DatasetCreateDto dto)
     {
@@ -68,6 +73,8 @@ public class DatasetController : ControllerBase
     /// <summary>
     /// Delete dataset by id.
     /// </summary>
+    /// <param name="id">The ID of the dataset to delete</param>
+    /// <returns>An action result indicating the outcome of the deletion process</returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(long id)
     {

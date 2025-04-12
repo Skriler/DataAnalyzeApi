@@ -6,6 +6,7 @@ using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
 using DataAnalyzeAPI.Services.DAL;
+using DataAnalyzeAPI.Services.Helpers;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,8 @@ public static class ServiceCollectionExtensions
         services.AddControllers();
         services.AddSwaggerGen();
 
-        services.AddMappers()
+        services.AddHelpers()
+            .AddMappers()
             .AddRepositories()
             .AddDataProcessingServices()
             .AddDistanceServices()
@@ -47,6 +49,13 @@ public static class ServiceCollectionExtensions
         app.UseAuthorization();
 
         return app;
+    }
+
+    private static IServiceCollection AddHelpers(this IServiceCollection services)
+    {
+        services.AddScoped<ClusterNameGenerator>();
+
+        return services;
     }
 
     private static IServiceCollection AddMappers(this IServiceCollection services)
