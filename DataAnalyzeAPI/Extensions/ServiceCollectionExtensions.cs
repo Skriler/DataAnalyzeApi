@@ -1,4 +1,5 @@
 ﻿using DataAnalyzeAPI.Mappers;
+using DataAnalyzeAPI.Models.Config;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
@@ -9,6 +10,7 @@ using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Helpers;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace DataAnalyzeAPI.Extensions;
 
@@ -19,6 +21,15 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<DataAnalyzeDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
         );
+
+        services.Configure<RedisConfig>(configuration.GetSection("Redis"));
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            var redisConfig = configuration.GetSection("Redis").Get<RedisConfig>();
+            options.Configuration = redisConfig?.ConnectionString;
+            options.InstanceName = redisConfig?.InstanceName;
+        });
 
         services.AddControllers();
         services.AddSwaggerGen();
