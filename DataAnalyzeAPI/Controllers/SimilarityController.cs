@@ -4,6 +4,7 @@ using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.DAL;
 using Microsoft.AspNetCore.Mvc;
+using DataAnalyzeAPI.Services.Cache;
 
 namespace DataAnalyzeAPI.Controllers;
 
@@ -12,20 +13,26 @@ namespace DataAnalyzeAPI.Controllers;
 public class SimilarityController : Controller
 {
     private readonly DatasetRepository repository;
+
     private readonly DatasetSettingsMapper datasetSettingsMapper;
     private readonly AnalysisMapper analysisMapper;
+
     private readonly SimilarityComparer comparer;
+
+    private readonly SimilarityCacheService cacheService;
 
     public SimilarityController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
         AnalysisMapper analysisMapper,
-        SimilarityComparer comparer)
+        SimilarityComparer comparer,
+        SimilarityCacheService cacheService)
     {
         this.repository = repository;
         this.datasetSettingsMapper = datasetSettingsMapper;
         this.analysisMapper = analysisMapper;
         this.comparer = comparer;
+        this.cacheService = cacheService;
     }
 
     /// <summary>
@@ -42,6 +49,13 @@ public class SimilarityController : Controller
         long datasetId,
         [FromBody] SimilarityRequest? request)
     {
+        var cachedResult = await cacheService.GetCachedResultAsync(datasetId, request);
+
+        if (cachedResult != null)
+        {
+            return Ok(cachedResult);
+        }
+
         var dataset = await repository.GetByIdAsync(datasetId);
 
         if (dataset == null)
@@ -60,6 +74,8 @@ public class SimilarityController : Controller
             DatasetId = datasetId,
             Similarities = similaritiesDto,
         };
+
+        await cacheService.CacheResultAsync(datasetId, request, similarityResult);
 
         return Ok(similarityResult);
     }

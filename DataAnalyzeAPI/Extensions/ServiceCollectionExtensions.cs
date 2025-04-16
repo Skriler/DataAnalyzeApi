@@ -6,11 +6,11 @@ using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+using DataAnalyzeAPI.Services.Cache;
 using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Helpers;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
 
 namespace DataAnalyzeAPI.Extensions;
 
@@ -37,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddHelpers()
             .AddMappers()
             .AddRepositories()
+            .AddCacheServices()
             .AddDataProcessingServices()
             .AddDistanceServices()
             .AddClusteringServices();
@@ -81,6 +82,14 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<DatasetRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCacheServices(this IServiceCollection services)
+    {
+        services.AddScoped<ClusteringCacheService>();
+        services.AddScoped<SimilarityCacheService>();
 
         return services;
     }

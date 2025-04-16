@@ -4,6 +4,7 @@ using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
+using DataAnalyzeAPI.Services.Cache;
 using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,23 +16,29 @@ namespace DataAnalyzeAPI.Controllers;
 public class ClusteringController : Controller
 {
     private readonly DatasetRepository repository;
+
     private readonly DatasetSettingsMapper datasetSettingsMapper;
     private readonly AnalysisMapper analysisMapper;
+
     private readonly DatasetNormalizer datasetNormalizer;
     private readonly ClustererFactory clustererFactory;
+
+    private readonly ClusteringCacheService clusteringCacheService;
 
     public ClusteringController(
         DatasetRepository repository,
         DatasetSettingsMapper datasetSettingsMapper,
         AnalysisMapper analysisMapper,
         DatasetNormalizer datasetNormalizer,
-        ClustererFactory clustererFactory)
+        ClustererFactory clustererFactory,
+        ClusteringCacheService clusteringCacheService)
     {
         this.repository = repository;
         this.datasetSettingsMapper = datasetSettingsMapper;
         this.analysisMapper = analysisMapper;
         this.datasetNormalizer = datasetNormalizer;
         this.clustererFactory = clustererFactory;
+        this.clusteringCacheService = clusteringCacheService;
     }
 
     /// <summary>
@@ -135,6 +142,14 @@ public class ClusteringController : Controller
         ClusterAlgorithm algorithm,
         TSettings settings) where TSettings : IClusterSettings
     {
+        var cachedResult = await clusteringCacheService.GetCachedResultAsync(
+            datasetId, algorithm, request);
+
+        if (cachedResult != null)
+        {
+            return Ok(cachedResult);
+        }
+
         var dataset = await repository.GetByIdAsync(datasetId);
 
         if (dataset == null)
@@ -154,6 +169,9 @@ public class ClusteringController : Controller
             DatasetId = datasetId,
             Clusters = clustersDto,
         };
+
+        await clusteringCacheService.CacheResultAsync(
+            datasetId, algorithm, request, clusteringResult);
 
         return Ok(clusteringResult);
     }
