@@ -1,23 +1,16 @@
-﻿using DataAnalyzeAPI.Models.Config;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
+﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
+using DataAnalyzeAPI.Services.Cache;
 using System.Text.Json;
-using System.Text;
 
 public class ClusteringCacheService
 {
-    private readonly IDistributedCache cache;
-    private readonly RedisConfig redisConfig;
+    private readonly ICacheService cacheService;
 
-    public ClusteringCacheService(
-        IDistributedCache cache,
-        IOptions<RedisConfig> redisConfigOptions)
+    public ClusteringCacheService(ICacheService cacheService)
     {
-        this.cache = cache;
-        redisConfig = redisConfigOptions.Value;
+        this.cacheService = cacheService;
     }
 
     public async Task<ClusteringResult?> GetCachedResultAsync(
@@ -26,13 +19,7 @@ public class ClusteringCacheService
         BaseClusteringRequest request)
     {
         var cacheKey = BuildCacheKey(datasetId, algorithm, request);
-        var cacheBytes = await cache.GetAsync(cacheKey);
-
-        if (cacheBytes == null)
-            return null;
-
-        var cacheJson = Encoding.UTF8.GetString(cacheBytes);
-        return JsonSerializer.Deserialize<ClusteringResult>(cacheJson);
+        return await cacheService.GetAsync<ClusteringResult>(cacheKey);
     }
 
     public async Task CacheResultAsync(
@@ -42,18 +29,12 @@ public class ClusteringCacheService
         ClusteringResult result)
     {
         var cacheKey = BuildCacheKey(datasetId, algorithm, request);
-        var resultJson = JsonSerializer.Serialize(result);
-
-        var resultBytes = Encoding.UTF8.GetBytes(resultJson);
-
-        var cacheOptions = new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(redisConfig.DefaultCacheDurationMinutes)
-        };
-
-        await cache.SetAsync(cacheKey, resultBytes, cacheOptions);
+        await cacheService.SetAsync(cacheKey, result);
     }
 
+    /// <summary>
+    /// Builds a unique cache key based on dataset ID, algorithm, and clustering request.
+    /// </summary>
     private static string BuildCacheKey(long datasetId, ClusterAlgorithm algorithm, BaseClusteringRequest request)
     {
         var requestType = request.GetType().Name;

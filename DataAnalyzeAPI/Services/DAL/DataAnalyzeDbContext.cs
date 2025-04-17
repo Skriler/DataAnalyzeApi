@@ -1,9 +1,10 @@
 ﻿using DataAnalyzeAPI.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAnalyzeAPI.Services.DAL;
 
-public class DataAnalyzeDbContext : DbContext
+public class DataAnalyzeDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Dataset> Datasets { get; set; }
 

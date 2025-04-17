@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Models.Config;
+using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
@@ -10,6 +11,7 @@ using DataAnalyzeAPI.Services.Cache;
 using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Helpers;
 using DataAnalyzeAPI.Services.Normalizers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAnalyzeAPI.Extensions;
@@ -30,6 +32,10 @@ public static class ServiceCollectionExtensions
             options.Configuration = redisConfig?.ConnectionString;
             options.InstanceName = redisConfig?.InstanceName;
         });
+
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<DataAnalyzeDbContext>()
+            .AddDefaultTokenProviders();
 
         services.AddControllers();
         services.AddSwaggerGen();
@@ -88,6 +94,7 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddCacheServices(this IServiceCollection services)
     {
+        services.AddSingleton<ICacheService, DistributedCacheService>();
         services.AddScoped<ClusteringCacheService>();
         services.AddScoped<SimilarityCacheService>();
 
