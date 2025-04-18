@@ -12,7 +12,7 @@ namespace DataAnalyzeAPI.Controllers;
 
 [ApiController]
 [Route("api/analyse/clustering")]
-public class ClusteringController : Controller
+public class ClusteringController : ControllerBase
 {
     private readonly DatasetRepository repository;
 

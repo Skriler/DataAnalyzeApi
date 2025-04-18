@@ -3,7 +3,7 @@ using ParamConfig = DataAnalyzeAPI.Models.Config.ParameterSettingsConfig;
 
 namespace DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
 
-public class ParameterSettingsDto
+public record ParameterSettingsDto
 {
     public long ParameterId { get; set; }
 

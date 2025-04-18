@@ -2,7 +2,7 @@
 
 namespace DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
 
-public class SimilarityRequest
+public record SimilarityRequest
 {
     public List<ParameterSettingsDto> ParameterSettings { get; set; } = new();
 

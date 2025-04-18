@@ -2,7 +2,7 @@
 
 namespace DataAnalyzeAPI.Models.DTOs.Auth;
 
-public class RegisterModelDto
+public record RegisterDto
 {
     [Required]
     public string Username { get; set; } = string.Empty;

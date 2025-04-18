@@ -10,7 +10,7 @@ namespace DataAnalyzeAPI.Controllers;
 
 [ApiController]
 [Route("api/analyse/similarity")]
-public class SimilarityController : Controller
+public class SimilarityController : ControllerBase
 {
     private readonly DatasetRepository repository;
 

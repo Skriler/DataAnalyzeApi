@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 
-public class KMeansClusteringRequest : BaseClusteringRequest
+public record KMeansClusteringRequest : BaseClusteringRequest
 {
     [Range(KMeansConfig.MaxIterations.MinAllowed, KMeansConfig.MaxIterations.MaxAllowed)]
     public int MaxIterations { get; set; } = KMeansConfig.MaxIterations.Default;
