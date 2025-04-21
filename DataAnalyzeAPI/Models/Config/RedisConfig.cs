@@ -6,5 +6,5 @@ public class RedisConfig
 
     public string InstanceName { get; set; } = string.Empty;
 
-    public int DefaultCacheDurationMinutes { get; set; } = 20;
+    public int DefaultCacheDurationMinutes { get; set; }
 }

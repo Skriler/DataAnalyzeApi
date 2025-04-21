@@ -2,9 +2,9 @@
 using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
-using DataAnalyzeAPI.Services.DAL;
 using Microsoft.AspNetCore.Mvc;
 using DataAnalyzeAPI.Services.Cache;
+using DataAnalyzeAPI.DAL.Repositories;
 
 namespace DataAnalyzeAPI.Controllers;
 

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Services.Helpers;
+﻿namespace DataAnalyzeAPI.Services.Analyse.Helpers;
 
 public class ClusterNameGenerator
 {

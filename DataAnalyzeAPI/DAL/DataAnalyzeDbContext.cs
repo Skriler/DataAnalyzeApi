@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAnalyzeAPI.Services.DAL;
+namespace DataAnalyzeAPI.DAL;
 
 public class DataAnalyzeDbContext : IdentityDbContext<ApplicationUser>
 {

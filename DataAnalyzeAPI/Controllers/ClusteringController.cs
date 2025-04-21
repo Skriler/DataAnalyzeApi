@@ -1,10 +1,10 @@
-﻿using DataAnalyzeAPI.Mappers;
+﻿using DataAnalyzeAPI.DAL.Repositories;
+using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
-using DataAnalyzeAPI.Services.DAL;
 using DataAnalyzeAPI.Services.Normalizers;
 using Microsoft.AspNetCore.Mvc;
 

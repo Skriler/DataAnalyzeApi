@@ -1,7 +1,7 @@
 ﻿using DataAnalyzeAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAnalyzeAPI.Services.DAL;
+namespace DataAnalyzeAPI.DAL.Repositories;
 
 public class DatasetRepository
 {

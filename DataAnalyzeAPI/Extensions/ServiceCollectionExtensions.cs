@@ -1,18 +1,24 @@
-﻿using DataAnalyzeAPI.Mappers;
+﻿using DataAnalyzeAPI.DAL;
+using DataAnalyzeAPI.DAL.Repositories;
+using DataAnalyzeAPI.DAL.Seeders;
+using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Models.Config;
 using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+using DataAnalyzeAPI.Services.Analyse.Helpers;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+using DataAnalyzeAPI.Services.Auth;
 using DataAnalyzeAPI.Services.Cache;
-using DataAnalyzeAPI.Services.DAL;
-using DataAnalyzeAPI.Services.Helpers;
 using DataAnalyzeAPI.Services.Normalizers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DataAnalyzeAPI.Extensions;
 
@@ -37,13 +43,37 @@ public static class ServiceCollectionExtensions
             .AddEntityFrameworkStores<DataAnalyzeDbContext>()
             .AddDefaultTokenProviders();
 
+        services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["JwtConfig:Issuer"],
+                ValidAudience = configuration["JwtConfig:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(configuration["JwtConfig:Secret"]))
+            };
+        });
+
         services.AddControllers();
         services.AddSwaggerGen();
 
-        services.AddHelpers()
-            .AddMappers()
-            .AddRepositories()
+        services.AddDal()
             .AddCacheServices()
+            .AddAuthServices()
+            .AddMappers()
+            .AddHelpers()
             .AddDataProcessingServices()
             .AddDistanceServices()
             .AddClusteringServices();
@@ -69,9 +99,26 @@ public static class ServiceCollectionExtensions
         return app;
     }
 
-    private static IServiceCollection AddHelpers(this IServiceCollection services)
+    private static IServiceCollection AddDal(this IServiceCollection services)
     {
-        services.AddScoped<ClusterNameGenerator>();
+        services.AddScoped<DatasetRepository>();
+        services.AddScoped<IdentitySeeder>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCacheServices(this IServiceCollection services)
+    {
+        services.AddSingleton<ICacheService, DistributedCacheService>();
+        services.AddScoped<ClusteringCacheService>();
+        services.AddScoped<SimilarityCacheService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAuthServices(this IServiceCollection services)
+    {
+        services.AddScoped<JwtTokenService, JwtTokenService>();
 
         return services;
     }
@@ -85,18 +132,9 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    private static IServiceCollection AddHelpers(this IServiceCollection services)
     {
-        services.AddScoped<DatasetRepository>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddCacheServices(this IServiceCollection services)
-    {
-        services.AddSingleton<ICacheService, DistributedCacheService>();
-        services.AddScoped<ClusteringCacheService>();
-        services.AddScoped<SimilarityCacheService>();
+        services.AddScoped<ClusterNameGenerator>();
 
         return services;
     }
