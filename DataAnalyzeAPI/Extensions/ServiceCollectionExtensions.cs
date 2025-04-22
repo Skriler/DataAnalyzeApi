@@ -3,6 +3,7 @@ using DataAnalyzeAPI.DAL.Repositories;
 using DataAnalyzeAPI.DAL.Seeders;
 using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Models.Config;
+using DataAnalyzeAPI.Models.Config.Identity;
 using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
@@ -22,16 +23,37 @@ using System.Text;
 
 namespace DataAnalyzeAPI.Extensions;
 
+/// <summary>
+/// Contains extension methods for registering application services.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Configures all services for the application.
+    /// </summary>
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services
+            .AddInfrastructure(configuration)
+            .AddSecurityServices(configuration)
+            .AddApiServices()
+            .AddApplicationServices();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures infrastructure-related services, including database and caching.
+    /// </summary>
+    private static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Database
         services.AddDbContext<DataAnalyzeDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
         );
 
+        // Caching
         services.Configure<RedisConfig>(configuration.GetSection("Redis"));
-
         services.AddStackExchangeRedisCache(options =>
         {
             var redisConfig = configuration.GetSection("Redis").Get<RedisConfig>();
@@ -39,12 +61,28 @@ public static class ServiceCollectionExtensions
             options.InstanceName = redisConfig?.InstanceName;
         });
 
+        // Repositories and seeders
+        services.AddScoped<DatasetRepository>();
+        services.AddScoped<IdentitySeeder>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures security-related services, including authentication and identity.
+    /// </summary>
+    private static IServiceCollection AddSecurityServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Configuration
+        services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
+        services.Configure<IdentityConfig>(configuration.GetSection("Identity"));
+
+        // Identity
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<DataAnalyzeDbContext>()
             .AddDefaultTokenProviders();
 
-        services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
-
+        // Authentication
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -62,49 +100,40 @@ public static class ServiceCollectionExtensions
                 ValidIssuer = configuration["JwtConfig:Issuer"],
                 ValidAudience = configuration["JwtConfig:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(configuration["JwtConfig:Secret"]))
+                    Encoding.UTF8.GetBytes(configuration["JwtConfig:Secret"]!))
             };
         });
 
+        // Auth services
+        services.AddScoped<JwtTokenService>();
+        services.AddScoped<AuthService>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures API-related services, including controllers and Swagger documentation.
+    /// </summary>
+    private static IServiceCollection AddApiServices(this IServiceCollection services)
+    {
         services.AddControllers();
         services.AddSwaggerGen();
 
-        services.AddDal()
+        return services;
+    }
+
+    /// <summary>
+    /// Configures application-specific services, including caching, mappers, data processing, and clustering.
+    /// </summary>
+    private static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        return services
             .AddCacheServices()
-            .AddAuthServices()
             .AddMappers()
             .AddHelpers()
             .AddDataProcessingServices()
             .AddDistanceServices()
             .AddClusteringServices();
-
-        return services;
-    }
-
-    public static WebApplication ConfigureMiddleware(this WebApplication app)
-    {
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(opt =>
-            {
-                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Data Analyze API v1");
-                opt.RoutePrefix = string.Empty;
-            });
-        }
-
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-
-        return app;
-    }
-
-    private static IServiceCollection AddDal(this IServiceCollection services)
-    {
-        services.AddScoped<DatasetRepository>();
-        services.AddScoped<IdentitySeeder>();
-
-        return services;
     }
 
     private static IServiceCollection AddCacheServices(this IServiceCollection services)
@@ -112,13 +141,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICacheService, DistributedCacheService>();
         services.AddScoped<ClusteringCacheService>();
         services.AddScoped<SimilarityCacheService>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddAuthServices(this IServiceCollection services)
-    {
-        services.AddScoped<JwtTokenService, JwtTokenService>();
 
         return services;
     }
@@ -150,34 +172,39 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddDistanceServices(this IServiceCollection services)
     {
+        // Register metrics
         services.AddTransient<EuclideanDistanceMetric>();
         services.AddTransient<ManhattanDistanceMetric>();
         services.AddTransient<CosineDistanceMetric>();
         services.AddTransient<HammingDistanceMetric>();
         services.AddTransient<JaccardDistanceMetric>();
 
-        services.AddTransient(provider =>
-        {
-            return new Dictionary<NumericDistanceMetricType, INumericDistanceMetric>
-            {
-                { NumericDistanceMetricType.Euclidean, provider.GetRequiredService<EuclideanDistanceMetric>() },
-                { NumericDistanceMetricType.Manhattan, provider.GetRequiredService<ManhattanDistanceMetric>() },
-                { NumericDistanceMetricType.Cosine, provider.GetRequiredService<CosineDistanceMetric>() }
-            };
-        });
-
-        services.AddTransient(provider =>
-        {
-            return new Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric>
-            {
-                { CategoricalDistanceMetricType.Hamming, provider.GetRequiredService<HammingDistanceMetric>() },
-                { CategoricalDistanceMetricType.Jaccard, provider.GetRequiredService<JaccardDistanceMetric>() }
-            };
-        });
+        // Register metric dictionaries
+        services.AddTransient(CreateNumericDistanceMetricDictionary);
+        services.AddTransient(CreateCategoricalDistanceMetricDictionary);
 
         services.AddScoped<IDistanceCalculator, DistanceCalculator>();
 
         return services;
+    }
+
+    private static Dictionary<NumericDistanceMetricType, INumericDistanceMetric> CreateNumericDistanceMetricDictionary(IServiceProvider provider)
+    {
+        return new Dictionary<NumericDistanceMetricType, INumericDistanceMetric>
+        {
+            { NumericDistanceMetricType.Euclidean, provider.GetRequiredService<EuclideanDistanceMetric>() },
+            { NumericDistanceMetricType.Manhattan, provider.GetRequiredService<ManhattanDistanceMetric>() },
+            { NumericDistanceMetricType.Cosine, provider.GetRequiredService<CosineDistanceMetric>() }
+        };
+    }
+
+    private static Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric> CreateCategoricalDistanceMetricDictionary(IServiceProvider provider)
+    {
+        return new Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric>
+        {
+            { CategoricalDistanceMetricType.Hamming, provider.GetRequiredService<HammingDistanceMetric>() },
+            { CategoricalDistanceMetricType.Jaccard, provider.GetRequiredService<JaccardDistanceMetric>() }
+        };
     }
 
     private static IServiceCollection AddClusteringServices(this IServiceCollection services)

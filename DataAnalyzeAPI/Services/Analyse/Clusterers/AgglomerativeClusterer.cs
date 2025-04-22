@@ -3,6 +3,7 @@ using DataAnalyzeAPI.Models.Domain.Clustering.Agglomerative;
 using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+using DataAnalyzeAPI.Services.Analyse.Helpers;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 

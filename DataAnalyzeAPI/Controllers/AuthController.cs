@@ -1,10 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Config;
-using DataAnalyzeAPI.Models.DTOs.Auth;
-using DataAnalyzeAPI.Models.Entities;
+﻿using DataAnalyzeAPI.Models.DTOs.Auth;
 using DataAnalyzeAPI.Services.Auth;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace DataAnalyzeAPI.Controllers;
 
@@ -12,71 +8,61 @@ namespace DataAnalyzeAPI.Controllers;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly RoleManager<IdentityRole> roleManager;
-    private readonly JwtTokenService jwtTokenService;
+    private readonly AuthService authService;
+    private readonly ILogger<AuthController> logger;
 
     public AuthController(
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager,
-        JwtTokenService jwtTokenService)
+        AuthService authService,
+        ILogger<AuthController> logger)
     {
-        this.userManager = userManager;
-        this.roleManager = roleManager;
-        this.jwtTokenService = jwtTokenService;
+        this.authService = authService;
+        this.logger = logger;
     }
 
+    /// <summary>
+    /// Logs in a user with the provided credentials.
+    /// </summary>
+    /// <param name="dto">The login data dto</param>
+    /// <returns>An action result containing the authentication result or an error message</returns>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
-        var user = await userManager.FindByNameAsync(dto.Username);
+        var authResult = await authService.LoginAsync(dto);
 
-        if (user == null || !await userManager.CheckPasswordAsync(user, dto.Password))
+        if (!authResult.Success)
         {
-            return Unauthorized("Invalid username or password");
+            logger.LogWarning(authResult.Error);
+            return Unauthorized(authResult.Error);
         }
 
-        var userRoles = await userManager.GetRolesAsync(user);
-        var token = jwtTokenService.GenerateToken(user, userRoles);
-
-        var authResult = new AuthResult()
-        {
-            Token = new JwtSecurityTokenHandler().WriteToken(token),
-            Expiration = token.ValidTo,
-            Username = user.UserName,
-            Role = userRoles.First()
-        };
-
+        logger.LogInformation("User {Username} successfully logged in", dto.Username);
         return Ok(authResult);
     }
 
+    /// <summary>
+    /// Registers a new user with the provided details.
+    /// </summary>
+    /// <param name="dto">The registration dto containing user information</param>
+    /// <returns>An action result indicating the success or failure of the registration</returns>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
-        var existedUser = await userManager.FindByNameAsync(dto.Username);
-
-        if (existedUser != null)
+        if (await authService.UserExistsAsync(dto.Username))
         {
+            logger.LogWarning("Registration attempt with existing username: {Username}", dto.Username);
             return Conflict("User already exists.");
         }
 
-        var newUser = new ApplicationUser()
-        {
-            UserName = dto.Username,
-            Email = dto.Email,
-            FirstName = dto.FirstName,
-            LastName = dto.LastName
-        };
-
-        var result = await userManager.CreateAsync(newUser, dto.Password);
+        var result = await authService.RegisterAsync(dto);
 
         if (!result.Succeeded)
         {
-            return BadRequest(result.Errors);
+            logger.LogWarning("Failed to create user: {Username}, Errors: {Errors}",
+                dto.Username, string.Join(", ", result.Errors.Select(e => e.Description)));
+            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
         }
 
-        await userManager.AddToRoleAsync(newUser, "User");
-
+        logger.LogInformation("User {Username} successfully registered", dto.Username);
         return Ok("User created successfully.");
-    } 
+    }
 }

@@ -14,16 +14,19 @@ public class JwtTokenService
 
     public JwtTokenService(IOptions<JwtConfig> jwtOptions)
     {
-        this.jwtConfig = jwtOptions.Value;
+        jwtConfig = jwtOptions.Value;
     }
 
+    /// <summary>
+    /// Generates a JWT token containing user information and roles.
+    /// </summary>
     public JwtSecurityToken GenerateToken(ApplicationUser user, IEnumerable<string> roles)
     {
         var authClaims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id),
-            new(ClaimTypes.Name, user.UserName),
-            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Name, user.UserName!),
+            new(ClaimTypes.Email, user.Email!),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
