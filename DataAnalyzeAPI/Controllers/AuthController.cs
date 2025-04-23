@@ -1,11 +1,13 @@
 ﻿using DataAnalyzeAPI.Models.DTOs.Auth;
 using DataAnalyzeAPI.Services.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataAnalyzeAPI.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly AuthService authService;

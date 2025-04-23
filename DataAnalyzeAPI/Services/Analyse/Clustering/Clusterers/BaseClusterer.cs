@@ -3,7 +3,7 @@ using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 
-namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
+namespace DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
 
 public abstract class BaseClusterer<TSettings> where TSettings : IClusterSettings
 {

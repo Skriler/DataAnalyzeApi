@@ -4,7 +4,7 @@ using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 using DataAnalyzeAPI.Services.Analyse.Helpers;
 
-namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
+namespace DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
 
 public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 {

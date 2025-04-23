@@ -7,6 +7,7 @@ using DataAnalyzeAPI.Models.Config.Identity;
 using DataAnalyzeAPI.Models.Entities;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
+using DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 using DataAnalyzeAPI.Services.Analyse.Helpers;
@@ -102,6 +103,17 @@ public static class ServiceCollectionExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(configuration["JwtConfig:Secret"]!))
             };
+        });
+
+        // Authorization
+        services.AddAuthorization(options =>
+        {
+            var identityConfig = configuration.GetSection("Identity").Get<IdentityConfig>();
+            var adminRole = identityConfig!.AdminRole;
+            var defaultRole = identityConfig!.DefaultRole;
+
+            options.AddPolicy("OnlyAdmin", policy => policy.RequireRole(adminRole));
+            options.AddPolicy("UserOrAdmin", policy => policy.RequireRole(defaultRole, adminRole));
         });
 
         // Auth services

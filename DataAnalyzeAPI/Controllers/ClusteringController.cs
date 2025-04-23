@@ -6,12 +6,14 @@ using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.Normalizers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataAnalyzeAPI.Controllers;
 
 [ApiController]
 [Route("api/analyse/clustering")]
+[Authorize(Policy = "UserOrAdmin")]
 public class ClusteringController : ControllerBase
 {
     private readonly DatasetRepository repository;

@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Models.Enums;
+using DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
 
 namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
 

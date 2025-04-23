@@ -5,11 +5,13 @@ using DataAnalyzeAPI.Services.Analyse.Comparers;
 using Microsoft.AspNetCore.Mvc;
 using DataAnalyzeAPI.Services.Cache;
 using DataAnalyzeAPI.DAL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DataAnalyzeAPI.Controllers;
 
 [ApiController]
 [Route("api/analyse/similarity")]
+[Authorize(Policy = "UserOrAdmin")]
 public class SimilarityController : ControllerBase
 {
     private readonly DatasetRepository repository;

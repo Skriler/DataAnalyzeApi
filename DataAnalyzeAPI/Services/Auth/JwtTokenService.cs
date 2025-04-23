@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeAPI.Models.Config;
 using DataAnalyzeAPI.Models.Entities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
