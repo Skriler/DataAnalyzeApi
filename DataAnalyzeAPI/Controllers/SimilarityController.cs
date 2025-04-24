@@ -1,11 +1,9 @@
-﻿using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
+﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
-using DataAnalyzeAPI.Services.Analyse.Comparers;
 using Microsoft.AspNetCore.Mvc;
-using DataAnalyzeAPI.Services.Cache;
-using DataAnalyzeAPI.DAL.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using DataAnalyzeAPI.Services.Cache;
+using DataAnalyzeAPI.Services.Analyse.Core;
 
 namespace DataAnalyzeAPI.Controllers;
 
@@ -14,27 +12,15 @@ namespace DataAnalyzeAPI.Controllers;
 [Authorize(Policy = "UserOrAdmin")]
 public class SimilarityController : ControllerBase
 {
-    private readonly DatasetRepository repository;
-
-    private readonly DatasetSettingsMapper datasetSettingsMapper;
-    private readonly AnalysisMapper analysisMapper;
-
-    private readonly SimilarityComparer comparer;
-
-    private readonly SimilarityCacheService cacheService;
+    private readonly DatasetService datasetService;
+    private readonly SimilarityService similarityService;
 
     public SimilarityController(
-        DatasetRepository repository,
-        DatasetSettingsMapper datasetSettingsMapper,
-        AnalysisMapper analysisMapper,
-        SimilarityComparer comparer,
-        SimilarityCacheService cacheService)
+        DatasetService datasetService,
+        SimilarityService similarityService)
     {
-        this.repository = repository;
-        this.datasetSettingsMapper = datasetSettingsMapper;
-        this.analysisMapper = analysisMapper;
-        this.comparer = comparer;
-        this.cacheService = cacheService;
+        this.datasetService = datasetService;
+        this.similarityService = similarityService;
     }
 
     /// <summary>
@@ -51,33 +37,15 @@ public class SimilarityController : ControllerBase
         long datasetId,
         [FromBody] SimilarityRequest? request)
     {
-        var cachedResult = await cacheService.GetCachedResultAsync(datasetId, request);
+        var cachedResult = await similarityService.GetCachedResultAsync(datasetId, request);
 
         if (cachedResult != null)
         {
             return Ok(cachedResult);
         }
 
-        var dataset = await repository.GetByIdAsync(datasetId);
-
-        if (dataset == null)
-        {
-            return NotFound($"Dataset with ID {datasetId} not found.");
-        }
-
-        var mappedDataset = datasetSettingsMapper.Map(dataset, request?.ParameterSettings);
-        var similarities = comparer.CalculateSimilarity(mappedDataset);
-
-        var includeParameters = request?.IncludeParameters ?? false;
-        var similaritiesDto = analysisMapper.MapSimilarityPairList(similarities, includeParameters);
-
-        var similarityResult = new SimilarityResult()
-        {
-            DatasetId = datasetId,
-            Similarities = similaritiesDto,
-        };
-
-        await cacheService.CacheResultAsync(datasetId, request, similarityResult);
+        var dataset = await datasetService.GetPreparedDatasetAsync(datasetId, request?.ParameterSettings);
+        var similarityResult = await similarityService.CalculateSimilarityAsync(dataset, request);
 
         return Ok(similarityResult);
     }

@@ -2,6 +2,7 @@
 using DataAnalyzeAPI.DAL.Repositories;
 using DataAnalyzeAPI.DAL.Seeders;
 using DataAnalyzeAPI.Mappers;
+using DataAnalyzeAPI.Middlewares;
 using DataAnalyzeAPI.Models.Config;
 using DataAnalyzeAPI.Models.Config.Identity;
 using DataAnalyzeAPI.Models.Entities;
@@ -9,13 +10,14 @@ using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
+using DataAnalyzeAPI.Services.Analyse.Core;
 using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
 using DataAnalyzeAPI.Services.Analyse.Helpers;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
 using DataAnalyzeAPI.Services.Auth;
 using DataAnalyzeAPI.Services.Cache;
-using DataAnalyzeAPI.Services.Normalizers;
+using DataAnalyzeAPI.Services.DataPreparation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -128,8 +130,10 @@ public static class ServiceCollectionExtensions
     /// </summary>
     private static IServiceCollection AddApiServices(this IServiceCollection services)
     {
-        services.AddControllers();
         services.AddSwaggerGen();
+        services
+            .AddControllers()
+            .AddDataAnalyzeExceptionFilters();
 
         return services;
     }
@@ -178,6 +182,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DatasetNormalizer>();
         services.AddScoped<SimilarityComparer>();
         services.AddTransient<ICompare, NormalizedValueComparer>();
+        services.AddScoped<DatasetService>();
+        services.AddScoped<SimilarityService>();
+        services.AddScoped<ClusteringService>();
 
         return services;
     }

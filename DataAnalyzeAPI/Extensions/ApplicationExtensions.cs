@@ -1,4 +1,5 @@
 ﻿using DataAnalyzeAPI.DAL.Seeders;
+using DataAnalyzeAPI.Middlewares;
 
 namespace DataAnalyzeAPI.Extensions;
 
@@ -17,8 +18,9 @@ public static class ApplicationExtensions
             ConfigureDevEnvironment(app);
         }
 
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
+        app.UseErrorHandlingMiddleware()
+            .UseHttpsRedirection()
+            .UseAuthorization();
 
         return app;
     }

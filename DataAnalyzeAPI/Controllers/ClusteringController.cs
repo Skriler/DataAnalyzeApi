@@ -1,11 +1,7 @@
-﻿using DataAnalyzeAPI.DAL.Repositories;
-using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.Domain.Settings;
+﻿using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.Enums;
-using DataAnalyzeAPI.Services.Analyse.Clusterers;
-using DataAnalyzeAPI.Services.Normalizers;
+using DataAnalyzeAPI.Services.Analyse.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,30 +12,15 @@ namespace DataAnalyzeAPI.Controllers;
 [Authorize(Policy = "UserOrAdmin")]
 public class ClusteringController : ControllerBase
 {
-    private readonly DatasetRepository repository;
-
-    private readonly DatasetSettingsMapper datasetSettingsMapper;
-    private readonly AnalysisMapper analysisMapper;
-
-    private readonly DatasetNormalizer datasetNormalizer;
-    private readonly ClustererFactory clustererFactory;
-
-    private readonly ClusteringCacheService clusteringCacheService;
+    private readonly DatasetService datasetService;
+    private readonly ClusteringService clusteringService;
 
     public ClusteringController(
-        DatasetRepository repository,
-        DatasetSettingsMapper datasetSettingsMapper,
-        AnalysisMapper analysisMapper,
-        DatasetNormalizer datasetNormalizer,
-        ClustererFactory clustererFactory,
-        ClusteringCacheService clusteringCacheService)
+        DatasetService datasetService,
+        ClusteringService clusteringService)
     {
-        this.repository = repository;
-        this.datasetSettingsMapper = datasetSettingsMapper;
-        this.analysisMapper = analysisMapper;
-        this.datasetNormalizer = datasetNormalizer;
-        this.clustererFactory = clustererFactory;
-        this.clusteringCacheService = clusteringCacheService;
+        this.datasetService = datasetService;
+        this.clusteringService = clusteringService;
     }
 
     /// <summary>
@@ -143,36 +124,17 @@ public class ClusteringController : ControllerBase
         ClusterAlgorithm algorithm,
         TSettings settings) where TSettings : IClusterSettings
     {
-        var cachedResult = await clusteringCacheService.GetCachedResultAsync(
-            datasetId, algorithm, request);
+        var cachedResult = await clusteringService.GetCachedResultAsync(datasetId, algorithm, request);
 
         if (cachedResult != null)
         {
             return Ok(cachedResult);
         }
 
-        var dataset = await repository.GetByIdAsync(datasetId);
+        var mappedDataset = await datasetService.GetPreparedDatasetAsync(datasetId, request.ParameterSettings);
+        var normalizedDataset = datasetService.NormalizeDataset(mappedDataset);
 
-        if (dataset == null)
-        {
-            return NotFound($"Dataset with ID {datasetId} not found.");
-        }
-
-        var mappedDataset = datasetSettingsMapper.Map(dataset, request.ParameterSettings);
-        var normalizedDataset = datasetNormalizer.Normalize(mappedDataset);
-
-        var clusterer = clustererFactory.Get<TSettings>(algorithm);
-        var clusters = clusterer.Cluster(normalizedDataset.Objects, settings);
-        var clustersDto = analysisMapper.MapClusterList(clusters, settings.IncludeParameters);
-
-        var clusteringResult = new ClusteringResult()
-        {
-            DatasetId = datasetId,
-            Clusters = clustersDto,
-        };
-
-        await clusteringCacheService.CacheResultAsync(
-            datasetId, algorithm, request, clusteringResult);
+        var clusteringResult = await clusteringService.CalculateClustersAsync(normalizedDataset, request, algorithm, settings);
 
         return Ok(clusteringResult);
     }

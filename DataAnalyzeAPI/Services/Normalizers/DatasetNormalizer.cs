@@ -1,7 +1,8 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
 using DataAnalyzeAPI.Models.Enum;
+using DataAnalyzeAPI.Services.Normalizers;
 
-namespace DataAnalyzeAPI.Services.Normalizers;
+namespace DataAnalyzeAPI.Services.DataPreparation;
 
 public class DatasetNormalizer
 {
