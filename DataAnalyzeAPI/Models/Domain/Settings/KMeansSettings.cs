@@ -4,6 +4,8 @@ namespace DataAnalyzeAPI.Models.Domain.Settings;
 
 public class KMeansSettings : IClusterSettings
 {
+    public ClusterAlgorithm Algorithm => ClusterAlgorithm.KMeans;
+
     public NumericDistanceMetricType NumericMetric { get; set; }
 
     public CategoricalDistanceMetricType CategoricalMetric { get; set; }
@@ -13,6 +15,4 @@ public class KMeansSettings : IClusterSettings
     public int NumberOfClusters { get; set; }
 
     public bool IncludeParameters { get; set; }
-
-    public ClusterAlgorithm GetAlgorithm() => ClusterAlgorithm.KMeans;
 }

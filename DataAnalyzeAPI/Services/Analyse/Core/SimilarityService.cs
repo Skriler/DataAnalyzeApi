@@ -1,10 +1,7 @@
 ﻿using DataAnalyzeAPI.Mappers;
 using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
-using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Comparers;
 using DataAnalyzeAPI.Services.Cache;
 
@@ -26,7 +23,10 @@ public class SimilarityService : BaseAnalysisService
         this.cacheService = cacheService;
     }
 
-    public async Task<SimilarityResult> CalculateSimilarityAsync(DatasetModel dataset, SimilarityRequest? request)
+    /// <summary>
+    /// Performs similarity analysis on the given dataset and returns the result.
+    /// </summary>
+    public async Task<SimilarityResult> PerformAnalysisAsync(DatasetModel dataset, SimilarityRequest? request)
     {
         var similarities = comparer.CalculateSimilarity(dataset);
 
@@ -44,6 +44,9 @@ public class SimilarityService : BaseAnalysisService
         return similarityResult;
     }
 
+    /// <summary>
+    /// Retrieves a cached similarity result for the given dataset and request, if available.
+    /// </summary>
     public async Task<SimilarityResult?> GetCachedResultAsync(long datasetId, SimilarityRequest? request)
     {
         return await cacheService.GetCachedResultAsync(datasetId, request);

@@ -24,13 +24,15 @@ public class ClusteringService : BaseAnalysisService
         this.cacheService = cacheService;
     }
 
-    public async Task<ClusteringResult> CalculateClustersAsync<TSettings>(
+    /// <summary>
+    /// Performs clustering analysis on the given dataset using the specified algorithm and settings.
+    /// </summary>
+    public async Task<ClusteringResult> PerformAnalysisAsync<TSettings>(
         DatasetModel dataset,
         BaseClusteringRequest request,
-        ClusterAlgorithm algorithm,
         TSettings settings) where TSettings : IClusterSettings
     {
-        var clusterer = clustererFactory.Get<TSettings>(algorithm);
+        var clusterer = clustererFactory.Get<TSettings>(settings.Algorithm);
         var clusters = clusterer.Cluster(dataset.Objects, settings);
 
         var clustersDto = analysisMapper.MapClusterList(clusters, settings.IncludeParameters);
@@ -41,11 +43,14 @@ public class ClusteringService : BaseAnalysisService
             Clusters = clustersDto,
         };
 
-        await cacheService.CacheResultAsync(dataset.Id, algorithm, request, clusteringResult);
+        await cacheService.CacheResultAsync(dataset.Id, settings.Algorithm, request, clusteringResult);
 
         return clusteringResult;
     }
 
+    /// <summary>
+    /// Retrieves a cached clustering result for the given dataset, algorithm, and request, if available.
+    /// </summary>
     public async Task<ClusteringResult?> GetCachedResultAsync(
         long datasetId,
         ClusterAlgorithm algorithm,

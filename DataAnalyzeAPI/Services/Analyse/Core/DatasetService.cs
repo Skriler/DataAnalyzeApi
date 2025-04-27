@@ -23,11 +23,9 @@ public class DatasetService
         normalizer = datasetNormalizer;
     }
 
-    public DatasetModel NormalizeDataset(DatasetModel dataset)
-    {
-        return normalizer.Normalize(dataset);
-    }
-
+    /// <summary>
+    /// Retrieves a dataset by ID, applies parameter settings if provided, and maps it to a model.
+    /// </summary>
     public async Task<DatasetModel> GetPreparedDatasetAsync(
         long datasetId,
         List<ParameterSettingsDto>? parameterSettings)
@@ -39,8 +37,18 @@ public class DatasetService
             throw new ResourceNotFoundException("Dataset", datasetId);
         }
 
-        var mappedDataset = settingsMapper.Map(dataset, parameterSettings);
+        return settingsMapper.Map(dataset, parameterSettings);
+    }
 
-        return mappedDataset;
+    /// <summary>
+    /// Retrieves a prepared dataset and applies normalization.
+    /// </summary>
+    public async Task<DatasetModel> GetPreparedNormalizedDatasetAsync(
+        long datasetId,
+        List<ParameterSettingsDto>? parameterSettings)
+    {
+        var dataset = await GetPreparedDatasetAsync(datasetId, parameterSettings);
+
+        return normalizer.Normalize(dataset);
     }
 }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeAPI", "DataAnalyzeAPI\DataAnalyzeAPI.csproj", "{EAFC5023-739F-4B0B-BF2F-06A3E352CD88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeApi", "DataAnalyzeAPI\DataAnalyzeApi.csproj", "{EAFC5023-739F-4B0B-BF2F-06A3E352CD88}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeApi.Tests.Unit", "DataAnalyzeApi.Tests.Unit\DataAnalyzeApi.Tests.Unit.csproj", "{50581463-6DC9-4034-BCF8-7A5D54CDE16D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,11 +17,15 @@ Global
 		{EAFC5023-739F-4B0B-BF2F-06A3E352CD88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAFC5023-739F-4B0B-BF2F-06A3E352CD88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAFC5023-739F-4B0B-BF2F-06A3E352CD88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {24D81679-5150-4B9B-9C4F-D43A6EC0961F}
+		SolutionGuid = {102D3A9C-FC22-4323-A242-0AB48972B388}
 	EndGlobalSection
 EndGlobal

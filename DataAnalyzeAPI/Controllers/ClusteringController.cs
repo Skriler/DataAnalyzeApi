@@ -1,6 +1,5 @@
 ﻿using DataAnalyzeAPI.Models.Domain.Settings;
 using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeAPI.Models.Enums;
 using DataAnalyzeAPI.Services.Analyse.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,11 +42,7 @@ public class ClusteringController : ControllerBase
             NumberOfClusters = request.NumberOfClusters,
         };
 
-        return await CalculateClusters(
-            datasetId,
-            request,
-            ClusterAlgorithm.KMeans,
-            settings);
+        return await CalculateClusters(datasetId, request, settings);
     }
 
     /// <summary>
@@ -71,11 +66,7 @@ public class ClusteringController : ControllerBase
             MinPoints = request.MinPoints,
         };
 
-        return await CalculateClusters(
-            datasetId,
-            request,
-            ClusterAlgorithm.DBSCAN,
-            settings);
+        return await CalculateClusters(datasetId, request, settings);
     }
 
     /// <summary>
@@ -97,44 +88,41 @@ public class ClusteringController : ControllerBase
             Threshold = request.Threshold,
         };
 
-        return await CalculateClusters(
-            datasetId,
-            request,
-            ClusterAlgorithm.HierarchicalAgglomerative,
-            settings);
+        return await CalculateClusters(datasetId, request, settings);
     }
 
     /// <summary>
-    /// Generic method that performs clustering analysis on a dataset using the specified algorithm and settings.
-    /// This private method handles the common workflow for all clustering algorithms:
-    /// 1. Retrieves the dataset
-    /// 2. Maps and normalizes the dataset
-    /// 3. Performs clustering using the appropriate algorithm
-    /// 4. Maps the results to DTOs for response
+    /// Calculates clusters for the specified dataset using the given settings and request data.
+    /// Returns a cached result if available; otherwise, performs a new clustering analysis.
     /// </summary>
     /// <typeparam name="TSettings">The type of clustering settings</typeparam>
     /// <param name="datasetId">The ID of the dataset to analyze</param>
     /// <param name="request">The base clustering request containing configuration parameters</param>
-    /// <param name="algorithm">The clustering algorithm to use</param>
     /// <param name="settings">The specific settings for the selected algorithm</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
     private async Task<IActionResult> CalculateClusters<TSettings>(
         long datasetId,
         BaseClusteringRequest request,
-        ClusterAlgorithm algorithm,
         TSettings settings) where TSettings : IClusterSettings
     {
-        var cachedResult = await clusteringService.GetCachedResultAsync(datasetId, algorithm, request);
+        var cachedResult = await clusteringService.GetCachedResultAsync(
+            datasetId,
+            settings.Algorithm,
+            request);
 
         if (cachedResult != null)
         {
             return Ok(cachedResult);
         }
 
-        var mappedDataset = await datasetService.GetPreparedDatasetAsync(datasetId, request.ParameterSettings);
-        var normalizedDataset = datasetService.NormalizeDataset(mappedDataset);
+        var dataset = await datasetService.GetPreparedNormalizedDatasetAsync(
+            datasetId,
+            request.ParameterSettings);
 
-        var clusteringResult = await clusteringService.CalculateClustersAsync(normalizedDataset, request, algorithm, settings);
+        var clusteringResult = await clusteringService.PerformAnalysisAsync(
+            dataset,
+            request,
+            settings);
 
         return Ok(clusteringResult);
     }

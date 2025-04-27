@@ -1,8 +1,6 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
+﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using DataAnalyzeAPI.Services.Cache;
 using DataAnalyzeAPI.Services.Analyse.Core;
 
 namespace DataAnalyzeAPI.Controllers;
@@ -24,10 +22,9 @@ public class SimilarityController : ControllerBase
     }
 
     /// <summary>
-    /// Get similarity results based on full pairwise comparison algorithm.
-    /// This method computes the pairwise similarity between objects in the dataset,
-    /// using the configured comparison algorithm. It returns the similarity score
-    /// for each pair of objects based on the selected settings.
+    /// Calculates  similarity results based on full pairwise comparison algorithm.
+    /// Provides similarity score for each pair of objects.
+    /// Returns a cached result if available; otherwise, performs a new similarity analysis.
     /// </summary>
     /// <param name="datasetId">The ID of the dataset to analyze</param>
     /// <param name="request">Similarity configuration parameters (optional)</param>
@@ -45,7 +42,7 @@ public class SimilarityController : ControllerBase
         }
 
         var dataset = await datasetService.GetPreparedDatasetAsync(datasetId, request?.ParameterSettings);
-        var similarityResult = await similarityService.CalculateSimilarityAsync(dataset, request);
+        var similarityResult = await similarityService.PerformAnalysisAsync(dataset, request);
 
         return Ok(similarityResult);
     }

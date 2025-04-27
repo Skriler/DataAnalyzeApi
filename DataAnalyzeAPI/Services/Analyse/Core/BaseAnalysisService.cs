@@ -2,6 +2,9 @@
 
 namespace DataAnalyzeAPI.Services.Analyse.Core;
 
+/// <summary>
+/// Base class for analysis services.
+/// </summary>
 public abstract class BaseAnalysisService
 {
     protected readonly DatasetService datasetService;
