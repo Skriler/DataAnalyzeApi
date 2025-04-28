@@ -10,9 +10,16 @@ public class HammingDistanceMetric : BaseDistanceMetric<int>, ICategoricalDistan
     {
         Validate(oneHotValuesA, oneHotValuesB);
 
-        var differences = oneHotValuesA.Except(oneHotValuesB).Count()
-            + oneHotValuesB.Except(oneHotValuesA).Count();
+        int differences = 0;
 
-        return differences / (double)oneHotValuesA.Length;
+        for (int i = 0; i < oneHotValuesA.Length; ++i)
+        {
+            if (oneHotValuesA[i] == oneHotValuesB[i])
+                continue;
+
+            ++differences;
+        }
+
+        return (double)differences / oneHotValuesA.Length;
     }
 }

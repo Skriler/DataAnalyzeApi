@@ -10,9 +10,18 @@ public class JaccardDistanceMetric : BaseDistanceMetric<int>, ICategoricalDistan
     {
         Validate(oneHotValuesA, oneHotValuesB);
 
-        var intersection = oneHotValuesA.Intersect(oneHotValuesB).Count();
-        var union = oneHotValuesA.Union(oneHotValuesB).Count();
+        int intersection = 0;
+        int union = 0;
 
-        return 1.0 - (double)intersection / union;
+        for (int i = 0; i < oneHotValuesA.Length; ++i)
+        {
+            if (oneHotValuesA[i] == 1 && oneHotValuesB[i] == 1)
+                ++intersection;
+
+            if (oneHotValuesA[i] == 1 || oneHotValuesB[i] == 1)
+                ++union;
+        }
+
+        return union == 0 ? 0 : 1.0 - (double)intersection / union;
     }
 }
