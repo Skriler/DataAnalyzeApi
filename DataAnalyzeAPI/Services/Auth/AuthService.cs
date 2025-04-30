@@ -1,12 +1,12 @@
-﻿using DataAnalyzeAPI.Models.Config.Identity;
-using DataAnalyzeAPI.Models.DTOs.Auth;
-using DataAnalyzeAPI.Models.Entities;
+﻿using DataAnalyzeApi.Models.Config.Identity;
+using DataAnalyzeApi.Models.DTOs.Auth;
+using DataAnalyzeApi.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace DataAnalyzeAPI.Services.Auth;
+namespace DataAnalyzeApi.Services.Auth;
 
 public class AuthService
 {

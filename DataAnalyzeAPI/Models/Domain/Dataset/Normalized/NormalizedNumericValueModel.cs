@@ -1,11 +1,11 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeAPI.Models.Domain.Dataset.Normalized;
+namespace DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
 public record NormalizedNumericValueModel : ParameterValueModel
 {
     public double NormalizedValue { get; }
-    
+
     public NormalizedNumericValueModel(
         double normalizedValue,
         ParameterStateModel parameter,

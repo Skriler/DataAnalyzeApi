@@ -1,20 +1,19 @@
-﻿using DataAnalyzeAPI.Models.Domain.Clustering;
-using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Settings;
-using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
-namespace DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
+namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
-public abstract class BaseClusterer<TSettings> where TSettings : IClusterSettings
+public abstract class BaseClusterer<TSettings>(IDistanceCalculator distanceCalculator)
+    where TSettings : IClusterSettings
 {
+    protected readonly IDistanceCalculator distanceCalculator = distanceCalculator;
+
+    /// <summary>
+    /// Prefix for cluster names.
+    /// </summary>
     protected abstract string ClusterPrefix { get; }
-
-    protected readonly IDistanceCalculator distanceCalculator;
-
-    protected BaseClusterer(IDistanceCalculator distanceCalculator)
-    {
-        this.distanceCalculator = distanceCalculator;
-    }
 
     public abstract List<Cluster> Cluster(List<DataObjectModel> Objects, TSettings settings);
 }

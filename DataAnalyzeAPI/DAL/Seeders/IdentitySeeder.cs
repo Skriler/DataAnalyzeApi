@@ -1,9 +1,9 @@
-﻿using DataAnalyzeAPI.Models.Config.Identity;
-using DataAnalyzeAPI.Models.Entities;
+﻿using DataAnalyzeApi.Models.Config.Identity;
+using DataAnalyzeApi.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace DataAnalyzeAPI.DAL.Seeders;
+namespace DataAnalyzeApi.DAL.Seeders;
 
 public class IdentitySeeder
 {

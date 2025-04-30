@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace DataAnalyzeAPI.Models.DTOs.Dataset;
+namespace DataAnalyzeApi.Models.DTOs.Dataset;
 
 public record DataObjectDto(
     long Id,

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
+﻿namespace DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
 
 public record SimilarityResult
 {

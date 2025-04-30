@@ -1,8 +1,8 @@
-﻿using DataAnalyzeAPI.Models.Entities;
+﻿using DataAnalyzeApi.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAnalyzeAPI.DAL;
+namespace DataAnalyzeApi.DAL;
 
 public class DataAnalyzeDbContext : IdentityDbContext<ApplicationUser>
 {

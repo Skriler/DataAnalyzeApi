@@ -1,10 +1,10 @@
-﻿using DataAnalyzeAPI.Models.Config;
+﻿using DataAnalyzeApi.Models.Config;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text;
 
-namespace DataAnalyzeAPI.Services.Cache;
+namespace DataAnalyzeApi.Services.Cache;
 
 public class DistributedCacheService : ICacheService
 {

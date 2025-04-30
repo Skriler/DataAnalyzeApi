@@ -1,8 +1,8 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
-using DataAnalyzeAPI.Models.Enums;
+﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+using DataAnalyzeApi.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
+namespace DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
 
 public abstract record BaseClusteringRequest
 {

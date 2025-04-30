@@ -1,10 +1,10 @@
-﻿using DataAnalyzeAPI.Models.Domain.Clustering;
-using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Settings;
-using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
-using DataAnalyzeAPI.Services.Analyse.Helpers;
+﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
+using DataAnalyzeApi.Services.Analyse.Helpers;
 
-namespace DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
+namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
 public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 {

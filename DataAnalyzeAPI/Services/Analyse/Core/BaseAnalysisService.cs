@@ -1,20 +1,14 @@
-﻿using DataAnalyzeAPI.Mappers;
+﻿using DataAnalyzeApi.Mappers;
 
-namespace DataAnalyzeAPI.Services.Analyse.Core;
+namespace DataAnalyzeApi.Services.Analyse.Core;
 
 /// <summary>
 /// Base class for analysis services.
 /// </summary>
-public abstract class BaseAnalysisService
+public abstract class BaseAnalysisService(
+    DatasetService datasetService,
+    AnalysisMapper analysisMapper)
 {
-    protected readonly DatasetService datasetService;
-    protected readonly AnalysisMapper analysisMapper;
-
-    protected BaseAnalysisService(
-        DatasetService datasetService,
-        AnalysisMapper analysisMapper)
-    {
-        this.datasetService = datasetService;
-        this.analysisMapper = analysisMapper;
-    }
+    protected readonly DatasetService datasetService = datasetService;
+    protected readonly AnalysisMapper analysisMapper = analysisMapper;
 }

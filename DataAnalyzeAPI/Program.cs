@@ -1,5 +1,5 @@
-using DataAnalyzeAPI.Extensions;
-using DataAnalyzeAPI.Middlewares;
+using DataAnalyzeApi.Extensions;
+using DataAnalyzeApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 

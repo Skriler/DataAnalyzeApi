@@ -1,12 +1,12 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
+﻿namespace DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 
-public class HammingDistanceMetric : BaseDistanceMetric<int>, ICategoricalDistanceMetric
+public class HammingDistanceMetric : BaseDistanceMetric<int>
 {
     /// <summary>
     /// Calculates normalized Hamming distance between two categorical vectors.
     /// Distance is calculated as the proportion of differing elements between vectors.
     /// </summary>
-    public double Calculate(int[] oneHotValuesA, int[] oneHotValuesB)
+    protected override double CalculateDistance(int[] oneHotValuesA, int[] oneHotValuesB)
     {
         Validate(oneHotValuesA, oneHotValuesB);
 

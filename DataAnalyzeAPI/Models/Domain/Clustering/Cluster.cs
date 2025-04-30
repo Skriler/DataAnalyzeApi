@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeAPI.Models.Domain.Clustering;
+namespace DataAnalyzeApi.Models.Domain.Clustering;
 
 public class Cluster
 {

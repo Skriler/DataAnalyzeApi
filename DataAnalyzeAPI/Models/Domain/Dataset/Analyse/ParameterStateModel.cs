@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Enum;
+﻿using DataAnalyzeApi.Models.Enum;
 
-namespace DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+namespace DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
 public record ParameterStateModel(
     long Id,

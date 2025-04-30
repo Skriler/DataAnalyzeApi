@@ -1,8 +1,9 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Enum;
-using DataAnalyzeAPI.Services.Normalizers;
+﻿using DataAnalyzeApi.Exceptions;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Enum;
+using DataAnalyzeApi.Services.Normalizers;
 
-namespace DataAnalyzeAPI.Services.DataPreparation;
+namespace DataAnalyzeApi.Services.DataPreparation;
 
 public class DatasetNormalizer
 {
@@ -90,8 +91,7 @@ public class DatasetNormalizer
                 parameterValue.Parameter.Id,
                 parameterValue.Value
                 ),
-            _ => throw new ArgumentException(
-                $"Unsupported parameter type: {parameterValue.Parameter.Type}")
+            _ => throw new TypeNotFoundException(nameof(parameterValue.Parameter.Type))
         };
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
+﻿namespace DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
 
 public record ClusteringResult
 {

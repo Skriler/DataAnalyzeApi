@@ -1,10 +1,11 @@
-﻿using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
+﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Services.Analyse.Metrics;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Metrics.Categorical;
 
 public abstract class CategoricalDistanceMetricTests
 {
-    protected abstract ICategoricalDistanceMetric Metric { get; }
+    protected abstract IDistanceMetric<int> Metric { get; }
 
     [Theory]
     [InlineData(new int[] { 1, 0, 0 }, new int[] { 1, 0, 0 }, 0)] // Identical vectors
@@ -25,8 +26,8 @@ public abstract class CategoricalDistanceMetricTests
         var valuesA = new int[] { 1, 0, 0 };
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => Metric.Calculate(null!, valuesA));
-        Assert.Throws<ArgumentNullException>(() => Metric.Calculate(valuesA, null!));
+        Assert.Throws<VectorNullException>(() => Metric.Calculate(null!, valuesA));
+        Assert.Throws<VectorNullException>(() => Metric.Calculate(valuesA, null!));
     }
 
     [Fact]
@@ -37,7 +38,7 @@ public abstract class CategoricalDistanceMetricTests
         var valuesB = new int[] { 1, 0 };
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Metric.Calculate(valuesA, valuesB));
+        Assert.Throws<VectorLengthMismatchException>(() => Metric.Calculate(valuesA, valuesB));
     }
 
     [Fact]
@@ -48,6 +49,6 @@ public abstract class CategoricalDistanceMetricTests
         var valuesB = new int[0];
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Metric.Calculate(valuesA, valuesB));
+        Assert.Throws<EmptyVectorException>(() => Metric.Calculate(valuesA, valuesB));
     }
 }

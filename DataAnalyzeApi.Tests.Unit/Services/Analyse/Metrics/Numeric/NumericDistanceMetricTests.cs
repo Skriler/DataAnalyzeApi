@@ -1,10 +1,11 @@
-﻿using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Services.Analyse.Metrics;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Metrics.Numeric;
 
 public abstract class NumericDistanceMetricTests
 {
-    protected abstract INumericDistanceMetric Metric { get; }
+    protected abstract IDistanceMetric<double> Metric { get; }
 
     [Theory]
     [InlineData(new double[] { 0.2, 0.6 }, new double[] { 0.2, 0.6 }, 0)] // Identical vectors
@@ -26,8 +27,8 @@ public abstract class NumericDistanceMetricTests
         var valuesA = new double[] { 1, 2, 3 };
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => Metric.Calculate(null!, valuesA));
-        Assert.Throws<ArgumentNullException>(() => Metric.Calculate(valuesA, null!));
+        Assert.Throws<VectorNullException>(() => Metric.Calculate(null!, valuesA));
+        Assert.Throws<VectorNullException>(() => Metric.Calculate(valuesA, null!));
     }
 
     [Fact]
@@ -38,7 +39,7 @@ public abstract class NumericDistanceMetricTests
         var valuesB = new double[] { 1, 2 };
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Metric.Calculate(valuesA, valuesB));
+        Assert.Throws<VectorLengthMismatchException>(() => Metric.Calculate(valuesA, valuesB));
     }
 
     [Fact]
@@ -49,6 +50,6 @@ public abstract class NumericDistanceMetricTests
         var valuesB = new double[0];
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Metric.Calculate(valuesA, valuesB));
+        Assert.Throws<EmptyVectorException>(() => Metric.Calculate(valuesA, valuesB));
     }
 }

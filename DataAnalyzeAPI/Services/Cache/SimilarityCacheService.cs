@@ -1,8 +1,8 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
+﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
 using System.Text.Json;
 
-namespace DataAnalyzeAPI.Services.Cache;
+namespace DataAnalyzeApi.Services.Cache;
 
 public class SimilarityCacheService
 {

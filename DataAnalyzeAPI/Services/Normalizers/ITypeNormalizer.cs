@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeAPI.Services.Normalizers;
+namespace DataAnalyzeApi.Services.Normalizers;
 
 public interface ITypeNormalizer
 {

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Exceptions;
+﻿namespace DataAnalyzeApi.Exceptions;
 
 public abstract class DataAnalyzeException : Exception
 {
@@ -6,9 +6,7 @@ public abstract class DataAnalyzeException : Exception
 
     public virtual string ErrorTitle { get; } = "Data analyze exception";
 
-    protected DataAnalyzeException(string message, string errorTitle, Exception? innerException = null)
+    protected DataAnalyzeException(string message, Exception? innerException = null)
         : base(message, innerException)
-    {
-        ErrorTitle = errorTitle ?? "Data analyze exception";
-    }
+    { }
 }

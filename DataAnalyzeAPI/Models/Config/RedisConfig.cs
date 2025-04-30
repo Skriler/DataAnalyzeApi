@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.Config;
+﻿namespace DataAnalyzeApi.Models.Config;
 
 public class RedisConfig
 {

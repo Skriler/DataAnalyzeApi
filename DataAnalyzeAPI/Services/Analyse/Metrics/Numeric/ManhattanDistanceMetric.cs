@@ -1,13 +1,13 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+﻿namespace DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 
-public class ManhattanDistanceMetric : BaseDistanceMetric<double>, INumericDistanceMetric
+public class ManhattanDistanceMetric : BaseDistanceMetric<double>
 {
     /// <summary>
     /// Calculates normalized Manhattan distance between two numeric vectors.
     /// Distance is calculated as the sum of absolute differences
     /// normalized by the vector length.
     /// </summary>
-    public double Calculate(double[] valuesA, double[] valuesB)
+    protected override double CalculateDistance(double[] valuesA, double[] valuesB)
     {
         Validate(valuesA, valuesB);
 

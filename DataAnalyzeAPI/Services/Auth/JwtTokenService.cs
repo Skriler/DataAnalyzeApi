@@ -1,13 +1,12 @@
-﻿using DataAnalyzeAPI.Models.Config;
-using DataAnalyzeAPI.Models.Entities;
-using Microsoft.Extensions.Logging;
+﻿using DataAnalyzeApi.Models.Config;
+using DataAnalyzeApi.Models.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace DataAnalyzeAPI.Services.Auth;
+namespace DataAnalyzeApi.Services.Auth;
 
 public class JwtTokenService
 {

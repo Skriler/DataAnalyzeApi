@@ -1,13 +1,13 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+﻿namespace DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 
-public class EuclideanDistanceMetric : BaseDistanceMetric<double>, INumericDistanceMetric
+public class EuclideanDistanceMetric : BaseDistanceMetric<double>
 {
     /// <summary>
     /// Calculates normalized Euclidean distance between two numeric vectors.
     /// Distance is calculated as the square root of the sum of squared differences
     /// normalized by the maximum possible distance.
     /// </summary>
-    public double Calculate(double[] valuesA, double[] valuesB)
+    protected override double CalculateDistance(double[] valuesA, double[] valuesB)
     {
         Validate(valuesA, valuesB);
 

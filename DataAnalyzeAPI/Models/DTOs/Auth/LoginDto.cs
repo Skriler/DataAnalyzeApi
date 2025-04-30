@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DataAnalyzeAPI.Models.DTOs.Auth;
+namespace DataAnalyzeApi.Models.DTOs.Auth;
 
 public record LoginDto
 {

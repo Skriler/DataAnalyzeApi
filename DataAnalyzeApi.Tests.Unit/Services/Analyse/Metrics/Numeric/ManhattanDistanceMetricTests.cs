@@ -1,10 +1,11 @@
-﻿using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+﻿using DataAnalyzeApi.Services.Analyse.Metrics;
+using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Metrics.Numeric;
 
 public class ManhattanDistanceMetricTests : NumericDistanceMetricTests
 {
-    protected override INumericDistanceMetric Metric => new ManhattanDistanceMetric();
+    protected override IDistanceMetric<double> Metric => new ManhattanDistanceMetric();
 
     [Theory]
     [InlineData(new double[] { 1, 0 }, new double[] { 1, 1 }, 0.5)]

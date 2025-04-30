@@ -1,7 +1,7 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Enums;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Enums;
 
-namespace DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+namespace DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
 public interface IDistanceCalculator
 {

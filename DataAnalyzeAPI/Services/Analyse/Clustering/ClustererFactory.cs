@@ -1,17 +1,13 @@
-﻿using DataAnalyzeAPI.Models.Domain.Settings;
-using DataAnalyzeAPI.Models.Enums;
-using DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
+﻿using DataAnalyzeApi.Exceptions;
+using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
-namespace DataAnalyzeAPI.Services.Analyse.Clusterers;
+namespace DataAnalyzeApi.Services.Analyse.Clusterers;
 
-public class ClustererFactory
+public class ClustererFactory(IServiceProvider serviceProvider)
 {
-    private readonly IServiceProvider serviceProvider;
-
-    public ClustererFactory(IServiceProvider serviceProvider)
-    {
-        this.serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider serviceProvider = serviceProvider;
 
     public BaseClusterer<TSettings> Get<TSettings>(ClusterAlgorithm algorithm) where TSettings : IClusterSettings
     {
@@ -20,7 +16,7 @@ public class ClustererFactory
             ClusterAlgorithm.KMeans => serviceProvider.GetRequiredService<KMeansClusterer>() as BaseClusterer<TSettings>,
             ClusterAlgorithm.DBSCAN => serviceProvider.GetRequiredService<DBSCANClusterer>() as BaseClusterer<TSettings>,
             ClusterAlgorithm.HierarchicalAgglomerative => serviceProvider.GetRequiredService<AgglomerativeClusterer>() as BaseClusterer<TSettings>,
-            _ => throw new ArgumentOutOfRangeException(nameof(algorithm))
+            _ => throw new TypeNotFoundException(nameof(algorithm))
         };
     }
 }

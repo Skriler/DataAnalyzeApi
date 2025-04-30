@@ -1,7 +1,7 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Dataset.Normalized;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
-namespace DataAnalyzeAPI.Services.Normalizers;
+namespace DataAnalyzeApi.Services.Normalizers;
 
 public class CategoricalParameterNormalizer : ITypeNormalizer
 {

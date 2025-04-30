@@ -1,7 +1,20 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Metrics;
+﻿using DataAnalyzeApi.Exceptions.Vector;
 
-public abstract class BaseDistanceMetric<T>
+namespace DataAnalyzeApi.Services.Analyse.Metrics;
+
+public abstract class BaseDistanceMetric<T> : IDistanceMetric<T>
 {
+    /// <summary>
+    /// Returns a value between 0 and 1.
+    /// 0 indicates identical, 1 indicates completely different vectors.
+    /// </summary>
+    public double Calculate(T[] a, T[] b)
+    {
+        Validate(a, b);
+
+        return CalculateDistance(a, b);
+    }
+
     /// <summary>
     /// Validates input arrays.
     /// Throws exceptions if arrays are null, have different lengths, or are empty.
@@ -9,12 +22,17 @@ public abstract class BaseDistanceMetric<T>
     protected void Validate(T[] valuesA, T[] valuesB)
     {
         if (valuesA == null || valuesB == null)
-            throw new ArgumentNullException(valuesA == null ? nameof(valuesA) : nameof(valuesB));
+            throw new VectorNullException();
 
         if (valuesA.Length != valuesB.Length)
-            throw new ArgumentException("Values must be the same length.");
+            throw new VectorLengthMismatchException();
 
         if (valuesA.Length == 0)
-            throw new ArgumentException("Values cannot be empty.");
+            throw new EmptyVectorException();
     }
+
+    /// <summary>
+    /// Performs the actual distance calculations.
+    /// </summary>
+    protected abstract double CalculateDistance(T[] a, T[] b);
 }

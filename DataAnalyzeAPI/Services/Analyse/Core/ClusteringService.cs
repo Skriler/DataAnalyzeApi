@@ -1,12 +1,12 @@
-﻿using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Settings;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
-using DataAnalyzeAPI.Models.Enums;
-using DataAnalyzeAPI.Services.Analyse.Clusterers;
+﻿using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
+using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
+using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Services.Analyse.Clusterers;
 
-namespace DataAnalyzeAPI.Services.Analyse.Core;
+namespace DataAnalyzeApi.Services.Analyse.Core;
 
 public class ClusteringService : BaseAnalysisService
 {

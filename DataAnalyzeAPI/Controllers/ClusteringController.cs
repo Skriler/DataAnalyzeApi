@@ -1,10 +1,10 @@
-﻿using DataAnalyzeAPI.Models.Domain.Settings;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeAPI.Services.Analyse.Core;
+﻿using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
+using DataAnalyzeApi.Services.Analyse.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeAPI.Controllers;
+namespace DataAnalyzeApi.Controllers;
 
 [ApiController]
 [Route("api/analyse/clustering")]

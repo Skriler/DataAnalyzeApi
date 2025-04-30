@@ -1,10 +1,11 @@
-﻿using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
+﻿using DataAnalyzeApi.Services.Analyse.Metrics;
+using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Metrics.Categorical;
 
 public class JaccardDistanceMetricTests : CategoricalDistanceMetricTests
 {
-    protected override ICategoricalDistanceMetric Metric => new JaccardDistanceMetric();
+    protected override IDistanceMetric<int> Metric => new JaccardDistanceMetric();
 
     [Theory]
     [InlineData(new int[] { 1, 0, 0 }, new int[] { 0, 1, 0 }, 1.0)]

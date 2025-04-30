@@ -1,11 +1,11 @@
-﻿using DataAnalyzeAPI.DAL.Repositories;
-using DataAnalyzeAPI.Exceptions;
-using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
-using DataAnalyzeAPI.Services.DataPreparation;
+﻿using DataAnalyzeApi.DAL.Repositories;
+using DataAnalyzeApi.Exceptions;
+using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+using DataAnalyzeApi.Services.DataPreparation;
 
-namespace DataAnalyzeAPI.Services.Analyse.Core;
+namespace DataAnalyzeApi.Services.Analyse.Core;
 
 public class DatasetService
 {

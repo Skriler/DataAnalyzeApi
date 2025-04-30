@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeAPI.Models.Domain.Clustering.KMeans;
+namespace DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 
 public class KMeansCluster : Cluster
 {

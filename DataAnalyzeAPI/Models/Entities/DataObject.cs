@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace DataAnalyzeAPI.Models.Entities;
+namespace DataAnalyzeApi.Models.Entities;
 
 public class DataObject
 {

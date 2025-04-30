@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeAPI.Models.Domain.Similarity;
+namespace DataAnalyzeApi.Models.Domain.Similarity;
 
 public record SimilarityPair(
     DataObjectModel ObjectA,

@@ -1,23 +1,14 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Dataset.Normalized;
-using DataAnalyzeAPI.Models.Enums;
-using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
-using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+﻿using DataAnalyzeApi.Extensions;
+using DataAnalyzeApi.Services.Analyse.Metrics;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
+using DataAnalyzeApi.Models.Enums;
 
-namespace DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
+namespace DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
-public class DistanceCalculator : IDistanceCalculator
+public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculator
 {
-    private readonly Dictionary<NumericDistanceMetricType, INumericDistanceMetric> numericMetrics;
-    private readonly Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric> categoricalMetrics;
-
-    public DistanceCalculator(
-        Dictionary<NumericDistanceMetricType, INumericDistanceMetric> numericMetrics,
-        Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric> categoricalMetrics)
-    {
-        this.numericMetrics = numericMetrics;
-        this.categoricalMetrics = categoricalMetrics;
-    }
+    private readonly MetricFactory metricFactory = metricFactory;
 
     /// <summary>
     /// Calculates the distance between two value vectors.
@@ -32,10 +23,10 @@ public class DistanceCalculator : IDistanceCalculator
     {
         ValidateVectors(valuesA, valuesB);
 
-        var numericParamsA = GetNumericParameters(valuesA);
-        var numericParamsB = GetNumericParameters(valuesB);
-        var categoricalParamsA = GetCategoricalParameters(valuesA);
-        var categoricalParamsB = GetCategoricalParameters(valuesB);
+        var numericParamsA = valuesA.OfParameterType<NormalizedNumericValueModel>();
+        var numericParamsB = valuesB.OfParameterType<NormalizedNumericValueModel>();
+        var categoricalParamsA = valuesA.OfParameterType<NormalizedCategoricalValueModel>();
+        var categoricalParamsB = valuesB.OfParameterType<NormalizedCategoricalValueModel>();
 
         var numericDistance = CalculateNumericDistance(numericParamsA, numericParamsB, numericMetricType);
         var categoricalDistance = CalculateCategoricalDistance(categoricalParamsA, categoricalParamsB, categoricalMetricType);
@@ -72,10 +63,11 @@ public class DistanceCalculator : IDistanceCalculator
         if (parametersA.Count == 0 || parametersB.Count == 0)
             return 0;
 
+        var metric = metricFactory.CreateNumericMetric(metricType);
         var valuesA = parametersA.Select(v => v.NormalizedValue).ToArray();
         var valuesB = parametersB.Select(v => v.NormalizedValue).ToArray();
 
-        return numericMetrics[metricType].Calculate(valuesA, valuesB);
+        return metric.Calculate(valuesA, valuesB);
     }
 
     /// <summary>
@@ -89,11 +81,12 @@ public class DistanceCalculator : IDistanceCalculator
         if (parametersA.Count == 0 || parametersB.Count == 0)
             return 0;
 
+        var metric = metricFactory.CreateCategoricalMetric(metricType);
         var totalDistance = 0d;
 
         for (int i = 0; i < parametersA.Count; i++)
         {
-            totalDistance += categoricalMetrics[metricType].Calculate(
+            totalDistance += metric.Calculate(
                 parametersA[i].OneHotValues,
                 parametersB[i].OneHotValues);
         }
@@ -122,9 +115,7 @@ public class DistanceCalculator : IDistanceCalculator
         return (weightedNumericDistance + weightedCategoricalDistance) / totalCount;
     }
 
-    private static List<NormalizedNumericValueModel> GetNumericParameters(List<ParameterValueModel> values)
-        => values.OfType<NormalizedNumericValueModel>().ToList();
-
-    private static List<NormalizedCategoricalValueModel> GetCategoricalParameters(List<ParameterValueModel> values)
-        => values.OfType<NormalizedCategoricalValueModel>().ToList();
+    private static bool AreVectorsEmpty<T>(List<T> a, List<T> b) => a.Count == 0 || b.Count == 0;
+    //private static List<T> GetParametersOfType<T>(List<ParameterValueModel> values) where T : ParameterValueModel
+    //    => values.OfType<T>().ToList();
 }

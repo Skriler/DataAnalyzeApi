@@ -1,7 +1,7 @@
-﻿using DataAnalyzeAPI.Models.Config.Clustering;
+﻿using DataAnalyzeApi.Models.Config.Clustering;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
+namespace DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
 
 public record KMeansClusteringRequest : BaseClusteringRequest
 {

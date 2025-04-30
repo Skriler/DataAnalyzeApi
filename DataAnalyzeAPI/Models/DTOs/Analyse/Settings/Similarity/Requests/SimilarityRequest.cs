@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
+﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
 
-namespace DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
+namespace DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
 
 public record SimilarityRequest
 {

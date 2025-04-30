@@ -1,9 +1,9 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
-using DataAnalyzeAPI.Models.Entities;
-using ParamConfig = DataAnalyzeAPI.Models.Config.ParameterSettingsConfig;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+using DataAnalyzeApi.Models.Entities;
+using ParamConfig = DataAnalyzeApi.Models.Config.ParameterSettingsConfig;
 
-namespace DataAnalyzeAPI.Mappers;
+namespace DataAnalyzeApi.Mappers;
 
 public class DatasetSettingsMapper
 {

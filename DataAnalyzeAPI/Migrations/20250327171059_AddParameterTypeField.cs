@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DataAnalyzeAPI.Migrations
+namespace DataAnalyzeApi.Migrations
 {
     /// <inheritdoc />
     public partial class AddParameterTypeField : Migration

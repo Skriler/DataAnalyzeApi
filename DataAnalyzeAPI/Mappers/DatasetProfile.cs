@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Create;
-using DataAnalyzeAPI.Models.Entities;
-using DataAnalyzeAPI.Models.Enum;
+﻿using DataAnalyzeApi.Models.DTOs.Dataset.Create;
+using DataAnalyzeApi.Models.Entities;
+using DataAnalyzeApi.Models.Enum;
+using AutoMapper;
 
-namespace DataAnalyzeAPI.Mappers;
+namespace DataAnalyzeApi.Mappers;
 
 public class DatasetProfile : Profile
 {

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Comparers;
+﻿namespace DataAnalyzeApi.Services.Analyse.Comparers;
 
 public class NormalizedValueComparer : ICompare
 {

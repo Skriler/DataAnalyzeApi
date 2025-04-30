@@ -1,10 +1,11 @@
-﻿using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
+﻿using DataAnalyzeApi.Services.Analyse.Metrics;
+using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Metrics.Categorical;
 
 public class HammingDistanceMetricTests : CategoricalDistanceMetricTests
 {
-    protected override ICategoricalDistanceMetric Metric => new HammingDistanceMetric();
+    protected override IDistanceMetric<int> Metric => new HammingDistanceMetric();
 
     [Theory]
     [InlineData(new int[] { 1, 0, 0 }, new int[] { 0, 1, 0 }, 0.6667)]

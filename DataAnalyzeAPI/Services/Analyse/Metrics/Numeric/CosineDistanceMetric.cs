@@ -1,15 +1,13 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
+﻿namespace DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 
-public class CosineDistanceMetric : BaseDistanceMetric<double>, INumericDistanceMetric
+public class CosineDistanceMetric : BaseDistanceMetric<double>
 {
     /// <summary>
     /// Calculates cosine distance between two numeric vectors.
     /// Distance is calculated as: 1 - (dot product / (|A| * |B|)).
     /// </summary>
-    public double Calculate(double[] valuesA, double[] valuesB)
+    protected override double CalculateDistance(double[] valuesA, double[] valuesB)
     {
-        Validate(valuesA, valuesB);
-
         var dotProduct = 0d;
         var magnitudeA = 0d;
         var magnitudeB = 0d;

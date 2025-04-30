@@ -1,11 +1,11 @@
-﻿using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
-using DataAnalyzeAPI.Services.Analyse.Comparers;
-using DataAnalyzeAPI.Services.Cache;
+﻿using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
+using DataAnalyzeApi.Services.Analyse.Comparers;
+using DataAnalyzeApi.Services.Cache;
 
-namespace DataAnalyzeAPI.Services.Analyse.Core;
+namespace DataAnalyzeApi.Services.Analyse.Core;
 
 public class SimilarityService : BaseAnalysisService
 {

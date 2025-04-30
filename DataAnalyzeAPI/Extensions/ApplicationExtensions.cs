@@ -1,7 +1,7 @@
-﻿using DataAnalyzeAPI.DAL.Seeders;
-using DataAnalyzeAPI.Middlewares;
+﻿using DataAnalyzeApi.DAL.Seeders;
+using DataAnalyzeApi.Middlewares;
 
-namespace DataAnalyzeAPI.Extensions;
+namespace DataAnalyzeApi.Extensions;
 
 /// <summary>
 /// Contains extension methods for application setup and middleware configuration.

@@ -1,30 +1,30 @@
-﻿using DataAnalyzeAPI.DAL;
-using DataAnalyzeAPI.DAL.Repositories;
-using DataAnalyzeAPI.DAL.Seeders;
-using DataAnalyzeAPI.Mappers;
-using DataAnalyzeAPI.Middlewares;
-using DataAnalyzeAPI.Models.Config;
-using DataAnalyzeAPI.Models.Config.Identity;
-using DataAnalyzeAPI.Models.Entities;
-using DataAnalyzeAPI.Models.Enums;
-using DataAnalyzeAPI.Services.Analyse.Clusterers;
-using DataAnalyzeAPI.Services.Analyse.Clustering.Clusterers;
-using DataAnalyzeAPI.Services.Analyse.Comparers;
-using DataAnalyzeAPI.Services.Analyse.Core;
-using DataAnalyzeAPI.Services.Analyse.DistanceCalculators;
-using DataAnalyzeAPI.Services.Analyse.Helpers;
-using DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
-using DataAnalyzeAPI.Services.Analyse.Metrics.Numeric;
-using DataAnalyzeAPI.Services.Auth;
-using DataAnalyzeAPI.Services.Cache;
-using DataAnalyzeAPI.Services.DataPreparation;
+﻿using DataAnalyzeApi.Services.Analyse.Metrics;
+using DataAnalyzeApi.DAL;
+using DataAnalyzeApi.DAL.Repositories;
+using DataAnalyzeApi.DAL.Seeders;
+using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Middlewares;
+using DataAnalyzeApi.Models.Config;
+using DataAnalyzeApi.Models.Config.Identity;
+using DataAnalyzeApi.Models.Entities;
+using DataAnalyzeApi.Services.Analyse.Clusterers;
+using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
+using DataAnalyzeApi.Services.Analyse.Comparers;
+using DataAnalyzeApi.Services.Analyse.Core;
+using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
+using DataAnalyzeApi.Services.Analyse.Helpers;
+using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
+using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
+using DataAnalyzeApi.Services.Auth;
+using DataAnalyzeApi.Services.Cache;
+using DataAnalyzeApi.Services.DataPreparation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace DataAnalyzeAPI.Extensions;
+namespace DataAnalyzeApi.Extensions;
 
 /// <summary>
 /// Contains extension methods for registering application services.
@@ -179,59 +179,50 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddDataProcessingServices(this IServiceCollection services)
     {
+        // Data preprocessing services
         services.AddScoped<DatasetNormalizer>();
+        services.AddScoped<DatasetService>();
+
+        // Similarity comparison services
         services.AddScoped<SimilarityComparer>();
         services.AddTransient<ICompare, NormalizedValueComparer>();
-        services.AddScoped<DatasetService>();
+
+        // Core services
         services.AddScoped<SimilarityService>();
-        services.AddScoped<ClusteringService>();
 
         return services;
     }
 
     private static IServiceCollection AddDistanceServices(this IServiceCollection services)
     {
-        // Register metrics
+        // Metrics
         services.AddTransient<EuclideanDistanceMetric>();
         services.AddTransient<ManhattanDistanceMetric>();
         services.AddTransient<CosineDistanceMetric>();
         services.AddTransient<HammingDistanceMetric>();
         services.AddTransient<JaccardDistanceMetric>();
 
-        // Register metric dictionaries
-        services.AddTransient(CreateNumericDistanceMetricDictionary);
-        services.AddTransient(CreateCategoricalDistanceMetricDictionary);
+        // Factories
+        services.AddScoped<MetricFactory>();
 
+        // Core services
         services.AddScoped<IDistanceCalculator, DistanceCalculator>();
 
         return services;
     }
 
-    private static Dictionary<NumericDistanceMetricType, INumericDistanceMetric> CreateNumericDistanceMetricDictionary(IServiceProvider provider)
-    {
-        return new Dictionary<NumericDistanceMetricType, INumericDistanceMetric>
-        {
-            { NumericDistanceMetricType.Euclidean, provider.GetRequiredService<EuclideanDistanceMetric>() },
-            { NumericDistanceMetricType.Manhattan, provider.GetRequiredService<ManhattanDistanceMetric>() },
-            { NumericDistanceMetricType.Cosine, provider.GetRequiredService<CosineDistanceMetric>() }
-        };
-    }
-
-    private static Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric> CreateCategoricalDistanceMetricDictionary(IServiceProvider provider)
-    {
-        return new Dictionary<CategoricalDistanceMetricType, ICategoricalDistanceMetric>
-        {
-            { CategoricalDistanceMetricType.Hamming, provider.GetRequiredService<HammingDistanceMetric>() },
-            { CategoricalDistanceMetricType.Jaccard, provider.GetRequiredService<JaccardDistanceMetric>() }
-        };
-    }
-
     private static IServiceCollection AddClusteringServices(this IServiceCollection services)
     {
-        services.AddScoped<ClustererFactory>();
+        // Clusterers
         services.AddScoped<KMeansClusterer>();
         services.AddScoped<DBSCANClusterer>();
         services.AddScoped<AgglomerativeClusterer>();
+
+        // Factories
+        services.AddScoped<ClustererFactory>();
+
+        // Core services
+        services.AddScoped<ClusteringService>();
 
         return services;
     }

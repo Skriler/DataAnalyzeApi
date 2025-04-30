@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace DataAnalyzeAPI.Middlewares;
+namespace DataAnalyzeApi.Middlewares;
 
 /// <summary>
 /// Middleware for global error handling in the application.

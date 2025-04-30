@@ -1,8 +1,8 @@
-﻿using DataAnalyzeAPI.Exceptions;
+﻿using DataAnalyzeApi.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace DataAnalyzeAPI.Middlewares;
+namespace DataAnalyzeApi.Middlewares;
 
 /// <summary>
 /// Exception filter for handling business logic errors.

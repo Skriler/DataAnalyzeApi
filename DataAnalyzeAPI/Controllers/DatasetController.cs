@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using DataAnalyzeAPI.DAL.Repositories;
-using DataAnalyzeAPI.Models.DTOs.Dataset.Create;
-using DataAnalyzeAPI.Models.Entities;
+﻿using DataAnalyzeApi.DAL.Repositories;
+using DataAnalyzeApi.Models.DTOs.Dataset.Create;
+using DataAnalyzeApi.Models.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeAPI.Controllers;
+namespace DataAnalyzeApi.Controllers;
 
 [Route("api/datasets")]
 [ApiController]

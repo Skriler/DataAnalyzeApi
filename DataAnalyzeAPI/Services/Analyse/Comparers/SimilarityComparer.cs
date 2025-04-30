@@ -1,19 +1,14 @@
-﻿using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Similarity;
-using DataAnalyzeAPI.Models.Enum;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Similarity;
+using DataAnalyzeApi.Models.Enum;
 
-namespace DataAnalyzeAPI.Services.Analyse.Comparers;
+namespace DataAnalyzeApi.Services.Analyse.Comparers;
 
-public class SimilarityComparer
+public class SimilarityComparer(ICompare comparer)
 {
-    private readonly ICompare comparer;
+    private readonly ICompare comparer = comparer;
 
     private readonly Dictionary<long, double> maxRanges = new();
-
-    public SimilarityComparer(ICompare comparer)
-    {
-        this.comparer = comparer;
-    }
 
     public List<SimilarityPair> CalculateSimilarity(DatasetModel dataset)
     {

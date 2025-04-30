@@ -1,9 +1,9 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Auth;
-using DataAnalyzeAPI.Services.Auth;
+﻿using DataAnalyzeApi.Models.DTOs.Auth;
+using DataAnalyzeApi.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeAPI.Controllers;
+namespace DataAnalyzeApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]

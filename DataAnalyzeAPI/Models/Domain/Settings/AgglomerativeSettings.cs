@@ -1,6 +1,6 @@
-﻿using DataAnalyzeAPI.Models.Enums;
+﻿using DataAnalyzeApi.Models.Enums;
 
-namespace DataAnalyzeAPI.Models.Domain.Settings;
+namespace DataAnalyzeApi.Models.Domain.Settings;
 
 public class AgglomerativeSettings : IClusterSettings
 {

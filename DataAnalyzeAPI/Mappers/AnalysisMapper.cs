@@ -1,11 +1,11 @@
-﻿using DataAnalyzeAPI.Models.Domain.Clustering;
-using DataAnalyzeAPI.Models.Domain.Dataset.Analyse;
-using DataAnalyzeAPI.Models.Domain.Similarity;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Results;
-using DataAnalyzeAPI.Models.DTOs.Dataset;
+﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Similarity;
+using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
+using DataAnalyzeApi.Models.DTOs.Dataset;
 
-namespace DataAnalyzeAPI.Mappers;
+namespace DataAnalyzeApi.Mappers;
 
 public class AnalysisMapper
 {

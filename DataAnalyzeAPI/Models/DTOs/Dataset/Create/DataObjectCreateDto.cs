@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeAPI.Models.DTOs.Dataset.Create;
+﻿namespace DataAnalyzeApi.Models.DTOs.Dataset.Create;
 
 public record DataObjectCreateDto(
     string Name,

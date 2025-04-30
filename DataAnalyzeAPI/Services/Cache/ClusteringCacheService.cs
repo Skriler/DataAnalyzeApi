@@ -1,7 +1,7 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeAPI.Models.DTOs.Analyse.Clustering.Results;
-using DataAnalyzeAPI.Models.Enums;
-using DataAnalyzeAPI.Services.Cache;
+﻿using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
+using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
+using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Services.Cache;
 using System.Text.Json;
 
 public class ClusteringCacheService

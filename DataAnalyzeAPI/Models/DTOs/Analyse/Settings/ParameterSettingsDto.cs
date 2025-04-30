@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ParamConfig = DataAnalyzeAPI.Models.Config.ParameterSettingsConfig;
+using ParamConfig = DataAnalyzeApi.Models.Config.ParameterSettingsConfig;
 
-namespace DataAnalyzeAPI.Models.DTOs.Analyse.Settings;
+namespace DataAnalyzeApi.Models.DTOs.Analyse.Settings;
 
 public record ParameterSettingsDto
 {

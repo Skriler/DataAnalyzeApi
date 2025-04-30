@@ -1,12 +1,12 @@
-﻿namespace DataAnalyzeAPI.Services.Analyse.Metrics.Categorical;
+﻿namespace DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 
-public class JaccardDistanceMetric : BaseDistanceMetric<int>, ICategoricalDistanceMetric
+public class JaccardDistanceMetric : BaseDistanceMetric<int>
 {
     /// <summary>
     /// Calculates Jaccard distance between two categorical vectors in one-hot encoding.
     /// Distance is calculated as: 1 - (size of intersection / size of union).
     /// </summary>
-    public double Calculate(int[] oneHotValuesA, int[] oneHotValuesB)
+    protected override double CalculateDistance(int[] oneHotValuesA, int[] oneHotValuesB)
     {
         Validate(oneHotValuesA, oneHotValuesB);
 

@@ -1,9 +1,9 @@
-﻿using DataAnalyzeAPI.Models.DTOs.Analyse.Similarity.Requests;
+﻿using DataAnalyzeApi.Services.Analyse.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using DataAnalyzeAPI.Services.Analyse.Core;
+using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
 
-namespace DataAnalyzeAPI.Controllers;
+namespace DataAnalyzeApi.Controllers;
 
 [ApiController]
 [Route("api/analyse/similarity")]
