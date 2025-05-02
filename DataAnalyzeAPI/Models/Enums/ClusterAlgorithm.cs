@@ -4,5 +4,5 @@ public enum ClusterAlgorithm
 {
     KMeans,
     DBSCAN,
-    HierarchicalAgglomerative,
+    Agglomerative,
 }

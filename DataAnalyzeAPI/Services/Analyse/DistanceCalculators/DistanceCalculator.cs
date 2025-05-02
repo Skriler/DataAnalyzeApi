@@ -3,6 +3,7 @@ using DataAnalyzeApi.Services.Analyse.Metrics;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Exceptions.Vector;
 
 namespace DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
@@ -23,10 +24,10 @@ public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculat
     {
         ValidateVectors(valuesA, valuesB);
 
-        var numericParamsA = valuesA.OfParameterType<NormalizedNumericValueModel>();
-        var numericParamsB = valuesB.OfParameterType<NormalizedNumericValueModel>();
-        var categoricalParamsA = valuesA.OfParameterType<NormalizedCategoricalValueModel>();
-        var categoricalParamsB = valuesB.OfParameterType<NormalizedCategoricalValueModel>();
+        var numericParamsA = valuesA.OfParameterTypeOrdered<NormalizedNumericValueModel>();
+        var numericParamsB = valuesB.OfParameterTypeOrdered<NormalizedNumericValueModel>();
+        var categoricalParamsA = valuesA.OfParameterTypeOrdered<NormalizedCategoricalValueModel>();
+        var categoricalParamsB = valuesB.OfParameterTypeOrdered<NormalizedCategoricalValueModel>();
 
         var numericDistance = CalculateNumericDistance(numericParamsA, numericParamsB, numericMetricType);
         var categoricalDistance = CalculateCategoricalDistance(categoricalParamsA, categoricalParamsB, categoricalMetricType);
@@ -46,10 +47,10 @@ public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculat
     private void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
     {
         if (valuesA.Count != valuesB.Count)
-            throw new ArgumentException("The vectors must have the same number of parameters.");
+            throw new VectorLengthMismatchException();
 
         if (valuesA.Count == 0)
-            throw new ArgumentException("The vectors cannot be empty.");
+            throw new EmptyVectorException();
     }
 
     /// <summary>
@@ -114,8 +115,4 @@ public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculat
 
         return (weightedNumericDistance + weightedCategoricalDistance) / totalCount;
     }
-
-    private static bool AreVectorsEmpty<T>(List<T> a, List<T> b) => a.Count == 0 || b.Count == 0;
-    //private static List<T> GetParametersOfType<T>(List<ParameterValueModel> values) where T : ParameterValueModel
-    //    => values.OfType<T>().ToList();
 }

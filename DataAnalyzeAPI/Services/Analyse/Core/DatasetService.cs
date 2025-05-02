@@ -3,6 +3,7 @@ using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Services.DataPreparation;
 
 namespace DataAnalyzeApi.Services.Analyse.Core;
@@ -33,9 +34,7 @@ public class DatasetService
         var dataset = await repository.GetByIdAsync(datasetId);
 
         if (dataset == null)
-        {
-            throw new ResourceNotFoundException("Dataset", datasetId);
-        }
+            throw new ResourceNotFoundException(nameof(Dataset), datasetId);
 
         return settingsMapper.Map(dataset, parameterSettings);
     }

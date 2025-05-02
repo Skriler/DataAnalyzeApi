@@ -1,6 +1,7 @@
 ﻿using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Services.Analyse.Helpers;
 
@@ -8,7 +9,7 @@ namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
 public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 {
-    protected override string ClusterPrefix => "DBSCAN";
+    protected override string ClusterPrefix => nameof(ClusterAlgorithm.DBSCAN);
     protected string NoiseClusterPrefix => "Noise";
 
     private readonly ClusterNameGenerator nameGenerator;
@@ -140,7 +141,6 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
             }
         }
     }
-
 
     /// <summary>
     /// Adds a noise cluster to the list of clusters

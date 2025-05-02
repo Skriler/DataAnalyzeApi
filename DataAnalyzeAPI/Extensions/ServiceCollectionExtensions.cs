@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
 
 namespace DataAnalyzeApi.Extensions;
 
@@ -213,6 +214,9 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddClusteringServices(this IServiceCollection services)
     {
+        // Helpers
+        services.AddTransient<CentroidCalculator>();
+
         // Clusterers
         services.AddScoped<KMeansClusterer>();
         services.AddScoped<DBSCANClusterer>();

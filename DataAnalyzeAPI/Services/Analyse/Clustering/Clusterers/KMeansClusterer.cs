@@ -2,6 +2,8 @@
 using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Services.Analyse.Helpers;
 
@@ -9,12 +11,13 @@ namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
 public class KMeansClusterer : BaseClusterer<KMeansSettings>
 {
-    protected override string ClusterPrefix => "KMeans";
+    protected override string ClusterPrefix => nameof(ClusterAlgorithm.KMeans);
 
     private readonly ClusterNameGenerator nameGenerator;
-    private readonly Random random = new();
+    private readonly CentroidCalculator centroidCalculator;
+    private readonly Random random;
 
-    private List<KMeansCluster> clusters = new();
+    private List<KMeansCluster> clusters = default!;
     private KMeansSettings settings = default!;
 
     /// <summary>
@@ -26,10 +29,13 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
 
     public KMeansClusterer(
         IDistanceCalculator distanceCalculator,
-        ClusterNameGenerator nameGenerator
+        ClusterNameGenerator nameGenerator,
+        CentroidCalculator centroidCalculator
         ) : base(distanceCalculator)
     {
         this.nameGenerator = nameGenerator;
+        this.centroidCalculator = centroidCalculator;
+        random = new();
     }
 
     public override List<Cluster> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
@@ -41,7 +47,12 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
         objectClusterMap = new Dictionary<DataObjectModel, int>(objects.Count);
 
         InitializeClusters(objects);
-        return PerformClustering(objects);
+        PerformClustering(objects);
+
+        return clusters
+            .Cast<Cluster>()
+            .OrderByDescending(c => c.Objects.Count)
+            .ToList();
     }
 
     /// <summary>
@@ -68,7 +79,7 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
     /// and recalculating centroids until convergence
     /// or the maximum number of iterations is reached.
     /// </summary>
-    private List<Cluster> PerformClustering(List<DataObjectModel> objects)
+    private void PerformClustering(List<DataObjectModel> objects)
     {
         for (int iteration = 0; iteration < settings.MaxIterations; ++iteration)
         {
@@ -77,13 +88,8 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
             if (!TryAssignObjectsToClusters(objects))
                 break;
 
-            clusters.ForEach(c => c.RecalculateCentroid());
+            RecalculateCentroids();
         }
-
-        return clusters
-            .Cast<Cluster>()
-            .OrderByDescending(c => c.Objects.Count)
-            .ToList();
     }
 
     /// <summary>
@@ -137,6 +143,17 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
         }
 
         return clusterIndex;
+    }
+
+    /// <summary>
+    /// Recalculates the centroid of each cluster based on the current set of assigned objects.
+    /// </summary>
+    public void RecalculateCentroids()
+    {
+        foreach (var cluster in clusters)
+        {
+            cluster.Centroid = centroidCalculator.Recalculate(cluster.Centroid, cluster.Objects);
+        }
     }
 
     /// <summary>

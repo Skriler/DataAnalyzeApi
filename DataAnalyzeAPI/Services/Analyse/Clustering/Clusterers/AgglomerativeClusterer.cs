@@ -2,6 +2,7 @@
 using DataAnalyzeApi.Models.Domain.Clustering.Agglomerative;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Services.Analyse.Helpers;
 
@@ -9,11 +10,11 @@ namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
 public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
 {
-    protected override string ClusterPrefix => "Agglomerative";
+    protected override string ClusterPrefix => nameof(ClusterAlgorithm.Agglomerative);
 
     private readonly ClusterNameGenerator nameGenerator;
 
-    private List<AgglomerativeCluster> clusters = new();
+    private List<AgglomerativeCluster> clusters = default!;
     private AgglomerativeSettings settings = default!;
 
     public AgglomerativeClusterer(
@@ -28,16 +29,23 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
     {
         this.settings = settings;
         clusters = objects.ConvertAll(
-            obj => new AgglomerativeCluster(obj, nameGenerator.GenerateName(ClusterPrefix)));
+            obj => new AgglomerativeCluster(obj, nameGenerator.GenerateName(ClusterPrefix))
+            );
 
-        return PerformClustering();
+        PerformClustering();
+
+        return clusters
+            .Where(c => !c.IsMerged)
+            .OrderByDescending(c => c.Objects.Count)
+            .Cast<Cluster>()
+            .ToList();
     }
 
     /// <summary>
     /// Performs a clustering process, merging the most similar clusters
     /// until convergence or a threshold is reached.
     /// </summary>
-    private List<Cluster> PerformClustering()
+    private void PerformClustering()
     {
         while (clusters.Count(c => !c.IsMerged) > 1)
         {
@@ -49,12 +57,6 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
             clusters[mostSimilarPair.ClusterAId]
                 .Merge(clusters[mostSimilarPair.ClusterBId]);
         }
-
-        return clusters
-            .Where(c => !c.IsMerged)
-            .OrderByDescending(c => c.Objects.Count)
-            .Cast<Cluster>()
-            .ToList();
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Models.Enum;
 
@@ -86,10 +87,10 @@ public class SimilarityComparer(ICompare comparer)
         List<ParameterStateModel> parameterStates)
     {
         if (objectA.Values.Count != objectB.Values.Count)
-            throw new InvalidOperationException("Objects must have the same number of parameters.");
+            throw new VectorLengthMismatchException();
 
-        if (maxRanges.Count == 0)
-            throw new InvalidOperationException("Max ranges must be initialized.");
+        if (objectA.Values.Count == 0)
+            throw new EmptyVectorException();
 
         var weightedSimilarity = 0d;
         var totalNormalizedWeight = 0d;

@@ -11,9 +11,4 @@ public class KMeansCluster : Cluster
     {
         Centroid = new Centroid(obj);
     }
-
-    public void RecalculateCentroid()
-    {
-        Centroid.Recalculate(Objects);
-    }
 }
