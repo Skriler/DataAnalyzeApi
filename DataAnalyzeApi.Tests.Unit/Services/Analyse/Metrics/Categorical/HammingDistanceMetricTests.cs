@@ -12,7 +12,7 @@ public class HammingDistanceMetricTests : CategoricalDistanceMetricTests
     [InlineData(new int[] { 0, 0, 0 }, new int[] { 1, 0, 0 }, 0.3333)]
     [InlineData(new int[] { 1, 1, 0 }, new int[] { 1, 0, 1 }, 0.6667)]
     [InlineData(new int[] { 1, 0, 1, 0 }, new int[] { 1, 1, 0, 0 }, 0.5)]
-    public void Calculate_ShouldReturnExpectedDistance_Specific(int[] valuesA, int[] valuesB, double expectedDistance)
+    public void Calculate_ReturnsExpectedDistance(int[] valuesA, int[] valuesB, double expectedDistance)
     {
         var distance = Metric.Calculate(valuesA, valuesB);
         Assert.Equal(expectedDistance, distance, precision: 4);

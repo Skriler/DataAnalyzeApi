@@ -46,6 +46,9 @@ public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculat
     /// </summary>
     private void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
     {
+        if (valuesA == null || valuesB == null)
+            throw new VectorNullException();
+
         if (valuesA.Count != valuesB.Count)
             throw new VectorLengthMismatchException();
 

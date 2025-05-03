@@ -57,7 +57,7 @@ public class CentroidCalculator
         numericSums.Clear();
         categoricalSums.Clear();
 
-        for (int i = 0; i < centroid.Values.Count; i++)
+        for (int i = 0; i < centroid.Values.Count; ++i)
         {
             var value = centroid.Values[i];
 
@@ -120,7 +120,7 @@ public class CentroidCalculator
             var valueModel = centroid.Values[pair.Key];
             var newOneHot = new int[pair.Value.Length];
 
-            for (int j = 0; j < newOneHot.Length; j++)
+            for (int j = 0; j < newOneHot.Length; ++j)
             {
                 var avgValue = (double)pair.Value[j] / mergedObjectsCount;
 
@@ -138,7 +138,7 @@ public class CentroidCalculator
     /// </summary>
     private static void AccumulateCategoricalValues(int[] sumArray, int[] values)
     {
-        for (int j = 0; j < values.Length; j++)
+        for (int j = 0; j < values.Length; ++j)
         {
             sumArray[j] += values[j];
         }
