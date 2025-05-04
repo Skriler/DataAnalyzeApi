@@ -112,7 +112,7 @@ public class CentroidCalculator
             var valueModel = centroid.Values[pair.Key];
             var newValue = pair.Value / mergedObjectsCount;
 
-            newParameterValues.Add(new NormalizedNumericValueModel(newValue, valueModel.Parameter, valueModel.Value));
+            newParameterValues.Add(new NormalizedNumericValueModel(valueModel, newValue));
         }
 
         foreach (var pair in categoricalSums)
@@ -127,7 +127,7 @@ public class CentroidCalculator
                 newOneHot[j] = avgValue >= OneHotThreshold ? 1 : 0;
             }
 
-            newParameterValues.Add(new NormalizedCategoricalValueModel(newOneHot, valueModel.Parameter, valueModel.Value));
+            newParameterValues.Add(new NormalizedCategoricalValueModel(valueModel, newOneHot));
         }
 
         return newParameterValues;

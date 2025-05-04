@@ -50,6 +50,7 @@ public class DatasetSettingsMapper
             var parameterState = new ParameterStateModel(
                 parameter.Id,
                 parameter.Name,
+                parameter.TypeId,
                 parameter.Type,
                 parameterSetting.IsActive,
                 parameterSetting.Weight / totalParameterWeight
@@ -113,8 +114,11 @@ public class DatasetSettingsMapper
                 .First(ps => ps.Id == sourceValue.ParameterId);
 
             var mappedValue = new ParameterValueModel(
+                sourceValue.Id,
                 sourceValue.Value,
+                parameterState.Id,
                 parameterState);
+
             mappedValues.Add(mappedValue);
         }
 

@@ -3,6 +3,7 @@ using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
+using DataAnalyzeApi.Services.Analyse.Factories.Metric;
 using DataAnalyzeApi.Services.Analyse.Metrics;
 using Moq;
 
@@ -10,23 +11,23 @@ namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.DistanceCalculators;
 
 public class DistanceCalculatorTests
 {
-    private readonly Mock<MetricFactory> metricFactoryMock;
+    private readonly Mock<IMetricFactory> metricFactoryMock;
     private readonly Mock<IDistanceMetric<double>> numericMetricMock;
     private readonly Mock<IDistanceMetric<int>> categoricalMetricMock;
-    private readonly IDistanceCalculator calculator;
+    private readonly DistanceCalculator calculator;
 
     public DistanceCalculatorTests()
     {
-        metricFactoryMock = new Mock<MetricFactory>();
+        metricFactoryMock = new Mock<IMetricFactory>();
         numericMetricMock = new Mock<IDistanceMetric<double>>();
         categoricalMetricMock = new Mock<IDistanceMetric<int>>();
 
         metricFactoryMock
-            .Setup(f => f.CreateNumericMetric(It.IsAny<NumericDistanceMetricType>()))
+            .Setup(f => f.GetNumeric(It.IsAny<NumericDistanceMetricType>()))
             .Returns(numericMetricMock.Object);
 
         metricFactoryMock
-            .Setup(f => f.CreateCategoricalMetric(It.IsAny<CategoricalDistanceMetricType>()))
+            .Setup(f => f.GetCategorical(It.IsAny<CategoricalDistanceMetricType>()))
             .Returns(categoricalMetricMock.Object);
 
         calculator = new DistanceCalculator(metricFactoryMock.Object);
@@ -47,8 +48,8 @@ public class DistanceCalculatorTests
     public void Calculate_ShouldThrowException_WhenVectorsHaveDifferentLengths()
     {
         // Arrange
-        var valuesA = CreateParameterValues(2);
-        var valuesB = CreateParameterValues(3);
+        var valuesA = CreateNumericValues(2);
+        var valuesB = CreateNumericValues(3);
 
         // Act & Assert
         Assert.Throws<VectorLengthMismatchException>(() => calculator.Calculate(valuesA, valuesB, default, default));
@@ -77,16 +78,12 @@ public class DistanceCalculatorTests
             .Returns(expectedDistance);
 
         // Act
-        var result = calculator.Calculate(
-            numericValuesA,
-            numericValuesB,
-            NumericDistanceMetricType.Manhattan,
-            CategoricalDistanceMetricType.Jaccard);
+        var result = calculator.Calculate(numericValuesA, numericValuesB, default, default);
 
         // Assert
         Assert.Equal(expectedDistance, result);
-        metricFactoryMock.Verify(f => f.CreateNumericMetric(NumericDistanceMetricType.Manhattan), Times.Once);
-        metricFactoryMock.Verify(f => f.CreateCategoricalMetric(It.IsAny<CategoricalDistanceMetricType>()), Times.Never);
+        metricFactoryMock.Verify(f => f.GetNumeric(default), Times.Once);
+        metricFactoryMock.Verify(f => f.GetCategorical(It.IsAny<CategoricalDistanceMetricType>()), Times.Never);
     }
 
     [Fact]
@@ -102,16 +99,12 @@ public class DistanceCalculatorTests
                 .Returns(expectedDistance);
 
         // Act
-        var result = calculator.Calculate(
-            categoricalValuesA,
-            categoricalValuesB,
-            NumericDistanceMetricType.Manhattan,
-            CategoricalDistanceMetricType.Jaccard);
+        var result = calculator.Calculate(categoricalValuesA, categoricalValuesB, default, default);
 
         // Assert
         Assert.Equal(expectedDistance, result);
-        metricFactoryMock.Verify(f => f.CreateNumericMetric(It.IsAny<NumericDistanceMetricType>()), Times.Never);
-        metricFactoryMock.Verify(f => f.CreateCategoricalMetric(CategoricalDistanceMetricType.Jaccard), Times.Once);
+        metricFactoryMock.Verify(f => f.GetNumeric(It.IsAny<NumericDistanceMetricType>()), Times.Never);
+        metricFactoryMock.Verify(f => f.GetCategorical(default), Times.Once);
     }
 
     [Fact]
@@ -142,25 +135,13 @@ public class DistanceCalculatorTests
             .Setup(m => m.Calculate(It.IsAny<int[]>(), It.IsAny<int[]>()))
             .Returns(categoricalDistance);
 
-        numericMetricMock
-            .Setup(m => m.Calculate(It.IsAny<double[]>(), It.IsAny<double[]>()))
-            .Returns(0.4);
-
-        categoricalMetricMock
-            .Setup(m => m.Calculate(It.IsAny<int[]>(), It.IsAny<int[]>()))
-            .Returns(0.6);
-
         // Act
-        var result = calculator.Calculate(
-            mixedValuesA,
-            mixedValuesB,
-            NumericDistanceMetricType.Manhattan,
-            CategoricalDistanceMetricType.Jaccard);
+        var result = calculator.Calculate(mixedValuesA, mixedValuesB, default, default);
 
         // Assert
         Assert.Equal(expectedAverageDistance, result, 3);
-        metricFactoryMock.Verify(f => f.CreateNumericMetric(NumericDistanceMetricType.Manhattan), Times.Once);
-        metricFactoryMock.Verify(f => f.CreateCategoricalMetric(CategoricalDistanceMetricType.Jaccard), Times.Once);
+        metricFactoryMock.Verify(f => f.GetNumeric(default), Times.Once);
+        metricFactoryMock.Verify(f => f.GetCategorical(default), Times.Once);
     }
 
     [Fact]
@@ -183,43 +164,59 @@ public class DistanceCalculatorTests
             CategoricalDistanceMetricType.Jaccard);
 
         // Assert
-        metricFactoryMock.Verify(f => f.CreateNumericMetric(NumericDistanceMetricType.Manhattan), Times.Once);
-        metricFactoryMock.Verify(f => f.CreateCategoricalMetric(CategoricalDistanceMetricType.Jaccard), Times.Once);
+        metricFactoryMock.Verify(f => f.GetNumeric(NumericDistanceMetricType.Manhattan), Times.Once);
+        metricFactoryMock.Verify(f => f.GetNumeric(NumericDistanceMetricType.Euclidean), Times.Never);
+        metricFactoryMock.Verify(f => f.GetNumeric(NumericDistanceMetricType.Cosine), Times.Never);
+        metricFactoryMock.Verify(f => f.GetCategorical(CategoricalDistanceMetricType.Jaccard), Times.Once);
+        metricFactoryMock.Verify(f => f.GetCategorical(CategoricalDistanceMetricType.Hamming), Times.Never);
     }
 
-    private static List<ParameterValueModel> CreateParameterValues(int count)
+    #region Test Helpers
+
+    /// <summary>
+    /// Creates a list of parameter values using a factory function.
+    /// </summary>
+    private static List<ParameterValueModel> CreateParameterValues(int count, Func<int, ParameterValueModel> factory)
     {
-        var result = new List<ParameterValueModel>();
+        var result = new List<ParameterValueModel>(count);
 
         for (int i = 0; i < count; ++i)
         {
-            var numericValue = new NormalizedNumericValueModel(
-                normalizedValue: (double)i / 10,
-                parameter: null!,
-                value: i.ToString());
-
-            result.Add(numericValue);
+            result.Add(factory(i));
         }
 
         return result;
     }
 
-    private static List<ParameterValueModel> CreateNumericValues(int count) => CreateParameterValues(count);
+    /// <summary>
+    /// Creates a list of numeric parameter values with normalized values.
+    /// </summary>
+    private static List<ParameterValueModel> CreateNumericValues(int count) =>
+        CreateParameterValues(count, i => new NormalizedNumericValueModel(
+            Id: i,
+            Value: i.ToString(),
+            ParameterId: i,
+            Parameter: null!,
+            NormalizedValue: (double)i / 10)
+        );
 
-    private static List<ParameterValueModel> CreateCategoricalValues(int count)
+    /// <summary>
+    /// Creates a list of categorical parameter values with one-hot encoding.
+    /// </summary>
+    private static List<ParameterValueModel> CreateCategoricalValues(int count, int vectorLength = 3)
     {
-        var result = new List<ParameterValueModel>();
+        return CreateParameterValues(count, i => {
+            var oneHotValues = new int[vectorLength];
+            oneHotValues[i % vectorLength] = 1;
 
-        for (int i = 0; i < count; ++i)
-        {
-            var categoricalValue = new NormalizedCategoricalValueModel(
-                oneHotValues: new int[] { 0, 1, 0 },
-                parameter: null!,
-                value: i.ToString());
-
-            result.Add(categoricalValue);
-        }
-
-        return result;
+            return new NormalizedCategoricalValueModel(
+                Id: i,
+                Value: i.ToString(),
+                ParameterId: i,
+                Parameter: null!,
+                OneHotValues: oneHotValues);
+        });
     }
+
+    #endregion
 }

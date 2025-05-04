@@ -1,11 +1,9 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeApi.Services.Normalizers;
+namespace DataAnalyzeApi.Services.Normalizers.Parameters;
 
 public interface ITypeNormalizer
 {
-    long ParameterId { get; }
-
     void AddValue(string value);
 
     ParameterValueModel Normalize(ParameterValueModel parameterValue);

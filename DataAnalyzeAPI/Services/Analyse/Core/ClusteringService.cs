@@ -4,19 +4,19 @@ using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
 using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeApi.Models.Enums;
-using DataAnalyzeApi.Services.Analyse.Clusterers;
+using DataAnalyzeApi.Services.Analyse.Factories.Clusterer;
 
 namespace DataAnalyzeApi.Services.Analyse.Core;
 
 public class ClusteringService : BaseAnalysisService
 {
-    private readonly ClustererFactory clustererFactory;
+    private readonly IClustererFactory clustererFactory;
     private readonly ClusteringCacheService cacheService;
 
     public ClusteringService(
         DatasetService datasetService,
         AnalysisMapper analysisMapper,
-        ClustererFactory clustererFactory,
+        IClustererFactory clustererFactory,
         ClusteringCacheService cacheService)
         : base(datasetService, analysisMapper)
     {
@@ -30,7 +30,7 @@ public class ClusteringService : BaseAnalysisService
     public async Task<ClusteringResult> PerformAnalysisAsync<TSettings>(
         DatasetModel dataset,
         BaseClusteringRequest request,
-        TSettings settings) where TSettings : IClusterSettings
+        TSettings settings) where TSettings : BaseClusterSettings
     {
         var clusterer = clustererFactory.Get<TSettings>(settings.Algorithm);
         var clusters = clusterer.Cluster(dataset.Objects, settings);

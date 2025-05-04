@@ -1,20 +1,17 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
-namespace DataAnalyzeApi.Services.Normalizers;
+namespace DataAnalyzeApi.Services.Normalizers.Parameters;
 
 public class CategoricalParameterNormalizer : ITypeNormalizer
 {
-    public long ParameterId { get; }
-
     /// <summary>
     /// List of all unique categories for this parameter.
     /// </summary>
     public List<string> Categories { get; } = new();
 
-    public CategoricalParameterNormalizer(long parameterId, string value)
+    public CategoricalParameterNormalizer(string value)
     {
-        ParameterId = parameterId;
         AddValue(value);
     }
 
@@ -38,11 +35,7 @@ public class CategoricalParameterNormalizer : ITypeNormalizer
     {
         var oneHotValues = ConvertValueToOneHot(parameterValue.Value);
 
-        return new NormalizedCategoricalValueModel(
-            oneHotValues,
-            parameterValue.Parameter,
-            parameterValue.Value
-            );
+        return new NormalizedCategoricalValueModel(parameterValue, oneHotValues);
     }
 
     /// <summary>
@@ -60,16 +53,19 @@ public class CategoricalParameterNormalizer : ITypeNormalizer
         foreach (var value in values)
         {
             var index = Categories.IndexOf(value);
+
+            if (index < 0)
+                continue;
+
             encoded[index] = 1;
         }
 
         return encoded;
     }
 
-    private static List<string> GetSplitValues(string values)
-    {
-        return values.Split(',')
+    private static List<string> GetSplitValues(string values) =>
+        values.Split(',')
             .Select(v => v.Trim())
+            .Where(v => !string.IsNullOrEmpty(v))
             .ToList();
-    }
 }

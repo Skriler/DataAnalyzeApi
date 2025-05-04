@@ -2,17 +2,15 @@
 
 namespace DataAnalyzeApi.Models.Domain.Settings;
 
-public class DBSCANSettings : IClusterSettings
-{
-    public ClusterAlgorithm Algorithm => ClusterAlgorithm.DBSCAN;
-
-    public NumericDistanceMetricType NumericMetric { get; set; }
-
-    public CategoricalDistanceMetricType CategoricalMetric { get; set; }
-
-    public double Epsilon { get; set; }
-
-    public int MinPoints { get; set; }
-
-    public bool IncludeParameters { get; set; }
-}
+public record DBSCANSettings(
+    NumericDistanceMetricType NumericMetric,
+    CategoricalDistanceMetricType CategoricalMetric,
+    bool IncludeParameters,
+    double Epsilon,
+    int MinPoints
+) : BaseClusterSettings(
+    ClusterAlgorithm.DBSCAN,
+    NumericMetric,
+    CategoricalMetric,
+    IncludeParameters
+);

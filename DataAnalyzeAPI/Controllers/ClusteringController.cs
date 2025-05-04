@@ -33,14 +33,12 @@ public class ClusteringController : ControllerBase
         long datasetId,
         [FromBody] KMeansClusteringRequest request)
     {
-        var settings = new KMeansSettings
-        {
-            NumericMetric = request.NumericMetric,
-            CategoricalMetric = request.CategoricalMetric,
-            IncludeParameters = request.IncludeParameters,
-            MaxIterations = request.MaxIterations,
-            NumberOfClusters = request.NumberOfClusters,
-        };
+        var settings = new KMeansSettings(
+            request.NumericMetric,
+            request.CategoricalMetric,
+            request.IncludeParameters,
+            request.MaxIterations,
+            request.NumberOfClusters);
 
         return await CalculateClusters(datasetId, request, settings);
     }
@@ -57,14 +55,12 @@ public class ClusteringController : ControllerBase
         long datasetId,
         [FromBody] DBSCANClusteringRequest request)
     {
-        var settings = new DBSCANSettings
-        {
-            NumericMetric = request.NumericMetric,
-            CategoricalMetric = request.CategoricalMetric,
-            IncludeParameters = request.IncludeParameters,
-            Epsilon = request.Epsilon,
-            MinPoints = request.MinPoints,
-        };
+        var settings = new DBSCANSettings(
+            request.NumericMetric,
+            request.CategoricalMetric,
+            request.IncludeParameters,
+            request.Epsilon,
+            request.MinPoints);
 
         return await CalculateClusters(datasetId, request, settings);
     }
@@ -80,13 +76,11 @@ public class ClusteringController : ControllerBase
         long datasetId,
         [FromBody] AgglomerativeClusteringRequest request)
     {
-        var settings = new AgglomerativeSettings
-        {
-            NumericMetric = request.NumericMetric,
-            CategoricalMetric = request.CategoricalMetric,
-            IncludeParameters = request.IncludeParameters,
-            Threshold = request.Threshold,
-        };
+        var settings = new AgglomerativeSettings(
+            request.NumericMetric,
+            request.CategoricalMetric,
+            request.IncludeParameters,
+            request.Threshold);
 
         return await CalculateClusters(datasetId, request, settings);
     }
@@ -103,7 +97,8 @@ public class ClusteringController : ControllerBase
     private async Task<IActionResult> CalculateClusters<TSettings>(
         long datasetId,
         BaseClusteringRequest request,
-        TSettings settings) where TSettings : IClusterSettings
+        TSettings settings
+        ) where TSettings : BaseClusterSettings
     {
         var cachedResult = await clusteringService.GetCachedResultAsync(
             datasetId,

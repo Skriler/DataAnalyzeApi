@@ -2,25 +2,23 @@
 
 namespace DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
-public record NormalizedCategoricalValueModel : ParameterValueModel
+public record NormalizedCategoricalValueModel(
+    long Id,
+    string Value,
+    long ParameterId,
+    ParameterStateModel Parameter,
+    int[] OneHotValues
+) : ParameterValueModel(Id, Value, ParameterId, Parameter)
 {
-    public int[] OneHotValues { get; }
+    public NormalizedCategoricalValueModel(ParameterValueModel model, int[] OneHotValues)
+        : this(model.Id, model.Value, model.ParameterId, model.Parameter, OneHotValues)
+    { }
 
-    public NormalizedCategoricalValueModel(
-        int[] oneHotValues,
-        ParameterStateModel parameter,
-        string value
-        ) : base(value, parameter)
-    {
-        OneHotValues = oneHotValues;
-    }
-
-    public override ParameterValueModel DeepClone()
-    {
-        return new NormalizedCategoricalValueModel(
-            (int[])OneHotValues.Clone(),
+    public override ParameterValueModel DeepClone() =>
+        new NormalizedCategoricalValueModel(
+            Id,
+            Value,
+            ParameterId,
             Parameter,
-            Value
-            );
-    }
+            (int[])OneHotValues.Clone());
 }

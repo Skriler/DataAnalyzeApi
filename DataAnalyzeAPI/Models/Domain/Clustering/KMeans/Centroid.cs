@@ -2,16 +2,7 @@
 
 namespace DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 
-public class Centroid
+public class Centroid(List<ParameterValueModel> values)
 {
-    public List<ParameterValueModel> Values { get; }
-
-    public Centroid(DataObjectModel obj)
-        : this(obj.Values)
-    { }
-
-    public Centroid(List<ParameterValueModel> values)
-    {
-        Values = values.ConvertAll(v => v.DeepClone());
-    }
+    public List<ParameterValueModel> Values { get; } = values.ConvertAll(v => v.DeepClone());
 }

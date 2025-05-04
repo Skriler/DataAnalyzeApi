@@ -6,7 +6,7 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
 public abstract class BaseClusterer<TSettings>(IDistanceCalculator distanceCalculator)
-    where TSettings : IClusterSettings
+    where TSettings : BaseClusterSettings
 {
     protected readonly IDistanceCalculator distanceCalculator = distanceCalculator;
 

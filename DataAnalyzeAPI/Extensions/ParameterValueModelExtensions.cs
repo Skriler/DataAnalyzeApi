@@ -10,5 +10,5 @@ public static class ParameterValueModelExtensions
 
     public static List<T> OfParameterTypeOrdered<T>(this IEnumerable<ParameterValueModel> values)
         where T : ParameterValueModel
-        => values.OfType<T>().OrderBy(p => p.Parameter.Id).ToList();
+        => values.OfType<T>().OrderBy(p => p.ParameterId).ToList();
 }

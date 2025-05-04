@@ -8,10 +8,11 @@ public class Parameter
 {
     [Key]
     [JsonIgnore]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [Required]
     public string Name { get; set; } = string.Empty;
 
-    public ParameterType Type { get; set; }
+    [JsonIgnore] public long TypeId { get; set; }
+    [JsonIgnore] public ParameterType Type { get; set; }
 }

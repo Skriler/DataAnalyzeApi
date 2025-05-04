@@ -35,7 +35,7 @@ public class SimilarityComparer(ICompare comparer)
         {
             var values = objects
                 .SelectMany(obj => obj.Values)
-                .Where(v => v.Parameter.Id == parameterState.Id)
+                .Where(v => v.ParameterId == parameterState.Id)
                 .Select(v => Convert.ToDouble(v.Value))
                 .ToList();
 
@@ -102,8 +102,8 @@ public class SimilarityComparer(ICompare comparer)
             if (!parameterState.IsActive)
                 continue;
 
-            var valueA = objectA.Values.First(v => v.Parameter.Id == parameterState.Id).Value;
-            var valueB = objectB.Values.First(v => v.Parameter.Id == parameterState.Id).Value;
+            var valueA = objectA.Values.First(v => v.ParameterId == parameterState.Id).Value;
+            var valueB = objectB.Values.First(v => v.ParameterId == parameterState.Id).Value;
             var maxRange = maxRanges[parameterState.Id];
 
             var similarity = comparer.Compare(valueA, valueB, maxRange);

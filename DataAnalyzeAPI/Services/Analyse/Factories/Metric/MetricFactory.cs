@@ -1,15 +1,16 @@
 ﻿using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Services.Analyse.Metrics;
 using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 
-namespace DataAnalyzeApi.Services.Analyse.Metrics;
+namespace DataAnalyzeApi.Services.Analyse.Factories.Metric;
 
-public class MetricFactory(IServiceProvider serviceProvider)
+public class MetricFactory(IServiceProvider serviceProvider) : IMetricFactory
 {
     private readonly IServiceProvider serviceProvider = serviceProvider;
 
-    public IDistanceMetric<double> CreateNumericMetric(NumericDistanceMetricType type)
+    public IDistanceMetric<double> GetNumeric(NumericDistanceMetricType type)
     {
         return type switch
         {
@@ -20,7 +21,7 @@ public class MetricFactory(IServiceProvider serviceProvider)
         };
     }
 
-    public IDistanceMetric<int> CreateCategoricalMetric(CategoricalDistanceMetricType type)
+    public IDistanceMetric<int> GetCategorical(CategoricalDistanceMetricType type)
     {
         return type switch
         {

@@ -1,15 +1,15 @@
 ﻿using DataAnalyzeApi.Extensions;
-using DataAnalyzeApi.Services.Analyse.Metrics;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Services.Analyse.Factories.Metric;
 
 namespace DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
-public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculator
+public class DistanceCalculator(IMetricFactory metricFactory) : IDistanceCalculator
 {
-    private readonly MetricFactory metricFactory = metricFactory;
+    private readonly IMetricFactory metricFactory = metricFactory;
 
     /// <summary>
     /// Calculates the distance between two value vectors.
@@ -67,7 +67,7 @@ public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculat
         if (parametersA.Count == 0 || parametersB.Count == 0)
             return 0;
 
-        var metric = metricFactory.CreateNumericMetric(metricType);
+        var metric = metricFactory.GetNumeric(metricType);
         var valuesA = parametersA.Select(v => v.NormalizedValue).ToArray();
         var valuesB = parametersB.Select(v => v.NormalizedValue).ToArray();
 
@@ -85,7 +85,7 @@ public class DistanceCalculator(MetricFactory metricFactory) : IDistanceCalculat
         if (parametersA.Count == 0 || parametersB.Count == 0)
             return 0;
 
-        var metric = metricFactory.CreateCategoricalMetric(metricType);
+        var metric = metricFactory.GetCategorical(metricType);
         var totalDistance = 0d;
 
         for (int i = 0; i < parametersA.Count; i++)

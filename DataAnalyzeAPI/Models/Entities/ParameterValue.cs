@@ -7,13 +7,13 @@ public class ParameterValue
 {
     [Key]
     [JsonIgnore]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Value { get; set; } = string.Empty;
 
-    [JsonIgnore] public int ParameterId { get; set; }
+    [JsonIgnore] public long ParameterId { get; set; }
     [JsonIgnore] public Parameter Parameter { get; set; } = default!;
 
-    [JsonIgnore] public int ObjectId { get; set; }
+    [JsonIgnore] public long ObjectId { get; set; }
     [JsonIgnore] public DataObject Object { get; set; } = default!;
 }

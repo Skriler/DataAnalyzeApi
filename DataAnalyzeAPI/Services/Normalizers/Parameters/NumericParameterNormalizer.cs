@@ -1,23 +1,18 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
-namespace DataAnalyzeApi.Services.Normalizers;
+namespace DataAnalyzeApi.Services.Normalizers.Parameters;
 
 public class NumericParameterNormalizer : ITypeNormalizer
 {
-    public long ParameterId { get; }
-
     public double Min { get; private set; } = double.MaxValue;
 
     public double Max { get; private set; } = double.MinValue;
 
-    public double Average { get; private set; }
+    public double Average => (Min + Max) / 2;
 
-    long ITypeNormalizer.ParameterId => ParameterId;
-
-    public NumericParameterNormalizer(long parameterId, string value)
+    public NumericParameterNormalizer(string value)
     {
-        ParameterId = parameterId;
         AddValue(value);
     }
 
@@ -31,7 +26,6 @@ public class NumericParameterNormalizer : ITypeNormalizer
 
         Min = Math.Min(Min, numericValue);
         Max = Math.Max(Max, numericValue);
-        Average = (Min + Max) / 2;
     }
 
     public ParameterValueModel Normalize(ParameterValueModel parameterValue)
@@ -42,11 +36,8 @@ public class NumericParameterNormalizer : ITypeNormalizer
 
         var normalizedValue = NormalizeMinMax(value);
 
-        return new NormalizedNumericValueModel(
-            normalizedValue,
-            parameterValue.Parameter,
-            parameterValue.Value
-            );
+        return new NormalizedNumericValueModel(parameterValue, normalizedValue);
+
     }
 
     /// <summary>
@@ -57,6 +48,7 @@ public class NumericParameterNormalizer : ITypeNormalizer
         if (Max == Min)
             return 1;
 
-        return (value - Min) / (Max - Min);
+        var normalized = (value - Min) / (Max - Min);
+        return Math.Clamp(normalized, 0, 1);
     }
 }

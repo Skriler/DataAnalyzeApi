@@ -1,7 +1,7 @@
 ﻿using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Enum;
-using DataAnalyzeApi.Services.Normalizers;
+using DataAnalyzeApi.Services.Normalizers.Parameters;
 
 namespace DataAnalyzeApi.Services.DataPreparation;
 
@@ -35,14 +35,14 @@ public class DatasetNormalizer
     /// </summary>
     private void AddValueToNormalizer(ParameterValueModel parameterValue)
     {
-        if (normalizers.TryGetValue(parameterValue.Parameter.Id, out var normalizer))
+        if (normalizers.TryGetValue(parameterValue.ParameterId, out var normalizer))
         {
             normalizer.AddValue(parameterValue.Value);
             return;
         }
 
         normalizer = CreateNormalizer(parameterValue);
-        normalizers.Add(parameterValue.Parameter.Id, normalizer);
+        normalizers.Add(parameterValue.ParameterId, normalizer);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public class DatasetNormalizer
     private DataObjectModel CreateNormalizedObject(DataObjectModel obj)
     {
         var normalizedValues = obj.Values
-            .ConvertAll(pv => normalizers[pv.Parameter.Id].Normalize(pv))
+            .ConvertAll(pv => normalizers[pv.ParameterId].Normalize(pv))
 ;
         return new DataObjectModel(
             obj.Id,
@@ -83,14 +83,8 @@ public class DatasetNormalizer
     {
         return parameterValue.Parameter.Type switch
         {
-            ParameterType.Numeric => new NumericParameterNormalizer(
-                parameterValue.Parameter.Id,
-                parameterValue.Value
-                ),
-            ParameterType.Categorical => new CategoricalParameterNormalizer(
-                parameterValue.Parameter.Id,
-                parameterValue.Value
-                ),
+            ParameterType.Numeric => new NumericParameterNormalizer(parameterValue.Value),
+            ParameterType.Categorical => new CategoricalParameterNormalizer(parameterValue.Value),
             _ => throw new TypeNotFoundException(nameof(parameterValue.Parameter.Type))
         };
     }

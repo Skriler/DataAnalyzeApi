@@ -2,16 +2,11 @@
 
 namespace DataAnalyzeApi.Models.Domain.Clustering;
 
-public class Cluster
+public class Cluster(string name)
 {
-    public string Name { get; }
+    public string Name { get; } = name;
 
     public List<DataObjectModel> Objects { get; } = new();
-
-    public Cluster(string name)
-    {
-        Name = name;
-    }
 
     public void AddObject(DataObjectModel obj)
     {

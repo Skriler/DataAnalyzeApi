@@ -1,5 +1,4 @@
-﻿using DataAnalyzeApi.Services.Analyse.Metrics;
-using DataAnalyzeApi.DAL;
+﻿using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.DAL.Seeders;
 using DataAnalyzeApi.Mappers;
@@ -7,7 +6,6 @@ using DataAnalyzeApi.Middlewares;
 using DataAnalyzeApi.Models.Config;
 using DataAnalyzeApi.Models.Config.Identity;
 using DataAnalyzeApi.Models.Entities;
-using DataAnalyzeApi.Services.Analyse.Clusterers;
 using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 using DataAnalyzeApi.Services.Analyse.Comparers;
 using DataAnalyzeApi.Services.Analyse.Core;
@@ -18,14 +16,15 @@ using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 using DataAnalyzeApi.Services.Auth;
 using DataAnalyzeApi.Services.Cache;
 using DataAnalyzeApi.Services.DataPreparation;
+using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
+using DataAnalyzeApi.Services.Analyse.Factories.Clusterer;
+using DataAnalyzeApi.Services.Analyse.Factories.Metric;
+namespace DataAnalyzeApi.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
-
-namespace DataAnalyzeApi.Extensions;
 
 /// <summary>
 /// Contains extension methods for registering application services.
@@ -150,7 +149,8 @@ public static class ServiceCollectionExtensions
             .AddHelpers()
             .AddDataProcessingServices()
             .AddDistanceServices()
-            .AddClusteringServices();
+            .AddClusteringServices()
+            .AddFactories();
     }
 
     private static IServiceCollection AddCacheServices(this IServiceCollection services)
@@ -203,9 +203,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<HammingDistanceMetric>();
         services.AddTransient<JaccardDistanceMetric>();
 
-        // Factories
-        services.AddScoped<MetricFactory>();
-
         // Core services
         services.AddScoped<IDistanceCalculator, DistanceCalculator>();
 
@@ -222,11 +219,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DBSCANClusterer>();
         services.AddScoped<AgglomerativeClusterer>();
 
-        // Factories
-        services.AddScoped<ClustererFactory>();
-
         // Core services
         services.AddScoped<ClusteringService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddFactories(this IServiceCollection services)
+    {
+        services.AddScoped<IMetricFactory, MetricFactory>();
+        services.AddScoped<IClustererFactory, ClustererFactory>();
 
         return services;
     }

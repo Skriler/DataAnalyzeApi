@@ -3,6 +3,7 @@ using System;
 using DataAnalyzeApi.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAnalyzeApi.Migrations
 {
     [DbContext(typeof(DataAnalyzeDbContext))]
-    partial class DataAnalyzeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250504172457_AddTypeIdFieldToParameterEntity")]
+    partial class AddTypeIdFieldToParameterEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
