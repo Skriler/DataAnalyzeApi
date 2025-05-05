@@ -10,7 +10,6 @@ using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 using DataAnalyzeApi.Services.Analyse.Comparers;
 using DataAnalyzeApi.Services.Analyse.Core;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
-using DataAnalyzeApi.Services.Analyse.Helpers;
 using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 using DataAnalyzeApi.Services.Auth;
