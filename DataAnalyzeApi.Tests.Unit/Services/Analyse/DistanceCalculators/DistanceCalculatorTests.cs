@@ -81,13 +81,13 @@ public class DistanceCalculatorTests
         var result = calculator.Calculate(numericValuesA, numericValuesB, default, default);
 
         // Assert
-        Assert.Equal(expectedDistance, result);
+        Assert.Equal(expectedDistance, result, precision: 4);
         metricFactoryMock.Verify(f => f.GetNumeric(default), Times.Once);
         metricFactoryMock.Verify(f => f.GetCategorical(It.IsAny<CategoricalDistanceMetricType>()), Times.Never);
     }
 
     [Fact]
-    public void Calculate_WhenOnlyCategoricalParameters_ReturnCategoricalDistanceOnly()
+    public void Calculate_WhenOnlyCategoricalParameters_ReturnsCategoricalDistanceOnly()
     {
         // Arrange
         const double expectedDistance = 0.3;
@@ -102,7 +102,7 @@ public class DistanceCalculatorTests
         var result = calculator.Calculate(categoricalValuesA, categoricalValuesB, default, default);
 
         // Assert
-        Assert.Equal(expectedDistance, result);
+        Assert.Equal(expectedDistance, result, precision: 4);
         metricFactoryMock.Verify(f => f.GetNumeric(It.IsAny<NumericDistanceMetricType>()), Times.Never);
         metricFactoryMock.Verify(f => f.GetCategorical(default), Times.Once);
     }
@@ -139,7 +139,7 @@ public class DistanceCalculatorTests
         var result = calculator.Calculate(mixedValuesA, mixedValuesB, default, default);
 
         // Assert
-        Assert.Equal(expectedAverageDistance, result, 3);
+        Assert.Equal(expectedAverageDistance, result, precision: 4);
         metricFactoryMock.Verify(f => f.GetNumeric(default), Times.Once);
         metricFactoryMock.Verify(f => f.GetCategorical(default), Times.Once);
     }

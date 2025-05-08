@@ -4,7 +4,7 @@ using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
 using DataAnalyzeApi.Models.Entities;
-using DataAnalyzeApi.Services.DataPreparation;
+using DataAnalyzeApi.Services.Normalizers;
 
 namespace DataAnalyzeApi.Services.Analyse.Core;
 

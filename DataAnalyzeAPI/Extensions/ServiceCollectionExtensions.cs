@@ -14,16 +14,17 @@ using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
 using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
 using DataAnalyzeApi.Services.Auth;
 using DataAnalyzeApi.Services.Cache;
-using DataAnalyzeApi.Services.DataPreparation;
 using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analyse.Factories.Clusterer;
 using DataAnalyzeApi.Services.Analyse.Factories.Metric;
-namespace DataAnalyzeApi.Extensions;
+using DataAnalyzeApi.Services.Normalizers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
+namespace DataAnalyzeApi.Extensions;
 
 /// <summary>
 /// Contains extension methods for registering application services.

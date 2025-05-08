@@ -1,5 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;

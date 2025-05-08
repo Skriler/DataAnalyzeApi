@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Normalizers.Parameters;
 
-namespace DataAnalyzeApi.Services.DataPreparation;
+namespace DataAnalyzeApi.Services.Normalizers;
 
 public class DatasetNormalizer
 {

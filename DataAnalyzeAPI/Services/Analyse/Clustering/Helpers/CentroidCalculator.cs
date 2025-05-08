@@ -26,7 +26,7 @@ public class CentroidCalculator
     /// <summary>
     /// Recalculates the centroid by averaging its parameters with the provided merge nodes.
     /// </summary>
-    public Centroid Recalculate(Centroid centroid, List<DataObjectModel> mergeObjects)
+    public virtual Centroid Recalculate(Centroid centroid, List<DataObjectModel> mergeObjects)
     {
         if (mergeObjects.Count == 0)
             return centroid;
@@ -38,15 +38,6 @@ public class CentroidCalculator
 
         var newValues = ApplyAverages(centroid, mergeObjects.Count + 1);
         return new Centroid(newValues);
-    }
-
-    /// <summary>
-    /// Validates that all nodes have the same number of parameters as the centroid.
-    /// </summary>
-    private void Validate(Centroid centroid, List<DataObjectModel> mergeObjects)
-    {
-        if (mergeObjects.Any(obj => obj.Values.Count != centroid.Values.Count))
-            throw new ArgumentException("Object values count doesn't match centroid's");
     }
 
     /// <summary>
@@ -142,5 +133,14 @@ public class CentroidCalculator
         {
             sumArray[j] += values[j];
         }
+    }
+
+    /// <summary>
+    /// Validates that all nodes have the same number of parameters as the centroid.
+    /// </summary>
+    private static void Validate(Centroid centroid, List<DataObjectModel> mergeObjects)
+    {
+        if (mergeObjects.Any(obj => obj.Values.Count != centroid.Values.Count))
+            throw new ArgumentException("Object values count doesn't match centroid's");
     }
 }
