@@ -2,7 +2,20 @@
 
 namespace DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 
-public class KMeansCluster(DataObjectModel obj, string name) : Cluster(name)
+public class KMeansCluster : Cluster
 {
-    public Centroid Centroid { get; set; } = new Centroid(obj.Values);
+    private static int nextId = 0;
+
+    public Centroid Centroid { get; set; }
+
+    public int Id { get; }
+
+    public KMeansCluster(DataObjectModel obj, string name)
+        : base(name)
+    {
+        Id = nextId++;
+
+        var valuesCopy = obj.Values.ConvertAll(v => v.DeepClone());
+        Centroid = new Centroid(Id, name, valuesCopy);
+    }
 }

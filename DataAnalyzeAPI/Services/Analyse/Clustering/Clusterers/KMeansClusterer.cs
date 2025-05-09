@@ -129,8 +129,8 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
         for (int i = 0; i < clusters.Count; ++i)
         {
            var distance = distanceCalculator.Calculate(
-               obj.Values,
-               clusters[i].Centroid.Values,
+               obj,
+               clusters[i].Centroid,
                settings.NumericMetric,
                settings.CategoricalMetric);
 

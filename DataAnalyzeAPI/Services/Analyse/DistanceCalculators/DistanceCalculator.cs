@@ -17,17 +17,17 @@ public class DistanceCalculator(IMetricFactory metricFactory) : IDistanceCalcula
     /// 0 indicates identical, 1 indicates completely different objects.
     /// </summary>
     public double Calculate(
-        List<ParameterValueModel> valuesA,
-        List<ParameterValueModel> valuesB,
+        DataObjectModel objectA,
+        DataObjectModel objectB,
         NumericDistanceMetricType numericMetricType,
         CategoricalDistanceMetricType categoricalMetricType)
     {
-        ValidateVectors(valuesA, valuesB);
+        ValidateVectors(objectA.Values, objectB.Values);
 
-        var numericParamsA = valuesA.OfParameterTypeOrdered<NormalizedNumericValueModel>();
-        var numericParamsB = valuesB.OfParameterTypeOrdered<NormalizedNumericValueModel>();
-        var categoricalParamsA = valuesA.OfParameterTypeOrdered<NormalizedCategoricalValueModel>();
-        var categoricalParamsB = valuesB.OfParameterTypeOrdered<NormalizedCategoricalValueModel>();
+        var numericParamsA = objectA.Values.OfParameterTypeOrdered<NormalizedNumericValueModel>();
+        var numericParamsB = objectB.Values.OfParameterTypeOrdered<NormalizedNumericValueModel>();
+        var categoricalParamsA = objectA.Values.OfParameterTypeOrdered<NormalizedCategoricalValueModel>();
+        var categoricalParamsB = objectB.Values.OfParameterTypeOrdered<NormalizedCategoricalValueModel>();
 
         var numericDistance = CalculateNumericDistance(numericParamsA, numericParamsB, numericMetricType);
         var categoricalDistance = CalculateCategoricalDistance(categoricalParamsA, categoricalParamsB, categoricalMetricType);

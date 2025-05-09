@@ -100,8 +100,8 @@ public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
             foreach (var objB in clusterB.Objects)
             {
                 var distance = distanceCalculator.Calculate(
-                    objA.Values,
-                    objB.Values,
+                    objA,
+                    objB,
                     settings.NumericMetric,
                     settings.CategoricalMetric);
 

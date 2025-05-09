@@ -1,16 +1,18 @@
 ﻿using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
-using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Services.Analyse.Factories.Metric;
 using DataAnalyzeApi.Services.Analyse.Metrics;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
 using Moq;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.DistanceCalculators;
 
 public class DistanceCalculatorTests
 {
+    protected readonly TestDataFactory dataFactory;
     private readonly Mock<IMetricFactory> metricFactoryMock;
     private readonly Mock<IDistanceMetric<double>> numericMetricMock;
     private readonly Mock<IDistanceMetric<int>> categoricalMetricMock;
@@ -18,6 +20,7 @@ public class DistanceCalculatorTests
 
     public DistanceCalculatorTests()
     {
+        dataFactory = new();
         metricFactoryMock = new Mock<IMetricFactory>();
         numericMetricMock = new Mock<IDistanceMetric<double>>();
         categoricalMetricMock = new Mock<IDistanceMetric<int>>();
@@ -37,48 +40,56 @@ public class DistanceCalculatorTests
     public void Calculate_ShouldThrowException_WhenVectorIsNull()
     {
         // Arrange
-        var valuesA = new List<ParameterValueModel>();
+        var objectA = new DataObjectModel(0, string.Empty, null!);
+        var objectB = new DataObjectModel(0, string.Empty, new List<ParameterValueModel>());
 
         // Act & Assert
-        Assert.Throws<VectorNullException>(() => calculator.Calculate(null!, valuesA, default, default));
-        Assert.Throws<VectorNullException>(() => calculator.Calculate(valuesA, null!, default, default));
+        Assert.Throws<VectorNullException>(() => calculator.Calculate(objectA, objectB, default, default));
+        Assert.Throws<VectorNullException>(() => calculator.Calculate(objectB, objectA, default, default));
     }
 
     [Fact]
     public void Calculate_ShouldThrowException_WhenVectorsHaveDifferentLengths()
     {
         // Arrange
-        var valuesA = CreateNumericValues(2);
-        var valuesB = CreateNumericValues(3);
+        var objectNumericsA = new NormalizedDataObject() { NumericValues = { 0.2, 0.4 } };
+        var objectNumericsB = new NormalizedDataObject() { NumericValues = { 0.6, 0.8, 0.3 } };
+
+        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectNumericsA);
+        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectNumericsB);
 
         // Act & Assert
-        Assert.Throws<VectorLengthMismatchException>(() => calculator.Calculate(valuesA, valuesB, default, default));
+        Assert.Throws<VectorLengthMismatchException>(() => calculator.Calculate(objectA, objectB, default, default));
     }
 
     [Fact]
     public void Calculate_ShouldThrowException_WhenVectorsAreEmpty()
     {
         // Arrange
-        var empty = new List<ParameterValueModel>();
+        var objectEmpty = new NormalizedDataObject();
+        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectEmpty);
 
         // Act & Assert
-        Assert.Throws<EmptyVectorException>(() => calculator.Calculate(empty, empty, default, default));
+        Assert.Throws<EmptyVectorException>(() => calculator.Calculate(objectA, objectA, default, default));
     }
 
     [Fact]
     public void Calculate_WhenOnlyNumericParameters_ReturnsNumericDistanceOnly()
     {
         // Arrange
+        var objectNumericsA = new NormalizedDataObject() { NumericValues = { 0.1, 0.3, 0.8 } };
+        var objectNumericsB = new NormalizedDataObject() { NumericValues = { 0.6, 0.8, 0.3 } };
         const double expectedDistance = 0.5;
-        var numericValuesA = CreateNumericValues(3);
-        var numericValuesB = CreateNumericValues(3);
+
+        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectNumericsA);
+        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectNumericsB);
 
         numericMetricMock
             .Setup(m => m.Calculate(It.IsAny<double[]>(), It.IsAny<double[]>()))
             .Returns(expectedDistance);
 
         // Act
-        var result = calculator.Calculate(numericValuesA, numericValuesB, default, default);
+        var result = calculator.Calculate(objectA, objectB, default, default);
 
         // Assert
         Assert.Equal(expectedDistance, result, precision: 4);
@@ -90,16 +101,25 @@ public class DistanceCalculatorTests
     public void Calculate_WhenOnlyCategoricalParameters_ReturnsCategoricalDistanceOnly()
     {
         // Arrange
+        var objectCategoricalA = new NormalizedDataObject()
+        {
+            CategoricalValues = { new[] { 1, 0 }, new[] { 1, 0 } }
+        };
+        var objectCategoricalB = new NormalizedDataObject()
+        {
+            CategoricalValues = { new[] { 0, 1 }, new[] { 1, 1 } }
+        };
         const double expectedDistance = 0.3;
-        var categoricalValuesA = CreateCategoricalValues(3);
-        var categoricalValuesB = CreateCategoricalValues(3);
+
+        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectCategoricalA);
+        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectCategoricalB);
 
         categoricalMetricMock
                 .Setup(m => m.Calculate(It.IsAny<int[]>(), It.IsAny<int[]>()))
                 .Returns(expectedDistance);
 
         // Act
-        var result = calculator.Calculate(categoricalValuesA, categoricalValuesB, default, default);
+        var result = calculator.Calculate(objectA, objectB, default, default);
 
         // Assert
         Assert.Equal(expectedDistance, result, precision: 4);
@@ -111,21 +131,24 @@ public class DistanceCalculatorTests
     public void Calculate_WithMixedParameters_ReturnsWeightedAverageDistance()
     {
         // Arrange
+        var objectMixedA = new NormalizedDataObject()
+        {
+            NumericValues = { 0.4, 0.7 },
+            CategoricalValues = { new[] { 0, 1 }, new[] { 1, 1, 0 }, new[] { 1, 1 } }
+        };
+        var objectMixedB = new NormalizedDataObject()
+        {
+            NumericValues = { 0.1, 1.0 },
+            CategoricalValues = { new[] { 1, 0 }, new[] { 0, 1, 1 }, new[] { 0, 1 } }
+        };
+
         const double numericDistance = 0.8;
         const double categoricalDistance = 0.2;
-        const int numericCount = 2;
-        const int categoricalCount = 3;
-
         // Expected weighted average: (0.8*2 + 0.2*3) / 5 = 0.44
         const double expectedAverageDistance = 0.44;
 
-        var mixedValuesA = new List<ParameterValueModel>();
-        mixedValuesA.AddRange(CreateNumericValues(numericCount));
-        mixedValuesA.AddRange(CreateCategoricalValues(categoricalCount));
-
-        var mixedValuesB = new List<ParameterValueModel>();
-        mixedValuesB.AddRange(CreateNumericValues(numericCount));
-        mixedValuesB.AddRange(CreateCategoricalValues(categoricalCount));
+        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectMixedA);
+        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectMixedB);
 
         numericMetricMock
             .Setup(m => m.Calculate(It.IsAny<double[]>(), It.IsAny<double[]>()))
@@ -136,7 +159,7 @@ public class DistanceCalculatorTests
             .Returns(categoricalDistance);
 
         // Act
-        var result = calculator.Calculate(mixedValuesA, mixedValuesB, default, default);
+        var result = calculator.Calculate(objectA, objectB, default, default);
 
         // Assert
         Assert.Equal(expectedAverageDistance, result, precision: 4);
@@ -148,18 +171,24 @@ public class DistanceCalculatorTests
     public void Calculate_WithDifferentMetricTypes_UsesCorrectMetrics()
     {
         // Arrange
-        var mixedValuesA = new List<ParameterValueModel>();
-        mixedValuesA.AddRange(CreateNumericValues(1));
-        mixedValuesA.AddRange(CreateCategoricalValues(1));
+        var objectMixedA = new NormalizedDataObject()
+        {
+            NumericValues = { 0.6, 0.4 },
+            CategoricalValues = { new[] { 1, 1, 1 } }
+        };
+        var objectMixedB = new NormalizedDataObject()
+        {
+            NumericValues = { 0.2, 0.3 },
+            CategoricalValues = { new[] { 0, 1, 1 } }
+        };
 
-        var mixedValuesB = new List<ParameterValueModel>();
-        mixedValuesB.AddRange(CreateNumericValues(1));
-        mixedValuesB.AddRange(CreateCategoricalValues(1));
+        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectMixedA);
+        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectMixedB);
 
         // Act
         calculator.Calculate(
-            mixedValuesA,
-            mixedValuesB,
+            objectA,
+            objectB,
             NumericDistanceMetricType.Manhattan,
             CategoricalDistanceMetricType.Jaccard);
 
@@ -170,53 +199,4 @@ public class DistanceCalculatorTests
         metricFactoryMock.Verify(f => f.GetCategorical(CategoricalDistanceMetricType.Jaccard), Times.Once);
         metricFactoryMock.Verify(f => f.GetCategorical(CategoricalDistanceMetricType.Hamming), Times.Never);
     }
-
-    #region Test Helpers
-
-    /// <summary>
-    /// Creates a list of parameter values using a factory function.
-    /// </summary>
-    private static List<ParameterValueModel> CreateParameterValues(int count, Func<int, ParameterValueModel> factory)
-    {
-        var result = new List<ParameterValueModel>(count);
-
-        for (int i = 0; i < count; ++i)
-        {
-            result.Add(factory(i));
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    /// Creates a list of numeric parameter values with normalized values.
-    /// </summary>
-    private static List<ParameterValueModel> CreateNumericValues(int count) =>
-        CreateParameterValues(count, i => new NormalizedNumericValueModel(
-            Id: i,
-            Value: i.ToString(),
-            ParameterId: i,
-            Parameter: null!,
-            NormalizedValue: (double)i / 10)
-        );
-
-    /// <summary>
-    /// Creates a list of categorical parameter values with one-hot encoding.
-    /// </summary>
-    private static List<ParameterValueModel> CreateCategoricalValues(int count, int vectorLength = 3)
-    {
-        return CreateParameterValues(count, i => {
-            var oneHotValues = new int[vectorLength];
-            oneHotValues[i % vectorLength] = 1;
-
-            return new NormalizedCategoricalValueModel(
-                Id: i,
-                Value: i.ToString(),
-                ParameterId: i,
-                Parameter: null!,
-                OneHotValues: oneHotValues);
-        });
-    }
-
-    #endregion
 }

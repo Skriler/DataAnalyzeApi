@@ -110,19 +110,7 @@ public class TestDataFactory
             centroid.NumericValues,
             centroid.CategoricalValues);
 
-        return new Centroid(valueModels);
-    }
-
-    /// <summary>
-    /// Creates a DataObjectModel with the specified numeric and categorical values.
-    /// </summary>
-    public DataObjectModel CreateNormalizedDataObjectModel(NormalizedDataObject dataObject)
-    {
-        var valueModels = CreateNormalizedValueModels(
-            dataObject.NumericValues,
-            dataObject.CategoricalValues);
-
-        return fixture.Build<DataObjectModel>()
+        return fixture.Build<Centroid>()
             .With(obj => obj.Values, valueModels)
             .Create();
     }
@@ -130,11 +118,27 @@ public class TestDataFactory
     /// <summary>
     /// Creates a DataObjectModel with the specified numeric and categorical values.
     /// </summary>
-    public DataObjectModel CreateDataObjectModel(RawDataObject dataObject)
+    public DataObjectModel CreateNormalizedDataObjectModel(NormalizedDataObject dataObject, int id = 0)
+    {
+        var valueModels = CreateNormalizedValueModels(
+            dataObject.NumericValues,
+            dataObject.CategoricalValues);
+
+        return fixture.Build<DataObjectModel>()
+            .With(obj => obj.Id, id)
+            .With(obj => obj.Values, valueModels)
+            .Create();
+    }
+
+    /// <summary>
+    /// Creates a DataObjectModel with the specified numeric and categorical values.
+    /// </summary>
+    public DataObjectModel CreateDataObjectModel(RawDataObject dataObject, int id = 0)
     {
         var valueModels = CreateValueModels(dataObject.Values);
 
         return fixture.Build<DataObjectModel>()
+            .With(obj => obj.Id, id)
             .With(obj => obj.Values, valueModels)
             .Create();
     }
@@ -144,7 +148,12 @@ public class TestDataFactory
     /// </summary>
     public DatasetModel CreateNormalizedDatasetModel(List<NormalizedDataObject> dataObjects)
     {
-        var dataObjectsModel = dataObjects.ConvertAll(CreateNormalizedDataObjectModel);
+        var dataObjectsModel = new List<DataObjectModel>();
+
+        for (int i = 0; i < dataObjects.Count; ++i)
+        {
+            dataObjectsModel.Add(CreateNormalizedDataObjectModel(dataObjects[i], i));
+        }
 
         return fixture.Build<DatasetModel>()
             .With(d => d.Objects, dataObjectsModel)
@@ -156,7 +165,12 @@ public class TestDataFactory
     /// </summary>
     public DatasetModel CreateDatasetModel(List<RawDataObject> dataObjects)
     {
-        var dataObjectsModel = dataObjects.ConvertAll(CreateDataObjectModel);
+        var dataObjectsModel = new List<DataObjectModel>();
+
+        for (int i = 0; i < dataObjects.Count; ++i)
+        {
+            dataObjectsModel.Add(CreateDataObjectModel(dataObjects[i], i));
+        }
 
         return fixture.Build<DatasetModel>()
             .With(d => d.Objects, dataObjectsModel)

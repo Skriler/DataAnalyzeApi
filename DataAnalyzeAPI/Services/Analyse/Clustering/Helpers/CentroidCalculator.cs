@@ -37,7 +37,7 @@ public class CentroidCalculator
         CalculateValuesSums(mergeObjects);
 
         var newValues = ApplyAverages(centroid, mergeObjects.Count + 1);
-        return new Centroid(newValues);
+        return new Centroid(centroid.Id, centroid.Name, newValues);
     }
 
     /// <summary>

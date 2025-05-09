@@ -1,4 +1,5 @@
 ﻿using DataAnalyzeApi.Services.Normalizers;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Helpers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Normalizers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
@@ -10,7 +11,7 @@ public class DatasetNormalizerTests
     private readonly TestDataFactory dataFactory = new();
 
     [Theory]
-    [MemberData(nameof(NormalizeTestCases))]
+    [MemberData(nameof(DatasetNormalizerTestData.GetNormalizeTestCases), MemberType = typeof(DatasetNormalizerTestData))]
     public void Normalize_WhenMixedParameters_ReturnsCorrectNormalization(NormalizerTestCase testCase)
     {
         // Arrange
@@ -25,6 +26,4 @@ public class DatasetNormalizerTests
         Assert.NotEmpty(result.Objects);
         ParameterValueComparison.AssertDataObjectsEqual(expecteDataset.Objects, result.Objects);
     }
-
-    public static IEnumerable<object[]> NormalizeTestCases => DatasetNormalizerTestData.GetNormalizeTestCases();
 }

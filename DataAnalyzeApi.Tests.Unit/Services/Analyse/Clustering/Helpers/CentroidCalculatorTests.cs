@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Clusterers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Helpers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases;
@@ -30,7 +31,7 @@ public class CentroidCalculatorTests
     }
 
     [Theory]
-    [MemberData(nameof(RecalculateTestCases))]
+    [MemberData(nameof(CentroidCalculatorTestData.GetRecalculateTestCases), MemberType = typeof(CentroidCalculatorTestData))]
     public void Calculate_ReturnsExpectedDistance(CentroidTestCase testCase)
     {
         // Arrange
@@ -45,6 +46,4 @@ public class CentroidCalculatorTests
         Assert.NotEmpty(result.Values);
         ParameterValueComparison.AssertParameterValuesEqual(expectedCentroid.Values, result.Values);
     }
-
-    public static IEnumerable<object[]> RecalculateTestCases => CentroidCalculatorTestData.GetRecalculateTestCases();
 }
