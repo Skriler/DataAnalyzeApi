@@ -8,22 +8,15 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
 namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
-public class AgglomerativeClusterer : BaseClusterer<AgglomerativeSettings>
+public class AgglomerativeClusterer(
+    IDistanceCalculator distanceCalculator,
+    ClusterNameGenerator nameGenerator
+    ) : BaseClusterer<AgglomerativeSettings>(distanceCalculator, nameGenerator)
 {
     protected override string ClusterPrefix => nameof(ClusterAlgorithm.Agglomerative);
 
-    private readonly ClusterNameGenerator nameGenerator;
-
     private List<AgglomerativeCluster> clusters = default!;
     private AgglomerativeSettings settings = default!;
-
-    public AgglomerativeClusterer(
-        IDistanceCalculator distanceCalculator,
-        ClusterNameGenerator nameGenerator
-        ) : base(distanceCalculator)
-    {
-        this.nameGenerator = nameGenerator;
-    }
 
     public override List<Cluster> Cluster(List<DataObjectModel> objects, AgglomerativeSettings settings)
     {

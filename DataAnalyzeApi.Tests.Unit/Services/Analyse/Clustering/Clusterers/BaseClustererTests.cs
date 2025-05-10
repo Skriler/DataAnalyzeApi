@@ -1,4 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
@@ -8,7 +9,6 @@ using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases.Clusterers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
 using Moq;
-using System;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Clusterers;
 
@@ -35,7 +35,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     }
 
     [Fact]
-    public void Cluster_WhenEmptyObjects_ReturnsEmptyList()
+    public virtual void Cluster_WhenEmptyObjects_ReturnsEmptyList()
     {
         // Arrange
         var emptyObjects = new List<DataObjectModel>();
@@ -49,7 +49,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     }
 
     [Fact]
-    public void Cluster_WhenOnlyOneObject_ReturnsSingleCluster()
+    public virtual void Cluster_WhenOnlyOneObject_ReturnsSingleCluster()
     {
         // Arrange
         var dataObjects = new List<NormalizedDataObject>()
@@ -74,7 +74,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     }
 
     [Fact]
-    public void Cluster_WhenCalculatingDistances_ShouldUseSpecifiedMetrics()
+    public virtual void Cluster_WhenCalculatingDistances_ShouldUseSpecifiedMetrics()
     {
         // Arrange
         var dataObjects = new List<NormalizedDataObject>()
@@ -124,6 +124,36 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
             Times.Never);
     }
 
+    // Default realization for test
+    public void ClustererReturnsExpectedClusters(BaseClustererTestCase testCase, TSettings settings)
+    {
+        // Arrange
+        var dataset = dataFactory.CreateNormalizedDatasetModel(testCase.Objects);
+        SetupDistanceCalculatorMock(testCase.PairwiseDistances!);
+
+        // Act
+        var result = clusterer.Cluster(dataset.Objects, settings);
+
+        // Assert
+        AssertClustersEqualsExpected(testCase, result);
+    }
+
+    protected virtual void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<Cluster> result)
+    {
+        Assert.NotEmpty(result);
+        Assert.Equal(testCase.ExpectedClusterCount, result.Count);
+
+        var expectedClusterSizes = testCase.ExpectedClusterSizes
+            .OrderByDescending(s => s)
+            .ToList();
+        var actualClusterSizes = result
+            .Select(c => c.Objects.Count)
+            .OrderByDescending(size => size)
+            .ToList();
+
+        Assert.Equal(expectedClusterSizes, actualClusterSizes);
+    }
+
     protected abstract TClusterer CreateClusterer(
         IDistanceCalculator calculator,
         ClusterNameGenerator generator);
@@ -157,6 +187,11 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
                 NumericDistanceMetricType numericType,
                 CategoricalDistanceMetricType categoricalType) =>
             {
+                if (objA.Id == objB.Id)
+                {
+                    return 0;
+                }
+
                 if (distanceLookup.TryGetValue((objA.Id, objB.Id), out double distance))
                 {
                     return distance;

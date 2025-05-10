@@ -7,12 +7,13 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
 namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
-public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
+public class DBSCANClusterer(
+    IDistanceCalculator distanceCalculator,
+    ClusterNameGenerator nameGenerator
+    ) : BaseClusterer<DBSCANSettings>(distanceCalculator, nameGenerator)
 {
     protected override string ClusterPrefix => nameof(ClusterAlgorithm.DBSCAN);
     protected string NoiseClusterPrefix => "Noise";
-
-    private readonly ClusterNameGenerator nameGenerator;
 
     /// <summary>
     /// A set of visited objects to prevent reprocessing.
@@ -25,14 +26,6 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
     private readonly HashSet<DataObjectModel> noiseObjects = new();
 
     private DBSCANSettings settings = default!;
-
-    public DBSCANClusterer(
-        IDistanceCalculator distanceCalculator,
-        ClusterNameGenerator nameGenerator
-        ) : base(distanceCalculator)
-    {
-        this.nameGenerator = nameGenerator;
-    }
 
     /// <summary>
     /// Performs a clustering process by iterating over all objects.
@@ -54,7 +47,9 @@ public class DBSCANClusterer : BaseClusterer<DBSCANSettings>
 
             var neighbors = GetNeighbors(obj, objects);
 
-            if (neighbors.Count < settings.MinPoints)
+            // The core point requires the point itself plus at least (MinPoints - 1) neighbors.
+            // So we add 1 to the neighbor count to include the point itself in the total count.
+            if (neighbors.Count + 1 < settings.MinPoints)
             {
                 noiseObjects.Add(obj);
                 continue;

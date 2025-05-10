@@ -8,13 +8,15 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 
 namespace DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 
-public class KMeansClusterer : BaseClusterer<KMeansSettings>
+public class KMeansClusterer(
+    IDistanceCalculator distanceCalculator,
+    ClusterNameGenerator nameGenerator,
+    CentroidCalculator centroidCalculator
+    ) : BaseClusterer<KMeansSettings>(distanceCalculator, nameGenerator)
 {
     protected override string ClusterPrefix => nameof(ClusterAlgorithm.KMeans);
 
-    private readonly ClusterNameGenerator nameGenerator;
-    private readonly CentroidCalculator centroidCalculator;
-    private readonly Random random;
+    private readonly CentroidCalculator centroidCalculator = centroidCalculator;
 
     private List<KMeansCluster> clusters = default!;
     private KMeansSettings settings = default!;
@@ -25,17 +27,6 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
     /// of changes in object assignments during the clustering process.
     /// </summary>
     private Dictionary<DataObjectModel, int> objectClusterMap = new();
-
-    public KMeansClusterer(
-        IDistanceCalculator distanceCalculator,
-        ClusterNameGenerator nameGenerator,
-        CentroidCalculator centroidCalculator
-        ) : base(distanceCalculator)
-    {
-        this.nameGenerator = nameGenerator;
-        this.centroidCalculator = centroidCalculator;
-        random = new();
-    }
 
     public override List<Cluster> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
     {
@@ -59,16 +50,18 @@ public class KMeansClusterer : BaseClusterer<KMeansSettings>
     /// </summary>
     private void InitializeClusters(List<DataObjectModel> objects)
     {
-        var selectedIndices = new HashSet<int>();
-
-        var randomIndices = Enumerable.Range(0, objects.Count)
-            .OrderBy(_ => random.Next())
-            .Take(settings.NumberOfClusters)
-            .ToList();
-
-        foreach (var index in randomIndices)
+        // For n clusters, we want to divide the range [0, objects.Count-1] into n equal parts
+        // and take the middle point of each part as the centroid index
+        for (int i = 0; i < settings.NumberOfClusters; ++i)
         {
-            var cluster = new KMeansCluster(objects[index], nameGenerator.GenerateName(ClusterPrefix));
+            double segmentStart = (double)i * objects.Count / settings.NumberOfClusters;
+            double segmentEnd = (double)(i + 1) * objects.Count / settings.NumberOfClusters;
+
+            int middleIndex = (int)Math.Floor((segmentStart + segmentEnd) / 2);
+
+            middleIndex = Math.Max(0, Math.Min(middleIndex, objects.Count - 1));
+
+            var cluster = new KMeansCluster(objects[middleIndex], nameGenerator.GenerateName(ClusterPrefix));
             clusters.Add(cluster);
         }
     }

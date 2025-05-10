@@ -31,36 +31,16 @@ public class AgglomerativeClustererTests : BaseClustererTests<AgglomerativeClust
     }
 
     [Theory]
-    [MemberData(nameof(AgglomerativeClustererTestData.GetAgglomerativeClusterTestCases), MemberType = typeof(AgglomerativeClustererTestData))]
-    public void Calculate_ReturnsExpectedDistance(AgglomerativeClustererTestCase testCase)
+    [MemberData(nameof(AgglomerativeClustererTestData.GetAgglomerativeClustererTestCases), MemberType = typeof(AgglomerativeClustererTestData))]
+    public void Cluster_ReturnsExpectedDistance(AgglomerativeClustererTestCase testCase)
     {
         // Arrange
-        var dataset = dataFactory.CreateNormalizedDatasetModel(testCase.Objects);
-
         var settings = new AgglomerativeSettings(
             NumericMetric: default,
             CategoricalMetric: default,
             IncludeParameters: false,
             Threshold: testCase.Threshold);
 
-        SetupDistanceCalculatorMock(testCase.PairwiseDistances!);
-
-        // Act
-        var result = clusterer.Cluster(dataset.Objects, settings);
-
-        // Assert
-        Assert.NotEmpty(result);
-        Assert.Equal(testCase.ExpectedClusterCount, result.Count);
-
-        var expectedClusterSizes = testCase.ExpectedClusterSizes
-            .OrderByDescending(s => s)
-            .ToList();
-
-        var actualClusterSizes = result
-            .Select(c => c.Objects.Count)
-            .OrderByDescending(size => size)
-            .ToList();
-
-        Assert.Equal(expectedClusterSizes, actualClusterSizes);
+        ClustererReturnsExpectedClusters(testCase, settings);
     }
 }

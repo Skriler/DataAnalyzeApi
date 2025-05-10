@@ -8,7 +8,7 @@ namespace DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Clusterer
 /// </summary>
 public static class AgglomerativeClustererTestData
 {
-    public static IEnumerable<object[]> GetAgglomerativeClusterTestCases() =>
+    public static IEnumerable<object[]> GetAgglomerativeClustererTestCases() =>
         new List<object[]>
         {
             // Test Case 1: 3 objects with low threshold & 3 clusters
