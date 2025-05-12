@@ -2,8 +2,6 @@
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
-using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
-using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Clusterers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases.Clusterers;
 
@@ -11,20 +9,16 @@ namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Clusterers;
 
 public class DBSCANClustererTests : BaseClustererTests<DBSCANClusterer, DBSCANSettings>
 {
-    protected override DBSCANClusterer CreateClusterer(
-        IDistanceCalculator calculator,
-        ClusterNameGenerator generator)
-    {
-        return new DBSCANClusterer(calculator, generator);
-    }
+    public DBSCANClustererTests()
+        : base((calculator, generator) => new DBSCANClusterer(calculator, generator))
+    { }
 
-    protected override DBSCANSettings CreateSettings(
+    private DBSCANSettings CreateDBSCANSettings(
         NumericDistanceMetricType numericMetric,
-        CategoricalDistanceMetricType categoricalMetric)
+        CategoricalDistanceMetricType categoricalMetric,
+        double epsilon,
+        int minPoints)
     {
-        const double epsilon = 0.2;
-        const int minPoints = 2;
-
         return new DBSCANSettings(
             NumericMetric: numericMetric,
             CategoricalMetric: categoricalMetric,
@@ -33,20 +27,23 @@ public class DBSCANClustererTests : BaseClustererTests<DBSCANClusterer, DBSCANSe
             MinPoints: minPoints);
     }
 
-    [Theory]
-    [MemberData(nameof(DBSCANCClustererTestData.GetDBSCANClustererTestCases), MemberType = typeof(DBSCANCClustererTestData))]
-    public void Cluster_ReturnsExpectedDistance(DBSCANClustererTestCase testCase)
+    protected override DBSCANSettings CreateDefaultSettings(
+        NumericDistanceMetricType numericMetric,
+        CategoricalDistanceMetricType categoricalMetric)
     {
-        var settings = new DBSCANSettings(
-            NumericMetric: default,
-            CategoricalMetric: default,
-            IncludeParameters: false,
-            Epsilon: testCase.Epsilon,
-            MinPoints: testCase.MinPoints);
+        const double epsilon = 0.2;
+        const int minPoints = 2;
 
-        ClustererReturnsExpectedClusters(testCase, settings);
+        return CreateDBSCANSettings(
+            numericMetric,
+            categoricalMetric,
+            epsilon,
+            minPoints);
     }
 
+    /// <summary>
+    /// Additional verify for the presence of a noise cluster.
+    /// </summary>
     protected override void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<Cluster> result)
     {
         base.AssertClustersEqualsExpected(testCase, result);
@@ -55,5 +52,20 @@ public class DBSCANClustererTests : BaseClustererTests<DBSCANClusterer, DBSCANSe
         {
             Assert.Contains(result, c => c.Name.StartsWith("Noise"));
         }
+    }
+
+    [Theory]
+    [MemberData(
+        nameof(DBSCANCClustererTestData.GetDBSCANClustererTestCases),
+        MemberType = typeof(DBSCANCClustererTestData))]
+    public void Cluster_ReturnsExpectedDistance(DBSCANClustererTestCase testCase)
+    {
+        var settings = CreateDBSCANSettings(
+            default,
+            default,
+            testCase.Epsilon,
+            testCase.MinPoints);
+
+        ClustererReturnsExpectedClusters(testCase, settings);
     }
 }

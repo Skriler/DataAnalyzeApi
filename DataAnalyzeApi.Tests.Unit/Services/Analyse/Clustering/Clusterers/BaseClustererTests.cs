@@ -12,6 +12,11 @@ using Moq;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Clusterers;
 
+/// <summary>
+/// Base class for all clustering algorithm tests that provides common setup and test methods.
+/// </summary>
+/// <typeparam name="TClusterer">The type of clusterer being tested</typeparam>
+/// <typeparam name="TSettings">The settings type for the clusterer</typeparam>
 public abstract class BaseClustererTests<TClusterer, TSettings>
     where TClusterer : BaseClusterer<TSettings>
     where TSettings : BaseClusterSettings
@@ -21,7 +26,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     protected readonly Mock<ClusterNameGenerator> nameGeneratorMock;
     protected readonly TClusterer clusterer;
 
-    protected BaseClustererTests()
+    protected BaseClustererTests(Func<IDistanceCalculator, ClusterNameGenerator, TClusterer> createClusterer)
     {
         dataFactory = new();
         distanceCalculatorMock = new Mock<IDistanceCalculator>();
@@ -31,7 +36,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
             .Setup(g => g.GenerateName(It.IsAny<string>()))
             .Returns<string>(prefix => $"{prefix}-Cluster");
 
-        clusterer = CreateClusterer(distanceCalculatorMock.Object, nameGeneratorMock.Object);
+        clusterer = createClusterer(distanceCalculatorMock.Object, nameGeneratorMock.Object);
     }
 
     [Fact]
@@ -39,7 +44,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     {
         // Arrange
         var emptyObjects = new List<DataObjectModel>();
-        var settings = CreateSettings(default, default);
+        var settings = CreateDefaultSettings(default, default);
 
         // Act
         var result = clusterer.Cluster(emptyObjects, settings);
@@ -62,7 +67,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
         };
 
         var dataset = dataFactory.CreateNormalizedDatasetModel(dataObjects);
-        var settings = CreateSettings(default, default);
+        var settings = CreateDefaultSettings(default, default);
 
         // Act
         var result = clusterer.Cluster(dataset.Objects, settings);
@@ -94,7 +99,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
 
         var dataset = dataFactory.CreateNormalizedDatasetModel(dataObjects);
 
-        var settings = CreateSettings(
+        var settings = CreateDefaultSettings(
             NumericDistanceMetricType.Manhattan,
             CategoricalDistanceMetricType.Jaccard);
 
@@ -124,7 +129,9 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
             Times.Never);
     }
 
-    // Default realization for test
+    /// <summary>
+    /// Executes the clustering test case with the provided settings.
+    /// </summary>
     public void ClustererReturnsExpectedClusters(BaseClustererTestCase testCase, TSettings settings)
     {
         // Arrange
@@ -138,6 +145,9 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
         AssertClustersEqualsExpected(testCase, result);
     }
 
+    /// <summary>
+    /// Verifies that the clustering result matches the expected outcome
+    /// </summary>
     protected virtual void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<Cluster> result)
     {
         Assert.NotEmpty(result);
@@ -153,14 +163,6 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
 
         Assert.Equal(expectedClusterSizes, actualClusterSizes);
     }
-
-    protected abstract TClusterer CreateClusterer(
-        IDistanceCalculator calculator,
-        ClusterNameGenerator generator);
-
-    protected abstract TSettings CreateSettings(
-        NumericDistanceMetricType numericMetric,
-        CategoricalDistanceMetricType categoricalMetric);
 
     /// <summary>
     /// Sets up the mock distance calculator to return predefined distances between object pairs.
@@ -201,4 +203,8 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
                 throw new InvalidOperationException($"No mock distance defined for objects with IDs {objA.Id} and {objB.Id}.");
             });
     }
+
+    protected abstract TSettings CreateDefaultSettings(
+        NumericDistanceMetricType numericMetric,
+        CategoricalDistanceMetricType categoricalMetric);
 }

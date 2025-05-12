@@ -49,7 +49,7 @@ public class NormalizedValueComparer : ICompare
     private static string[] GetSplitValues(string values)
     {
         return values.Split(',')
-            .Select(v => v.Trim())
+            .Select(v => v.Trim().ToLowerInvariant())
             .Order()
             .ToArray();
     }

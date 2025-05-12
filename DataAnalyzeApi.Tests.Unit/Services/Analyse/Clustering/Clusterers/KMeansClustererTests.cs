@@ -1,4 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
@@ -6,27 +7,37 @@ using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Clusterers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases.Clusterers;
+using Moq;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Clusterers;
 
 public class KMeansClustererTests : BaseClustererTests<KMeansClusterer, KMeansSettings>
 {
-    protected CentroidCalculator centroidCalculator = new();
+    public KMeansClustererTests()
+        : base(CreateKMeansClusterer)
+    { }
 
-    protected override KMeansClusterer CreateClusterer(
-        IDistanceCalculator calculator,
-        ClusterNameGenerator generator)
+    private static KMeansClusterer CreateKMeansClusterer(IDistanceCalculator calculator, ClusterNameGenerator generator)
     {
-        return new KMeansClusterer(calculator, generator, centroidCalculator);
+        var centroidCalculatorMock = new Mock<CentroidCalculator>();
+        centroidCalculatorMock
+            .Setup(c => c.Recalculate(
+                It.IsAny<Centroid>(),
+                It.IsAny<List<DataObjectModel>>()))
+            .Returns((Centroid centroid, List<DataObjectModel> objects) => centroid);
+
+        return new KMeansClusterer(
+            calculator,
+            generator,
+            centroidCalculatorMock.Object);
     }
 
-    protected override KMeansSettings CreateSettings(
+    private static KMeansSettings CreateKMeansSettings(
         NumericDistanceMetricType numericMetric,
-        CategoricalDistanceMetricType categoricalMetric)
+        CategoricalDistanceMetricType categoricalMetric,
+        int maxIterations,
+        int numberOfClusters)
     {
-        const int maxIterations = 500;
-        const int numberOfClusters = 1;
-
         return new KMeansSettings(
             NumericMetric: numericMetric,
             CategoricalMetric: categoricalMetric,
@@ -35,30 +46,46 @@ public class KMeansClustererTests : BaseClustererTests<KMeansClusterer, KMeansSe
             NumberOfClusters: numberOfClusters);
     }
 
+    protected override KMeansSettings CreateDefaultSettings(
+        NumericDistanceMetricType numericMetric,
+        CategoricalDistanceMetricType categoricalMetric)
+    {
+        const int maxIterations = 500;
+        const int numberOfClusters = 1;
+
+        return CreateKMeansSettings(
+            numericMetric,
+            categoricalMetric,
+            maxIterations,
+            numberOfClusters);
+    }
+
+    /// <summary>
+    /// Verify that the algorithm throws an exception instead of returning an empty list,
+    /// K-Means shouldn't allow more clusters than objects, so in this case an exception is required.
+    /// </summary>
     [Fact]
     public override void Cluster_WhenEmptyObjects_ReturnsEmptyList()
     {
         // Arrange
         var emptyObjects = new List<DataObjectModel>();
-        var settings = CreateSettings(default, default);
+        var settings = CreateDefaultSettings(default, default);
 
-        // Act
-        var result = clusterer.Cluster(emptyObjects, settings);
-
-        // Assert
+        // Act & Assert
         Assert.Throws<InvalidOperationException>(() => clusterer.Cluster(emptyObjects, settings));
     }
 
     [Theory]
-    [MemberData(nameof(KMeansClustererTestData.GetKMeansClustererTestCases), MemberType = typeof(KMeansClustererTestData))]
+    [MemberData(
+        nameof(KMeansClustererTestData.GetKMeansClustererTestCases), 
+        MemberType = typeof(KMeansClustererTestData))]
     public void Cluster_ReturnsExpectedDistance(KMeansClustererTestCase testCase)
     {
-        var settings = new KMeansSettings(
-            NumericMetric: default,
-            CategoricalMetric: default,
-            IncludeParameters: false,
-            MaxIterations: testCase.MaxIterations,
-            NumberOfClusters: testCase.NumberOfClusters);
+        var settings = CreateKMeansSettings(
+            default,
+            default,
+            testCase.MaxIterations,
+            testCase.NumberOfClusters);
 
         ClustererReturnsExpectedClusters(testCase, settings);
     }
