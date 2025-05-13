@@ -28,7 +28,7 @@ public class SimilarityService : BaseAnalysisService
     /// </summary>
     public async Task<SimilarityResult> PerformAnalysisAsync(DatasetModel dataset, SimilarityRequest? request)
     {
-        var similarities = comparer.CalculateSimilarity(dataset);
+        var similarities = comparer.CompareAllObjects(dataset);
 
         var includeParameters = request?.IncludeParameters ?? false;
         var similaritiesDto = analysisMapper.MapSimilarityPairList(similarities, includeParameters);

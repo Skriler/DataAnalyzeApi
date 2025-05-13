@@ -1,0 +1,122 @@
+﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Enum;
+using DataAnalyzeApi.Services.Analyse.Comparers;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
+using Moq;
+
+namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Comparers;
+
+public class SimilarityComparerTests
+{
+    protected readonly TestDataFactory dataFactory;
+    private readonly Mock<ICompare> comparerMock;
+    private readonly SimilarityComparer similarityComparer;
+
+    public SimilarityComparerTests()
+    {
+        dataFactory = new();
+        comparerMock = new Mock<ICompare>();
+        similarityComparer = new SimilarityComparer(comparerMock.Object);
+    }
+
+    [Fact]
+    public void CompareAllObjects_ShouldThrowException_WhenDatasetIsNull()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => similarityComparer.CompareAllObjects(null!));
+    }
+
+    [Fact]
+    public void CCompareAllObjects_ShouldThrowException_WhenDatasetHasNoObjects()
+    {
+        // Arrange
+        var rawObjects = new List<RawDataObject>();
+        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => similarityComparer.CompareAllObjects(datasetModel));
+    }
+
+    [Fact]
+    public void CompareAllObjects_ShouldThrowException_WhenDatasetHasNoParameters()
+    {
+        // Arrange
+        var rawValue = new RawDataObject() { Values =  { "0.5", "0.2" } };
+        var parameterStates = new List<ParameterStateModel>();
+
+        var dataObjects = new List<DataObjectModel>()
+        {
+            dataFactory.CreateDataObjectModel(rawValue),
+        };
+
+        var datasetModel = new DatasetModel(0, string.Empty, parameterStates, dataObjects);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => similarityComparer.CompareAllObjects(datasetModel));
+    }
+
+    [Fact]
+    public void CompareAllObjects_ShouldThrowException_WhenVectorIsNull()
+    {
+        // Arrange
+        var rawValue = new RawDataObject() { Values = { "0.5", "0.2" } };
+        var parameterStates = new List<ParameterStateModel>();
+
+        var dataObjects = new List<DataObjectModel>()
+        {
+            dataFactory.CreateDataObjectModel(rawValue),
+        };
+
+        var datasetModel = new DatasetModel(0, string.Empty, parameterStates, dataObjects);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => similarityComparer.CompareAllObjects(datasetModel));
+    }
+
+    [Fact]
+    public void CompareAllObjects_ShouldThrowException_WhenVectorsAreEmpty()
+    {
+        // Arrange
+        var rawObjects = new List<RawDataObject>()
+        {
+            new RawDataObject
+            {
+                Values = new List<string>(),
+            },
+            new RawDataObject
+            {
+                Values = new List<string>(),
+            },
+        };
+
+        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+
+        // Act & Assert
+        Assert.Throws<EmptyVectorException>(() => similarityComparer.CompareAllObjects(datasetModel));
+    }
+
+    [Fact]
+    public void CompareAllObjects_ShouldThrowException_WhenVectorsHaveDifferentLengths()
+    {
+        // Arrange
+        var rawObjects = new List<RawDataObject>()
+        {
+            new RawDataObject
+            {
+                Values = { "0.2", "0.4" },
+            },
+
+            new RawDataObject
+            {
+                Values = { "0.6", "0.8", "0.3" },
+            },
+        };
+
+        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+
+        // Act & Assert
+        Assert.Throws<VectorLengthMismatchException>(() => similarityComparer.CompareAllObjects(datasetModel));
+    }
+}

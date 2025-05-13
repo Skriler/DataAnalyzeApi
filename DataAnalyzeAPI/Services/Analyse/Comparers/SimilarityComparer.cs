@@ -11,10 +11,15 @@ public class SimilarityComparer(ICompare comparer)
 
     private readonly Dictionary<long, double> maxRanges = new();
 
-    public List<SimilarityPair> CalculateSimilarity(DatasetModel dataset)
+    /// <summary>
+    /// Calculates similarity pairs between objects in the dataset
+    /// based on their parameter values.
+    /// </summary>
+    public List<SimilarityPair> CompareAllObjects(DatasetModel dataset)
     {
-        InitializeMaxRanges(dataset.Objects, dataset.Parameters);
+        ValidateDataset(dataset);
 
+        InitializeMaxRanges(dataset.Objects, dataset.Parameters);
         return CompareObjects(dataset.Objects, dataset.Parameters);
     }
 
@@ -33,19 +38,37 @@ public class SimilarityComparer(ICompare comparer)
 
         foreach (var parameterState in numericParameters)
         {
-            var values = objects
-                .SelectMany(obj => obj.Values)
-                .Where(v => v.ParameterId == parameterState.Id)
-                .Select(v => Convert.ToDouble(v.Value))
-                .ToList();
-
-            var minValue = values.Min();
-            var maxValue = values.Max();
-
-            maxRanges[parameterState.Id] = maxValue > minValue
-                ? maxValue - minValue
-                : 1;
+            maxRanges[parameterState.Id] = CalculateRangeForParameter(parameterState, objects);
         }
+    }
+
+    /// <summary>
+    /// Calculates the value range (max - min) for the given numeric parameter across all provided data objects.
+    /// </summary>
+    private double CalculateRangeForParameter(
+        ParameterStateModel parameterState,
+        List<DataObjectModel> objects)
+    {
+        double minValue = double.MaxValue;
+        double maxValue = double.MinValue;
+
+        foreach (var obj in objects)
+        {
+            var parameterValue = obj.Values.FirstOrDefault(v => v.ParameterId == parameterState.Id);
+
+            if (parameterValue == null || string.IsNullOrEmpty(parameterValue.Value))
+                continue;
+
+            if (!double.TryParse(parameterValue.Value, out double doubleValue))
+                continue;
+
+            minValue = Math.Min(minValue, doubleValue);
+            maxValue = Math.Max(maxValue, doubleValue);
+        }
+
+        return minValue < double.MaxValue && maxValue > minValue
+            ? maxValue - minValue
+            : 1;
     }
 
     /// <summary>
@@ -55,6 +78,10 @@ public class SimilarityComparer(ICompare comparer)
         List<DataObjectModel> objects,
         List<ParameterStateModel> parameterStates)
     {
+        var activeParameterStates = parameterStates
+            .Where(ps => ps.IsActive)
+            .ToList();
+
         var similarities = new List<SimilarityPair>();
 
         for (int i = 0; i < objects.Count; ++i)
@@ -68,7 +95,7 @@ public class SimilarityComparer(ICompare comparer)
                 var similarity = new SimilarityPair(
                     objectA,
                     objectB,
-                    CalculateSimilarityPercentage(objectA, objectB, parameterStates)
+                    CalculateSimilarityPercentage(objectA, objectB, activeParameterStates)
                 );
 
                 similarities.Add(similarity);
@@ -84,27 +111,27 @@ public class SimilarityComparer(ICompare comparer)
     private double CalculateSimilarityPercentage(
         DataObjectModel objectA,
         DataObjectModel objectB,
-        List<ParameterStateModel> parameterStates)
+        List<ParameterStateModel> activeParameterStates)
     {
-        if (objectA.Values.Count != objectB.Values.Count)
-            throw new VectorLengthMismatchException();
-
-        if (objectA.Values.Count == 0)
-            throw new EmptyVectorException();
+        ValidateVectors(objectA.Values, objectB.Values);
 
         var weightedSimilarity = 0d;
         var totalNormalizedWeight = 0d;
 
-        for (int i = 0; i < parameterStates.Count; ++i)
+        foreach (var parameterState in activeParameterStates)
         {
-            var parameterState = parameterStates[i];
+            var parameterValueA = objectA.Values.FirstOrDefault(v => v.ParameterId == parameterState.Id);
+            var parameterValueB = objectB.Values.FirstOrDefault(v => v.ParameterId == parameterState.Id);
 
-            if (!parameterState.IsActive)
+            if (parameterValueA == null || parameterValueB == null)
                 continue;
 
-            var valueA = objectA.Values.First(v => v.ParameterId == parameterState.Id).Value;
-            var valueB = objectB.Values.First(v => v.ParameterId == parameterState.Id).Value;
-            var maxRange = maxRanges[parameterState.Id];
+            var valueA = parameterValueA.Value;
+            var valueB = parameterValueB.Value;
+
+            var maxRange = parameterState.Type == ParameterType.Numeric
+                ? maxRanges[parameterState.Id]
+                : 1;
 
             var similarity = comparer.Compare(valueA, valueB, maxRange);
 
@@ -113,5 +140,36 @@ public class SimilarityComparer(ICompare comparer)
         }
 
         return totalNormalizedWeight > 0 ? weightedSimilarity / totalNormalizedWeight : 0;
+    }
+
+    /// <summary>
+    /// Validates input dataset.
+    /// Throws exceptions if the dataset is null or if it contains no objects or parameters.
+    /// </summary>
+    private static void ValidateDataset(DatasetModel dataset)
+    {
+        ArgumentNullException.ThrowIfNull(dataset);
+
+        if (dataset.Objects == null || dataset.Objects.Count == 0)
+            throw new ArgumentException("Dataset must contain objects", nameof(dataset));
+
+        if (dataset.Parameters == null || dataset.Parameters.Count == 0)
+            throw new ArgumentException("Dataset must contain parameters", nameof(dataset));
+    }
+
+    /// <summary>
+    /// Validates input vectors.
+    /// Throws exceptions if vectors are null, empty or have different lengths.
+    /// </summary>
+    private static void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
+    {
+        if (valuesA == null || valuesB == null)
+            throw new VectorNullException();
+
+        if (valuesA.Count == 0)
+            throw new EmptyVectorException();
+
+        if (valuesA.Count != valuesB.Count)
+            throw new VectorLengthMismatchException();
     }
 }

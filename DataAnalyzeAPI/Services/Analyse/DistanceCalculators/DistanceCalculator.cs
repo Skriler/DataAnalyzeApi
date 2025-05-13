@@ -41,22 +41,6 @@ public class DistanceCalculator(IMetricFactory metricFactory) : IDistanceCalcula
     }
 
     /// <summary>
-    /// Validates input vectors.
-    /// Throws exceptions if objects have different parameter counts or are empty.
-    /// </summary>
-    private void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
-    {
-        if (valuesA == null || valuesB == null)
-            throw new VectorNullException();
-
-        if (valuesA.Count != valuesB.Count)
-            throw new VectorLengthMismatchException();
-
-        if (valuesA.Count == 0)
-            throw new EmptyVectorException();
-    }
-
-    /// <summary>
     /// Calculates distance between numeric parameters of two vectors.
     /// </summary>
     private double CalculateNumericDistance(
@@ -117,5 +101,21 @@ public class DistanceCalculator(IMetricFactory metricFactory) : IDistanceCalcula
         double weightedCategoricalDistance = categoricalDistance * categoricalParametersCount;
 
         return (weightedNumericDistance + weightedCategoricalDistance) / totalCount;
+    }
+
+    /// <summary>
+    /// Validates input vectors.
+    /// Throws exceptions if vectors are null, empty or have different lengths.
+    /// </summary>
+    private static void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
+    {
+        if (valuesA == null || valuesB == null)
+            throw new VectorNullException();
+
+        if (valuesA.Count != valuesB.Count)
+            throw new VectorLengthMismatchException();
+
+        if (valuesA.Count == 0)
+            throw new EmptyVectorException();
     }
 }
