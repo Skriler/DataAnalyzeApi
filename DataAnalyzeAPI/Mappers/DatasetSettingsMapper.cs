@@ -10,7 +10,7 @@ public class DatasetSettingsMapper
     /// <summary>
     /// Maps dataset entity to dataset model with parameter settings.
     /// </summary>
-    public DatasetModel Map(
+    public virtual DatasetModel Map(
         Dataset dataset,
         List<ParameterSettingsDto>? parameterSettings)
     {
@@ -50,7 +50,6 @@ public class DatasetSettingsMapper
             var parameterState = new ParameterStateModel(
                 parameter.Id,
                 parameter.Name,
-                parameter.TypeId,
                 parameter.Type,
                 parameterSetting.IsActive,
                 parameterSetting.Weight / totalParameterWeight

@@ -22,10 +22,16 @@ public class DataAnalyzeDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Dataset>()
-            .HasMany(d => d.Objects)
-            .WithOne(o => o.Dataset)
-            .HasForeignKey(o => o.DatasetId);
+        modelBuilder.Entity<Dataset>(entity =>
+        {
+            entity.HasMany(d => d.Objects)
+                .WithOne(o => o.Dataset)
+                .HasForeignKey(o => o.DatasetId);
+
+            entity.HasMany(d => d.Parameters)
+                .WithOne(type => type.Dataset)
+                .HasForeignKey(o => o.DatasetId);
+        });
 
         modelBuilder.Entity<DataObject>()
             .HasMany(o => o.Values)

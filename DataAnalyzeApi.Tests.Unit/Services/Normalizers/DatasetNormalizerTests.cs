@@ -8,7 +8,7 @@ namespace DataAnalyzeApi.Tests.Unit.Services.Normalizers;
 
 public class DatasetNormalizerTests
 {
-    private readonly TestDataFactory dataFactory = new();
+    private readonly ServiceDataFactory dataFactory = new();
 
     [Theory]
     [MemberData(nameof(DatasetNormalizerTestData.GetNormalizeTestCases), MemberType = typeof(DatasetNormalizerTestData))]

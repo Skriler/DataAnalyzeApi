@@ -10,7 +10,7 @@ namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Helpers;
 
 public class CentroidCalculatorTests
 {
-    private readonly TestDataFactory dataFactory = new();
+    private readonly ServiceDataFactory dataFactory = new();
     private readonly CentroidCalculator calculator = new();
 
     [Fact]

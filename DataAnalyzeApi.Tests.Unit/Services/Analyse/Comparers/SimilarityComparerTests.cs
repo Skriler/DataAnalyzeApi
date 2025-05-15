@@ -10,7 +10,7 @@ namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Comparers;
 
 public class SimilarityComparerTests
 {
-    protected readonly TestDataFactory dataFactory;
+    protected readonly ServiceDataFactory dataFactory;
     private readonly Mock<ICompare> comparerMock;
     private readonly SimilarityComparer similarityComparer;
 
@@ -118,5 +118,33 @@ public class SimilarityComparerTests
 
         // Act & Assert
         Assert.Throws<VectorLengthMismatchException>(() => similarityComparer.CompareAllObjects(datasetModel));
+    }
+
+    [Theory]
+    [InlineData(new string[] { "0.2", "0.3", "0.4" }, new string[] { "0.7", "0.3", "0.5" }, 1)]
+    public void Calculate_ReturnsExpectedDistance(string[] valuesA, string[] valuesB, double expectedDistance)
+    {
+        // Arrange
+        var rawObjects = new List<RawDataObject>()
+    {
+        new RawDataObject
+        {
+            Values = valuesA.ToList(),
+        },
+
+        new RawDataObject
+        {
+            Values = valuesB.ToList(),
+        },
+    };
+
+        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+
+        // Act
+        var similarityPair = similarityComparer.CompareAllObjects(datasetModel);
+
+        // Assert
+        Assert.Equal(expectedDistance, distance, precision: 4);
+        Assert.Equal(expectedAverageDistance, result, precision: 4);
     }
 }

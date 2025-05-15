@@ -13,6 +13,8 @@ public class Parameter
     [Required]
     public string Name { get; set; } = string.Empty;
 
-    [JsonIgnore] public long TypeId { get; set; }
     [JsonIgnore] public ParameterType Type { get; set; }
+
+    [JsonIgnore] public long DatasetId { get; set; }
+    [JsonIgnore] public Dataset Dataset { get; set; } = default!;
 }

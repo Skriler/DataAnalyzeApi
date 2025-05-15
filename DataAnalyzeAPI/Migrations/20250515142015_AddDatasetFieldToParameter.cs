@@ -6,11 +6,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAnalyzeApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTypeIdFieldToParameterEntity : Migration
+    public partial class AddDatasetFieldToParameter : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Parameters_Datasets_DatasetId",
+                table: "Parameters");
+
             migrationBuilder.AlterColumn<long>(
                 name: "ParameterId",
                 table: "ParameterValues",
@@ -41,7 +45,8 @@ namespace DataAnalyzeApi.Migrations
                 name: "DatasetId",
                 table: "Parameters",
                 type: "bigint",
-                nullable: true,
+                nullable: false,
+                defaultValue: 0L,
                 oldClrType: typeof(int),
                 oldType: "integer",
                 oldNullable: true);
@@ -55,13 +60,6 @@ namespace DataAnalyzeApi.Migrations
                 oldType: "integer")
                 .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-            migrationBuilder.AddColumn<long>(
-                name: "TypeId",
-                table: "Parameters",
-                type: "bigint",
-                nullable: false,
-                defaultValue: 0L);
 
             migrationBuilder.AlterColumn<long>(
                 name: "Id",
@@ -90,13 +88,21 @@ namespace DataAnalyzeApi.Migrations
                 oldType: "integer")
                 .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Parameters_Datasets_DatasetId",
+                table: "Parameters",
+                column: "DatasetId",
+                principalTable: "Datasets",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "TypeId",
+            migrationBuilder.DropForeignKey(
+                name: "FK_Parameters_Datasets_DatasetId",
                 table: "Parameters");
 
             migrationBuilder.AlterColumn<int>(
@@ -131,8 +137,7 @@ namespace DataAnalyzeApi.Migrations
                 type: "integer",
                 nullable: true,
                 oldClrType: typeof(long),
-                oldType: "bigint",
-                oldNullable: true);
+                oldType: "bigint");
 
             migrationBuilder.AlterColumn<int>(
                 name: "Id",
@@ -171,6 +176,13 @@ namespace DataAnalyzeApi.Migrations
                 oldType: "bigint")
                 .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Parameters_Datasets_DatasetId",
+                table: "Parameters",
+                column: "DatasetId",
+                principalTable: "Datasets",
+                principalColumn: "Id");
         }
     }
 }

@@ -21,7 +21,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     where TClusterer : BaseClusterer<TSettings>
     where TSettings : BaseClusterSettings
 {
-    protected readonly TestDataFactory dataFactory;
+    protected readonly ServiceDataFactory dataFactory;
     protected readonly Mock<IDistanceCalculator> distanceCalculatorMock;
     protected readonly Mock<ClusterNameGenerator> nameGeneratorMock;
     protected readonly TClusterer clusterer;

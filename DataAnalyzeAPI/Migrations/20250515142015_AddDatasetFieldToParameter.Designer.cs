@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAnalyzeApi.Migrations
 {
     [DbContext(typeof(DataAnalyzeDbContext))]
-    [Migration("20250504172457_AddTypeIdFieldToParameterEntity")]
-    partial class AddTypeIdFieldToParameterEntity
+    [Migration("20250515142015_AddDatasetFieldToParameter")]
+    partial class AddDatasetFieldToParameter
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,7 +150,7 @@ namespace DataAnalyzeApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("DatasetId")
+                    b.Property<long>("DatasetId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Name")
@@ -159,9 +159,6 @@ namespace DataAnalyzeApi.Migrations
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
-
-                    b.Property<long>("TypeId")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -342,9 +339,13 @@ namespace DataAnalyzeApi.Migrations
 
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Parameter", b =>
                 {
-                    b.HasOne("DataAnalyzeApi.Models.Entities.Dataset", null)
+                    b.HasOne("DataAnalyzeApi.Models.Entities.Dataset", "Dataset")
                         .WithMany("Parameters")
-                        .HasForeignKey("DatasetId");
+                        .HasForeignKey("DatasetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dataset");
                 });
 
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.ParameterValue", b =>

@@ -12,7 +12,7 @@ namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.DistanceCalculators;
 
 public class DistanceCalculatorTests
 {
-    protected readonly TestDataFactory dataFactory;
+    protected readonly ServiceDataFactory dataFactory;
     private readonly Mock<IMetricFactory> metricFactoryMock;
     private readonly Mock<IDistanceMetric<double>> numericMetricMock;
     private readonly Mock<IDistanceMetric<int>> categoricalMetricMock;

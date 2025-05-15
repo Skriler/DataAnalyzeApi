@@ -7,6 +7,9 @@ namespace DataAnalyzeApi.Mappers;
 
 public class DatasetProfile : Profile
 {
+    /// <summary>
+    /// Configures mappings between DTOs and entities using AutoMapper.
+    /// </summary>
     public DatasetProfile()
     {
         CreateMap<DatasetCreateDto, Dataset>()
@@ -23,8 +26,8 @@ public class DatasetProfile : Profile
                 opt => opt.MapFrom(src => MapObjects(src.Objects))
                 )
             .AfterMap((_, dest) => {
-                MapParameterValues(dest.Objects, dest.Parameters);
-                SetParameterTypes(dest.Objects, dest.Parameters);
+                AfterMapParameters(dest);
+                AfterMapParameterValues(dest.Objects, dest.Parameters);
             });
 
         CreateMap<Dataset, DatasetCreateDto>()
@@ -32,14 +35,20 @@ public class DatasetProfile : Profile
             .ForCtorParam("Objects", opt => opt.MapFrom(src => src.Objects));
 
         CreateMap<DataObject, DataObjectCreateDto>()
-            .ForCtorParam("Values", opt => opt.MapFrom(src => src.Values.ConvertAll(val => val.Value ?? "")));
+            .ForCtorParam("Values", opt => opt.MapFrom(src => src.Values.ConvertAll(val => val.Value ?? string.Empty)));
     }
 
+    /// <summary>
+    /// Maps parameter names to Parameter entities.
+    /// </summary>
     private static List<Parameter> MapParameter(List<string> parameters)
     {
         return parameters.ConvertAll(p => new Parameter { Name = p });
     }
 
+    /// <summary>
+    /// Maps DataObjectCreateDto models to DataObject entities.
+    /// </summary>
     private static List<DataObject> MapObjects(List<DataObjectCreateDto> objects)
     {
         return objects.ConvertAll(obj => new DataObject
@@ -49,29 +58,31 @@ public class DatasetProfile : Profile
         });
     }
 
-    private static void MapParameterValues(List<DataObject> objects, List<Parameter> parameters)
+    /// <summary>
+    /// Assigns dataset and determines type for each parameter.
+    /// </summary>
+    private static void AfterMapParameters(Dataset dataset)
+    {
+        for (int i = 0; i < dataset.Parameters.Count; ++i)
+        {
+            var values = dataset.Objects.ConvertAll(obj => obj.Values[i].Value);
+
+            dataset.Parameters[i].Type = DetermineParameterType(values);
+            dataset.Parameters[i].Dataset = dataset;
+        }
+    }
+
+    /// <summary>
+    /// Assigns parameters to each value in all data objects.
+    /// </summary>
+    private static void AfterMapParameterValues(List<DataObject> objects, List<Parameter> parameters)
     {
         foreach (var obj in objects)
         {
             for (int i = 0; i < obj.Values.Count; ++i)
             {
-                var val = obj.Values[i];
-                val.Parameter = parameters[i];
+                obj.Values[i].Parameter = parameters[i];
             }
-        }
-    }
-
-    /// <summary>
-    /// Sets the type to each parameter based on the values.
-    /// </summary>
-    private static void SetParameterTypes(List<DataObject> objects, List<Parameter> parameters)
-    {
-        for (int i = 0; i < parameters.Count; ++i)
-        {
-            var values = objects
-                .ConvertAll(obj => obj.Values[i].Value);
-
-            parameters[i].Type = DetermineParameterType(values);
         }
     }
 
