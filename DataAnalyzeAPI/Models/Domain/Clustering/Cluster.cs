@@ -6,7 +6,7 @@ public class Cluster(string name)
 {
     public string Name { get; } = name;
 
-    public List<DataObjectModel> Objects { get; } = new();
+    public List<DataObjectModel> Objects { get; set; } = new();
 
     public void AddObject(DataObjectModel obj)
     {

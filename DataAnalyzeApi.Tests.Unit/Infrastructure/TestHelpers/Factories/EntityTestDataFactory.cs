@@ -1,0 +1,85 @@
+﻿using AutoFixture;
+using DataAnalyzeApi.Models.Entities;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
+
+namespace DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories;
+
+public class EntityTestDataFactory
+{
+    protected readonly Fixture fixture = new();
+
+    /// <summary>
+    /// Creates Parameter list from raw parameter names.
+    /// </summary>
+    public List<Parameter> CreateParameterList(List<string> rawParameters)
+    {
+        var parameterEntities = new List<Parameter>();
+
+        for (int i = 0; i < rawParameters.Count; ++i)
+        {
+            parameterEntities.Add(fixture
+               .Build<Parameter>()
+               .With(p => p.Id, i)
+               .With(p => p.Name, rawParameters[i])
+               .Create());
+        }
+
+        return parameterEntities;
+    }
+
+    /// <summary>
+    /// Creates ParameterValue list from raw values.
+    /// </summary>
+    public List<ParameterValue> CreateParameterValueList(List<string> values)
+    {
+        var valueEntities = new List<ParameterValue>();
+
+        for (int i = 0; i < values.Count; ++i)
+        {
+            valueEntities.Add(fixture
+                .Build<ParameterValue>()
+                .With(val => val.Id, i)
+                .With(obj => obj.Value, values[i])
+                .With(val => val.ParameterId, i)
+                .Create());
+        }
+
+        return valueEntities;
+    }
+
+    /// <summary>
+    /// Creates DataObject list from raw objects.
+    /// </summary>
+    public List<DataObject> CreateDataObjectList(List<RawDataObject> rawObjects)
+    {
+        var objectCreateDtos = new List<DataObject>();
+
+        for (int i = 0; i < rawObjects.Count; ++i)
+        {
+            var parameterValues = CreateParameterValueList(rawObjects[i].Values);
+
+            objectCreateDtos.Add(fixture
+                .Build<DataObject>()
+                .With(obj => obj.Id, i)
+                .With(obj => obj.Values, parameterValues)
+                .Create());
+        }
+
+        return objectCreateDtos;
+    }
+
+    /// <summary>
+    /// Creates a Dataset with specified parameters and objects.
+    /// </summary>
+    public Dataset CreateDataset(List<RawDataObject> rawObjects, List<string> rawParameters)
+    {
+        var dataObjectEntities = CreateDataObjectList(rawObjects);
+        var parameterEntities = CreateParameterList(rawParameters);
+
+        return fixture
+            .Build<Dataset>()
+            .With(d => d.Objects, dataObjectEntities)
+            .With(d => d.Parameters, parameterEntities)
+            .Create();
+    }
+}

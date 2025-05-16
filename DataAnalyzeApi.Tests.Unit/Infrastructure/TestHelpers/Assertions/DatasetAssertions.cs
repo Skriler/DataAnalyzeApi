@@ -1,15 +1,12 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
-namespace DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
+namespace DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Assertions;
 
-/// <summary>
-/// Class for comparing parameter values of different types.
-/// </summary>
-public static class ParameterValueComparison
+public static class DatasetAssertions
 {
     /// <summary>
-    /// Verifies that the lists of parameter values are equal in value.
+    /// Verifies that the DataObjectModel list are equal.
     /// </summary>
     public static void AssertDataObjectsEqual(
            List<DataObjectModel> expected,
@@ -24,7 +21,7 @@ public static class ParameterValueComparison
     }
 
     /// <summary>
-    /// Verifies that the lists of parameter values are equal in value.
+    /// Verifies that the ParameterValueModel list are equal.
     /// </summary>
     public static void AssertParameterValuesEqual(
            List<ParameterValueModel> expected,
@@ -39,7 +36,7 @@ public static class ParameterValueComparison
     }
 
     /// <summary>
-    /// Verifies that parameter value are equal in value.
+    /// Verifies that pair of ParameterValueModel are equal.
     /// </summary>
     private static void AssertParameterValueEqual(
         ParameterValueModel expected,
@@ -62,7 +59,7 @@ public static class ParameterValueComparison
     }
 
     /// <summary>
-    /// Verifies that two normalized numeric values are equal in normalized value.
+    /// Verifies that pair of NormalizedNumericValueModel are equal in normalized value.
     /// </summary>
     private static void AssertEqualNumericValues(
         NormalizedNumericValueModel expected,
@@ -72,7 +69,7 @@ public static class ParameterValueComparison
     }
 
     /// <summary>
-    /// Verifies that two normalized categorical values are equal in one hot values.
+    /// Verifies that pair of NormalizedCategoricalValueModel are equal in one hot values.
     /// </summary>
     private static void AssertEqualCategoricalValues(
         NormalizedCategoricalValueModel expected,

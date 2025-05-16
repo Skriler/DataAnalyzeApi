@@ -5,14 +5,14 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Services.Analyse.Factories.Metric;
 using DataAnalyzeApi.Services.Analyse.Metrics;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
-using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories.Models;
 using Moq;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.DistanceCalculators;
 
 public class DistanceCalculatorTests
 {
-    protected readonly ServiceDataFactory dataFactory;
+    private readonly DatasetModelFactory datasetModelFactory;
     private readonly Mock<IMetricFactory> metricFactoryMock;
     private readonly Mock<IDistanceMetric<double>> numericMetricMock;
     private readonly Mock<IDistanceMetric<int>> categoricalMetricMock;
@@ -20,7 +20,7 @@ public class DistanceCalculatorTests
 
     public DistanceCalculatorTests()
     {
-        dataFactory = new();
+        datasetModelFactory = new();
         metricFactoryMock = new Mock<IMetricFactory>();
         numericMetricMock = new Mock<IDistanceMetric<double>>();
         categoricalMetricMock = new Mock<IDistanceMetric<int>>();
@@ -55,8 +55,8 @@ public class DistanceCalculatorTests
         var objectNumericsA = new NormalizedDataObject() { NumericValues = { 0.2, 0.4 } };
         var objectNumericsB = new NormalizedDataObject() { NumericValues = { 0.6, 0.8, 0.3 } };
 
-        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectNumericsA);
-        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectNumericsB);
+        var objectA = datasetModelFactory.CreateNormalizedDataObjectModel(objectNumericsA);
+        var objectB = datasetModelFactory.CreateNormalizedDataObjectModel(objectNumericsB);
 
         // Act & Assert
         Assert.Throws<VectorLengthMismatchException>(() => calculator.Calculate(objectA, objectB, default, default));
@@ -67,7 +67,7 @@ public class DistanceCalculatorTests
     {
         // Arrange
         var objectEmpty = new NormalizedDataObject();
-        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectEmpty);
+        var objectA = datasetModelFactory.CreateNormalizedDataObjectModel(objectEmpty);
 
         // Act & Assert
         Assert.Throws<EmptyVectorException>(() => calculator.Calculate(objectA, objectA, default, default));
@@ -81,8 +81,8 @@ public class DistanceCalculatorTests
         var objectNumericsB = new NormalizedDataObject() { NumericValues = { 0.6, 0.8, 0.3 } };
         const double expectedDistance = 0.5;
 
-        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectNumericsA);
-        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectNumericsB);
+        var objectA = datasetModelFactory.CreateNormalizedDataObjectModel(objectNumericsA);
+        var objectB = datasetModelFactory.CreateNormalizedDataObjectModel(objectNumericsB);
 
         numericMetricMock
             .Setup(m => m.Calculate(It.IsAny<double[]>(), It.IsAny<double[]>()))
@@ -111,8 +111,8 @@ public class DistanceCalculatorTests
         };
         const double expectedDistance = 0.3;
 
-        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectCategoricalA);
-        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectCategoricalB);
+        var objectA = datasetModelFactory.CreateNormalizedDataObjectModel(objectCategoricalA);
+        var objectB = datasetModelFactory.CreateNormalizedDataObjectModel(objectCategoricalB);
 
         categoricalMetricMock
                 .Setup(m => m.Calculate(It.IsAny<int[]>(), It.IsAny<int[]>()))
@@ -147,8 +147,8 @@ public class DistanceCalculatorTests
         // Expected weighted average: (0.8*2 + 0.2*3) / 5 = 0.44
         const double expectedAverageDistance = 0.44;
 
-        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectMixedA);
-        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectMixedB);
+        var objectA = datasetModelFactory.CreateNormalizedDataObjectModel(objectMixedA);
+        var objectB = datasetModelFactory.CreateNormalizedDataObjectModel(objectMixedB);
 
         numericMetricMock
             .Setup(m => m.Calculate(It.IsAny<double[]>(), It.IsAny<double[]>()))
@@ -182,8 +182,8 @@ public class DistanceCalculatorTests
             CategoricalValues = { new[] { 0, 1, 1 } }
         };
 
-        var objectA = dataFactory.CreateNormalizedDataObjectModel(objectMixedA);
-        var objectB = dataFactory.CreateNormalizedDataObjectModel(objectMixedB);
+        var objectA = datasetModelFactory.CreateNormalizedDataObjectModel(objectMixedA);
+        var objectB = datasetModelFactory.CreateNormalizedDataObjectModel(objectMixedB);
 
         // Act
         calculator.Calculate(

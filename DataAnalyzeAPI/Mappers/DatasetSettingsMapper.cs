@@ -8,7 +8,7 @@ namespace DataAnalyzeApi.Mappers;
 public class DatasetSettingsMapper
 {
     /// <summary>
-    /// Maps dataset entity to dataset model with parameter settings.
+    /// Maps Dataset entity to DatasetModel with parameter settings.
     /// </summary>
     public virtual DatasetModel Map(
         Dataset dataset,
@@ -25,7 +25,7 @@ public class DatasetSettingsMapper
     }
 
     /// <summary>
-    /// Maps parameters and parameter settings to their models.
+    /// Maps Parameter list with their settings to models.
     /// </summary>
     private static List<ParameterStateModel> MapParameterStates(
         List<Parameter> parameters,
@@ -75,7 +75,7 @@ public class DatasetSettingsMapper
     }
 
     /// <summary>
-    /// Maps data objects to their models.
+    /// Maps DataObject list to their models.
     /// </summary>
     private static List<DataObjectModel> MapDataObjects(
         List<DataObject> sourceObjects,
@@ -99,7 +99,7 @@ public class DatasetSettingsMapper
     }
 
     /// <summary>
-    /// Maps parameter values to their models.
+    /// Maps ParameterValue list to their models.
     /// </summary>
     private static List<ParameterValueModel> MapParameterValues(
         List<ParameterValue> sourceValues,

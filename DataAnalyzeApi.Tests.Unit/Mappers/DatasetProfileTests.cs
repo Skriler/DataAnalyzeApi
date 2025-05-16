@@ -2,21 +2,23 @@
 using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
-using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories;
 
 namespace DataAnalyzeApi.Tests.Unit.Mappers;
 
 public class DatasetProfileTests
 {
     private readonly IMapper mapper;
-    private readonly MapperDataFactory dataFactory;
+    private readonly DtoTestDataFactory dtoTestDataFactory;
+    private readonly EntityTestDataFactory entityTestDataFactory;
 
     public DatasetProfileTests()
     {
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DatasetProfile>());
 
         mapper = configuration.CreateMapper();
-        dataFactory = new MapperDataFactory();
+        dtoTestDataFactory = new DtoTestDataFactory();
+        entityTestDataFactory = new EntityTestDataFactory();
     }
 
     [Theory]
@@ -39,7 +41,7 @@ public class DatasetProfileTests
             },
         };
 
-        var dto = dataFactory.CreateDatasetCreateDto(rawObjects);
+        var dto = dtoTestDataFactory.CreateDatasetCreateDto(rawObjects);
 
         // Act
         var dataset = mapper.Map<Dataset>(dto);
@@ -74,7 +76,7 @@ public class DatasetProfileTests
             },
         };
 
-        var dataset = dataFactory.CreateDatasetEntity(rawObjects, parameterNames.ToList());
+        var dataset = entityTestDataFactory.CreateDataset(rawObjects, parameterNames.ToList());
 
         // Act
         var dto = mapper.Map<Dataset>(dataset);

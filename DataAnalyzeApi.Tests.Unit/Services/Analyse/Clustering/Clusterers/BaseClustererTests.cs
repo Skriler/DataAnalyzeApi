@@ -8,6 +8,7 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases.Clusterers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
+using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories.Models;
 using Moq;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Clusterers;
@@ -21,14 +22,14 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     where TClusterer : BaseClusterer<TSettings>
     where TSettings : BaseClusterSettings
 {
-    protected readonly ServiceDataFactory dataFactory;
+    protected readonly DatasetModelFactory datasetModelFactory;
     protected readonly Mock<IDistanceCalculator> distanceCalculatorMock;
     protected readonly Mock<ClusterNameGenerator> nameGeneratorMock;
     protected readonly TClusterer clusterer;
 
     protected BaseClustererTests(Func<IDistanceCalculator, ClusterNameGenerator, TClusterer> createClusterer)
     {
-        dataFactory = new();
+        datasetModelFactory = new();
         distanceCalculatorMock = new Mock<IDistanceCalculator>();
         nameGeneratorMock = new Mock<ClusterNameGenerator>();
 
@@ -66,7 +67,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
             }
         };
 
-        var dataset = dataFactory.CreateNormalizedDatasetModel(dataObjects);
+        var dataset = datasetModelFactory.CreateNormalized(dataObjects);
         var settings = CreateDefaultSettings(default, default);
 
         // Act
@@ -97,7 +98,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
             }
         };
 
-        var dataset = dataFactory.CreateNormalizedDatasetModel(dataObjects);
+        var dataset = datasetModelFactory.CreateNormalized(dataObjects);
 
         var settings = CreateDefaultSettings(
             NumericDistanceMetricType.Manhattan,
@@ -135,7 +136,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     public void ClustererReturnsExpectedClusters(BaseClustererTestCase testCase, TSettings settings)
     {
         // Arrange
-        var dataset = dataFactory.CreateNormalizedDatasetModel(testCase.Objects);
+        var dataset = datasetModelFactory.CreateNormalized(testCase.Objects);
         SetupDistanceCalculatorMock(testCase.PairwiseDistances!);
 
         // Act

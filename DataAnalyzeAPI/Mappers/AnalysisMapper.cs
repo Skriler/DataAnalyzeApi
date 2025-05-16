@@ -10,15 +10,9 @@ namespace DataAnalyzeApi.Mappers;
 public class AnalysisMapper
 {
     /// <summary>
-    /// Maps cluster list to their DTOs.
+    /// Maps Cluster to its DTO.
     /// </summary>
-    public List<ClusterDto> MapClusterList(List<Cluster> clusters, bool includeParameters)
-        => clusters.ConvertAll(c => MapCluster(c, includeParameters));
-
-    /// <summary>
-    /// Maps cluster to its DTO.
-    /// </summary>
-    public ClusterDto MapCluster(Cluster cluster, bool includeParameters)
+    public virtual ClusterDto MapCluster(Cluster cluster, bool includeParameters = false)
     {
         var objectsDto = cluster.Objects
             .ConvertAll(obj => MapDataObject(obj, includeParameters));
@@ -27,15 +21,15 @@ public class AnalysisMapper
     }
 
     /// <summary>
-    /// Maps similarity pair list to their DTOs.
+    /// Maps Cluster list to their DTOs.
     /// </summary>
-    public List<SimilarityPairDto> MapSimilarityPairList(List<SimilarityPair> pairs, bool includeParameters = false)
-        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
+    public virtual List<ClusterDto> MapClusterList(List<Cluster> clusters, bool includeParameters = false)
+        => clusters.ConvertAll(c => MapCluster(c, includeParameters));
 
     /// <summary>
-    /// Maps similarity pair to its DTO.
+    /// Maps SimilarityPair to its DTO.
     /// </summary>
-    public SimilarityPairDto MapSimilarityPair(SimilarityPair pair, bool includeParameters = false)
+    public virtual SimilarityPairDto MapSimilarityPair(SimilarityPair pair, bool includeParameters = false)
     {
         return new SimilarityPairDto(
             MapDataObject(pair.ObjectA, includeParameters),
@@ -45,26 +39,35 @@ public class AnalysisMapper
     }
 
     /// <summary>
-    /// Maps data object to its DTO.
+    /// Maps SimilarityPair list to their DTOs.
     /// </summary>
-    private static DataObjectDto MapDataObject(DataObjectModel obj, bool includeParameters)
-    {
-        var parameterValues = MapParameterValues(obj, includeParameters);
+    public virtual List<SimilarityPairDto> MapSimilarityPairList(List<SimilarityPair> pairs, bool includeParameters = false)
+        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
 
-        return new DataObjectDto(obj.Id, obj.Name, parameterValues!);
+    /// <summary>
+    /// Maps DataObjectModel to its DTO.
+    /// </summary>
+    private static DataObjectDto MapDataObject(DataObjectModel dataObject, bool includeParameters)
+    {
+        var parameterValues = MapParameterValues(dataObject.Values, includeParameters);
+
+        return new DataObjectDto(
+            dataObject.Id,
+            dataObject.Name,
+            parameterValues!);
     }
 
     /// <summary>
-    /// Maps parameter values to a dictionary, optionally including the parameters.
+    /// Maps ParameterValueModel list to a dictionary (name, value), optionally including the parameters.
     /// Returns null when includeParameters is false, which will cause the property
     /// to be excluded from JSON serialization when used with JsonIgnore attribute.
     /// </summary>
-    private static Dictionary<string, string>? MapParameterValues(DataObjectModel obj, bool includeParameters)
+    private static Dictionary<string, string>? MapParameterValues(List<ParameterValueModel> obj, bool includeParameters)
     {
         if (!includeParameters)
             return null;
 
-        return obj.Values.ToDictionary(
+        return obj.ToDictionary(
             pv => pv.Parameter.Name,
             pv => pv.Value
         );
