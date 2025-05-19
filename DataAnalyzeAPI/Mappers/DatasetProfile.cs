@@ -35,7 +35,7 @@ public class DatasetProfile : Profile
             .ForCtorParam("Objects", opt => opt.MapFrom(src => src.Objects));
 
         CreateMap<DataObject, DataObjectCreateDto>()
-            .ForCtorParam("Values", opt => opt.MapFrom(src => src.Values.ConvertAll(val => val.Value ?? string.Empty)));
+            .ForCtorParam("Values", opt => opt.MapFrom(src => src.Values.ConvertAll(val => val.Value)));
     }
 
     /// <summary>

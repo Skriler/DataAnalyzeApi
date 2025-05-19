@@ -30,13 +30,14 @@ public class DtoTestDataFactory
     /// <summary>
     /// Creates a DatasetCreateDto with specified parameters and object values.
     /// </summary>
-    public DatasetCreateDto CreateDatasetCreateDto(List<RawDataObject> rawObjects)
+    public DatasetCreateDto CreateDatasetCreateDto(List<RawDataObject> rawObjects, List<string> rawParameters)
     {
         var objectCreateDtos = CreateDataObjectCreateDtoList(rawObjects);
 
         return fixture
             .Build<DatasetCreateDto>()
             .With(d => d.Objects, objectCreateDtos)
+            .With(d => d.Parameters, rawParameters)
             .Create();
     }
 

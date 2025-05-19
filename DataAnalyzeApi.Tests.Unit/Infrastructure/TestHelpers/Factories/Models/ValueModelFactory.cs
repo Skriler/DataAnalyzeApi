@@ -19,9 +19,10 @@ public class ValueModelFactory(Fixture fixture)
         {
             valueModels.Add(fixture
                 .Build<ParameterValueModel>()
-                .With(p => p.Id, i)
-                .With(p => p.Value, values[i])
-                .With(p => p.ParameterId, i)
+                .With(val => val.Id, i)
+                .With(val => val.Value, values[i])
+                .With(val => val.ParameterId, i)
+                .Without(val => val.Parameter)
                 .Create());
         }
 
@@ -59,10 +60,11 @@ public class ValueModelFactory(Fixture fixture)
         {
             valueModels.Add(fixture
                 .Build<NormalizedNumericValueModel>()
-                .With(p => p.Id, i)
-                .With(p => p.Value, numerics[i].ToString())
-                .With(p => p.NormalizedValue, numerics[i])
-                .With(p => p.ParameterId, i)
+                .With(val => val.Id, i)
+                .With(val => val.Value, numerics[i].ToString())
+                .With(val => val.NormalizedValue, numerics[i])
+                .With(val => val.ParameterId, i)
+                .Without(val => val.Parameter)
                 .Create());
         }
 
@@ -80,10 +82,11 @@ public class ValueModelFactory(Fixture fixture)
         {
             valueModels.Add(fixture
                 .Build<NormalizedCategoricalValueModel>()
-                .With(p => p.Id, i)
-                .With(p => p.Value, fixture.Create<string>())
-                .With(p => p.OneHotValues, categoricals[i])
-                .With(p => p.ParameterId, startId + i)
+                .With(val => val.Id, i)
+                .With(val => val.Value, fixture.Create<string>())
+                .With(val => val.OneHotValues, categoricals[i])
+                .With(val => val.ParameterId, startId + i)
+                .Without(val => val.Parameter)
                 .Create());
         }
 

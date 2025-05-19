@@ -16,6 +16,8 @@ public class DatasetNormalizerTests
     {
         // Arrange
         var dataset = datasetModelFactory.Create(testCase.RawObjects);
+
+        // TODO: fix parameters creation
         var expecteDataset = datasetModelFactory.CreateNormalized(testCase.NormalizedObjects);
         var normalizer = new DatasetNormalizer();
 

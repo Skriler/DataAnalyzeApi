@@ -46,6 +46,12 @@ public class DatasetModelFactory
     }
 
     /// <summary>
+    /// Creates a DataObjectModel with raw values.
+    /// </summary>
+    public DataObjectModel CreateDataObjectModel(RawDataObject rawObject) =>
+        dataObjectModelFactory.Create(rawObject);
+
+    /// <summary>
     /// Creates DataObjectModel list with numeric and categorical values.
     /// </summary>
     public DataObjectModel CreateNormalizedDataObjectModel(NormalizedDataObject normalizedObject) =>

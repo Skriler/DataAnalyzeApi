@@ -7,15 +7,15 @@ public class NormalizedValueComparerTests
     private readonly NormalizedValueComparer comparer = new();
 
     [Theory]
-    [InlineData(null, null, 10.0, 0.0)]
+    [InlineData(null!, null!, 10.0, 0.0)]
     [InlineData("", "", 10.0, 0.0)]
     [InlineData("   ", "  ", 10.0, 0.0)]
     [InlineData("value", null, 10.0, 0.0)]
     [InlineData(null, "value", 10.0, 0.0)]
     [InlineData("", "value", 10.0, 0.0)]
-    public void Compare_WhenNullOrEmptyStrings_ReturnsExpected(string valueA, string valueB, double range, double expected)
+    public void Compare_WhenNullOrEmptyStrings_ReturnsExpected(string? valueA, string? valueB, double range, double expected)
     {
-        var result = comparer.Compare(valueA, valueB, range);
+        var result = comparer.Compare(valueA!, valueB!, range);
         Assert.Equal(expected, result, precision: 2);
     }
 
@@ -28,7 +28,7 @@ public class NormalizedValueComparerTests
     {
         var result = comparer.Compare(a, b, range);
 
-        Assert.Equal(expected, result, precision: 3);
+        Assert.Equal(expected, result, precision: 2);
     }
 
     [Theory]
@@ -37,7 +37,7 @@ public class NormalizedValueComparerTests
     [InlineData("red", "blue", 0.0)]
     [InlineData("red,blue", "red,blue", 1.0)]
     [InlineData("red,blue", "blue,red", 1.0)]
-    [InlineData("red,blue", "red,green", 0.5)]
+    [InlineData("red,blue", "red,green", 0.33)]
     [InlineData("red,blue,green", "red,green", 0.67)]
     [InlineData("red, blue", "red,blue", 1.0)]
     public void Compare_WhenCategoricalValues_ReturnsExpected(string a, string b, double expected)

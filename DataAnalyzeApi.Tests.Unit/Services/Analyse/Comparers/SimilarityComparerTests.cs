@@ -1,9 +1,7 @@
 ﻿using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
-using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Analyse.Comparers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
-using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories.Models;
 using Moq;
 
@@ -17,7 +15,7 @@ public class SimilarityComparerTests
 
     public SimilarityComparerTests()
     {
-        dataFactory = new();
+        datasetModelFactory = new();
         comparerMock = new Mock<ICompare>();
         similarityComparer = new SimilarityComparer(comparerMock.Object);
     }
@@ -34,7 +32,7 @@ public class SimilarityComparerTests
     {
         // Arrange
         var rawObjects = new List<RawDataObject>();
-        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+        var datasetModel = datasetModelFactory.Create(rawObjects);
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => similarityComparer.CompareAllObjects(datasetModel));
@@ -49,7 +47,7 @@ public class SimilarityComparerTests
 
         var dataObjects = new List<DataObjectModel>()
         {
-            dataFactory.CreateDataObjectModel(rawValue),
+            datasetModelFactory.CreateDataObjectModel(rawValue),
         };
 
         var datasetModel = new DatasetModel(0, string.Empty, parameterStates, dataObjects);
@@ -67,7 +65,7 @@ public class SimilarityComparerTests
 
         var dataObjects = new List<DataObjectModel>()
         {
-            dataFactory.CreateDataObjectModel(rawValue),
+            datasetModelFactory.CreateDataObjectModel(rawValue),
         };
 
         var datasetModel = new DatasetModel(0, string.Empty, parameterStates, dataObjects);
@@ -92,7 +90,7 @@ public class SimilarityComparerTests
             },
         };
 
-        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+        var datasetModel = datasetModelFactory.Create(rawObjects);
 
         // Act & Assert
         Assert.Throws<EmptyVectorException>(() => similarityComparer.CompareAllObjects(datasetModel));
@@ -115,7 +113,7 @@ public class SimilarityComparerTests
             },
         };
 
-        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+        var datasetModel = datasetModelFactory.Create(rawObjects);
 
         // Act & Assert
         Assert.Throws<VectorLengthMismatchException>(() => similarityComparer.CompareAllObjects(datasetModel));
@@ -139,7 +137,7 @@ public class SimilarityComparerTests
         },
     };
 
-        var datasetModel = dataFactory.CreateDatasetModel(rawObjects);
+        var datasetModel = datasetModelFactory.Create(rawObjects);
 
         // Act
         var similarityPair = similarityComparer.CompareAllObjects(datasetModel);

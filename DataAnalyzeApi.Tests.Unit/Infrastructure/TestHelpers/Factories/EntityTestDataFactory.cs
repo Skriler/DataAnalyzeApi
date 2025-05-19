@@ -21,6 +21,7 @@ public class EntityTestDataFactory
                .Build<Parameter>()
                .With(p => p.Id, i)
                .With(p => p.Name, rawParameters[i])
+               .Without(p => p.Dataset)
                .Create());
         }
 
@@ -39,8 +40,10 @@ public class EntityTestDataFactory
             valueEntities.Add(fixture
                 .Build<ParameterValue>()
                 .With(val => val.Id, i)
-                .With(obj => obj.Value, values[i])
+                .With(val => val.Value, values[i])
                 .With(val => val.ParameterId, i)
+                .Without(val => val.Parameter)
+                .Without(val => val.Object)
                 .Create());
         }
 
@@ -62,6 +65,7 @@ public class EntityTestDataFactory
                 .Build<DataObject>()
                 .With(obj => obj.Id, i)
                 .With(obj => obj.Values, parameterValues)
+                .Without(p => p.Dataset)
                 .Create());
         }
 

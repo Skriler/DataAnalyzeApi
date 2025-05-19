@@ -1,10 +1,8 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
-using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Clusterers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Clustering.Helpers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.Objects;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestData.Models.TestCases;
-using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Assertions;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories;
 using DataAnalyzeApi.Tests.Unit.Infrastructure.TestHelpers.Factories.Models;
@@ -40,7 +38,7 @@ public class CentroidCalculatorTests
     {
         // Arrange
         var centroid = centroidFactory.Create(testCase.InitialCentroid);
-        var dataset = dataFactory.CreateNormalizedDatasetModel(testCase.Objects);
+        var dataset = datasetModelFactory.CreateNormalized(testCase.Objects);
         var expectedCentroid = centroidFactory.Create(testCase.ExpectedCentroid);
 
         // Act
