@@ -5,6 +5,8 @@ using DataAnalyzeApi.Tests.Common.Models;
 
 namespace DataAnalyzeApi.Tests.Unit.Mappers;
 
+[Trait("Category", "Unit")]
+[Trait("Component", "Mapper")]
 public class AnalysisMapperTest
 {
     private readonly AnalysisMapper mapper = new();

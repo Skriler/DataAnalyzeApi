@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DataAnalyzeApi.Controllers;
 
-[Route("api/datasets")]
 [ApiController]
-[Authorize(Policy = "UserOrAdmin")]
+[Route("api/datasets")]
+//[Authorize(Policy = "UserOrAdmin")]
 public class DatasetController : ControllerBase
 {
     private readonly DatasetRepository repository;
@@ -78,7 +78,7 @@ public class DatasetController : ControllerBase
     /// <param name="id">The ID of the dataset to delete</param>
     /// <returns>An action result indicating the outcome of the deletion process</returns>
     [HttpDelete("{id}")]
-    [Authorize(Policy = "OnlyAdmin")]
+    //[Authorize(Policy = "OnlyAdmin")]
     public async Task<IActionResult> Delete(long id)
     {
         var dataset = await repository.GetByIdAsync(id);

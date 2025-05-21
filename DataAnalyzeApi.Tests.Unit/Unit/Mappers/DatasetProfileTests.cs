@@ -8,6 +8,8 @@ using DataAnalyzeApi.Tests.Common.Models;
 
 namespace DataAnalyzeApi.Tests.Unit.Mappers;
 
+[Trait("Category", "Unit")]
+[Trait("Component", "Mapper")]
 public class DatasetProfileTests
 {
     private readonly IMapper mapper;
