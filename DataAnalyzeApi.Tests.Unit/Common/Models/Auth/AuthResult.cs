@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Tests.Common.Models;
+﻿namespace DataAnalyzeApi.Tests.Common.Models.Auth;
 
 public class AuthResult
 {

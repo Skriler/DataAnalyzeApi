@@ -9,7 +9,8 @@ public class DataObject
     [JsonIgnore]
     public long Id { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Object name is required")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Object name must be between 3 and 50 characters")]
     public string Name { get; set; } = string.Empty;
 
     [JsonIgnore] public long DatasetId { get; set; }

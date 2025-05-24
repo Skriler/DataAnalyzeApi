@@ -12,21 +12,28 @@ public class DatasetRepository
         this.context = context;
     }
 
-    public async Task<List<Dataset>> GetAllAsync()
+    public async Task<List<Dataset>> GetAllAsync(bool trackChanges = false)
     {
-        return await context.Datasets
-            .AsNoTracking()
-            .ToListAsync();
+        var query = context.Datasets.AsQueryable();
+
+        if (!trackChanges)
+            query = query.AsNoTracking();
+
+        return await query.ToListAsync();
     }
 
-    public async Task<Dataset?> GetByIdAsync(long id)
+    public async Task<Dataset?> GetByIdAsync(long id, bool trackChanges = false)
     {
-        return await context.Datasets
-            .AsNoTracking()
+        var query = context.Datasets
             .Include(d => d.Parameters)
             .Include(d => d.Objects)
                 .ThenInclude(o => o.Values)
-            .FirstOrDefaultAsync(d => d.Id == id);
+            .Where(d => d.Id == id);
+
+        if (!trackChanges)
+            query = query.AsNoTracking();
+
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task AddAsync(Dataset dataset)

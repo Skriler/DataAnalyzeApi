@@ -50,25 +50,56 @@ public static class ServiceCollectionExtensions
     /// </summary>
     private static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Database
-        services.AddDbContext<DataAnalyzeDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-        );
-
-        // Caching
-        services.Configure<RedisConfig>(configuration.GetSection("Redis"));
-        services.AddStackExchangeRedisCache(options =>
-        {
-            var redisConfig = configuration.GetSection("Redis").Get<RedisConfig>();
-            options.Configuration = redisConfig?.ConnectionString;
-            options.InstanceName = redisConfig?.InstanceName;
-        });
-
-        // Repositories and seeders
-        services.AddScoped<DatasetRepository>();
-        services.AddScoped<IdentitySeeder>();
+        services
+            .AddDatabase(configuration)
+            .AddCaching(configuration)
+            .AddRepositories();
 
         return services;
+    }
+
+    /// <summary>
+    /// Configures and registers the DbContext for PostgreSQL based on configuration.
+    /// </summary>
+    private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    {
+        var config = configuration.GetSection("Postgres").Get<PostgresConfig>()!;
+        var connectionString =
+            $"Host={config.Host};" +
+            $"Port={config.Port};" +
+            $"Database={config.Name};" +
+            $"Username={config.Username};" +
+            $"Password={config.Password}";
+
+        services.AddDbContext<DataAnalyzeDbContext>(options => options.UseNpgsql(connectionString));
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures and registers Redis caching based on configuration.
+    /// </summary>
+    private static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RedisConfig>(configuration.GetSection("Redis"));
+
+        var config = configuration.GetSection("Redis").Get<RedisConfig>()!;
+        var connectionString = $"{config.Host}:{config.Port}";
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = connectionString;
+            options.InstanceName = config.InstanceName;
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        return services
+            .AddScoped<DatasetRepository>()
+            .AddScoped<IdentitySeeder>();
     }
 
     /// <summary>
@@ -130,8 +161,8 @@ public static class ServiceCollectionExtensions
     /// </summary>
     private static IServiceCollection AddApiServices(this IServiceCollection services)
     {
-        services.AddSwaggerGen();
         services
+            .AddSwaggerGen()
             .AddControllers()
             .AddDataAnalyzeExceptionFilters();
 
@@ -150,32 +181,30 @@ public static class ServiceCollectionExtensions
             .AddDataProcessingServices()
             .AddDistanceServices()
             .AddClusteringServices()
-            .AddFactories();
+            .AddFactories()
+            .AddFilters();
     }
 
     private static IServiceCollection AddCacheServices(this IServiceCollection services)
     {
-        services.AddSingleton<ICacheService, DistributedCacheService>();
-        services.AddScoped<ClusteringCacheService>();
-        services.AddScoped<SimilarityCacheService>();
-
-        return services;
+        return services
+            .AddSingleton<ICacheService, DistributedCacheService>()
+            .AddScoped<ClusteringCacheService>()
+            .AddScoped<SimilarityCacheService>();
     }
 
     private static IServiceCollection AddMappers(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(DatasetProfile));
-        services.AddScoped<DatasetSettingsMapper>();
-        services.AddScoped<AnalysisMapper>();
-
-        return services;
+        return services
+            .AddAutoMapper(typeof(DatasetProfile))
+            .AddScoped<DatasetSettingsMapper>()
+            .AddScoped<AnalysisMapper>();
     }
 
     private static IServiceCollection AddHelpers(this IServiceCollection services)
     {
-        services.AddScoped<ClusterNameGenerator>();
-
-        return services;
+        return services
+            .AddScoped<ClusterNameGenerator>();
     }
 
     private static IServiceCollection AddDataProcessingServices(this IServiceCollection services)
@@ -227,9 +256,14 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddFactories(this IServiceCollection services)
     {
-        services.AddScoped<IMetricFactory, MetricFactory>();
-        services.AddScoped<IClustererFactory, ClustererFactory>();
+        return services
+            .AddScoped<IMetricFactory, MetricFactory>()
+            .AddScoped<IClustererFactory, ClustererFactory>();
+    }
 
-        return services;
+    private static IServiceCollection AddFilters(this IServiceCollection services)
+    {
+        return services
+            .AddScoped<DataAnalyzeExceptionFilter>();
     }
 }

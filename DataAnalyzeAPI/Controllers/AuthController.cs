@@ -8,18 +8,14 @@ namespace DataAnalyzeApi.Controllers;
 [ApiController]
 [Route("api/auth")]
 [AllowAnonymous]
-public class AuthController : ControllerBase
+[Produces("application/json")]
+public class AuthController(
+    AuthService authService,
+    ILogger<AuthController> logger
+    ) : ControllerBase
 {
-    private readonly AuthService authService;
-    private readonly ILogger<AuthController> logger;
-
-    public AuthController(
-        AuthService authService,
-        ILogger<AuthController> logger)
-    {
-        this.authService = authService;
-        this.logger = logger;
-    }
+    private readonly AuthService authService = authService;
+    private readonly ILogger<AuthController> logger = logger;
 
     /// <summary>
     /// Logs in a user with the provided credentials.
@@ -27,13 +23,22 @@ public class AuthController : ControllerBase
     /// <param name="dto">The login data dto</param>
     /// <returns>An action result containing the authentication result or an error message</returns>
     [HttpPost("login")]
+    [ProducesResponseType(typeof(AuthResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var authResult = await authService.LoginAsync(dto);
 
         if (!authResult.Success)
         {
-            logger.LogWarning(authResult.Error);
+            logger.LogWarning("Login failed for user {Username}: {Error}", dto.Username, authResult.Error);
             return Unauthorized(authResult.Error);
         }
 
@@ -47,8 +52,17 @@ public class AuthController : ControllerBase
     /// <param name="dto">The registration dto containing user information</param>
     /// <returns>An action result indicating the success or failure of the registration</returns>
     [HttpPost("register")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         if (await authService.UserExistsAsync(dto.Username))
         {
             logger.LogWarning("Registration attempt with existing username: {Username}", dto.Username);

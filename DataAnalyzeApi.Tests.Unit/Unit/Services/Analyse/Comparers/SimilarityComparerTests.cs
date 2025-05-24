@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Analyse.Comparers;
 using DataAnalyzeApi.Tests.Common.Factories.Models;
-using DataAnalyzeApi.Tests.Common.Models;
+using DataAnalyzeApi.Tests.Common.Models.Analyse;
 using DataAnalyzeApi.Tests.Common.TestData.Comparers;
 using Moq;
 

@@ -1,16 +1,28 @@
 using DataAnalyzeApi.Extensions;
-using DataAnalyzeApi.Middlewares;
+
+// Load environment variables
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddUserSecrets<Program>();
+// Configuration
+builder.Configuration.AddEnvironmentVariables();
+
+// Dependency Injection
 builder.Services.ConfigureServices(builder.Configuration);
-builder.Services.AddScoped<DataAnalyzeExceptionFilter>();
+
 var app = builder.Build();
 
+// Middleware & Routing
 app.ConfigureMiddleware();
 app.MapControllers();
 
-await app.InitializeDatabaseAsync();
+// Database seeding (except for Testing environment)
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await app.InitializeDatabaseAsync();
+}
 
 app.Run();
+
+public partial class Program;

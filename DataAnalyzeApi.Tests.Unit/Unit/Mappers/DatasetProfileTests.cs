@@ -4,7 +4,7 @@ using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Tests.Common.Assertions;
 using DataAnalyzeApi.Tests.Common.Factories;
-using DataAnalyzeApi.Tests.Common.Models;
+using DataAnalyzeApi.Tests.Common.Models.Analyse;
 
 namespace DataAnalyzeApi.Tests.Unit.Mappers;
 

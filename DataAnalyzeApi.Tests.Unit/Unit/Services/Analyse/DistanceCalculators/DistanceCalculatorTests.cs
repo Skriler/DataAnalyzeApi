@@ -5,7 +5,7 @@ using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Services.Analyse.Factories.Metric;
 using DataAnalyzeApi.Services.Analyse.Metrics;
 using DataAnalyzeApi.Tests.Common.Factories.Models;
-using DataAnalyzeApi.Tests.Common.Models;
+using DataAnalyzeApi.Tests.Common.Models.Analyse;
 using Moq;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.DistanceCalculators;

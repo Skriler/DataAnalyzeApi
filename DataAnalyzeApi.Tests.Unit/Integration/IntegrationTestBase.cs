@@ -1,11 +1,13 @@
 ﻿using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Seeders;
+using DataAnalyzeApi.Models.Config;
 using DataAnalyzeApi.Models.Config.Identity;
 using DataAnalyzeApi.Models.DTOs.Auth;
 using DataAnalyzeApi.Models.Entities;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -21,8 +23,10 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     protected readonly DataAnalyzeFactory factory;
     protected readonly HttpClient client;
 
-    protected readonly PostgreSqlContainer postgresContainer;
-    protected readonly RedisContainer redisContainer;
+    protected IConfigurationRoot configuration;
+
+    protected PostgreSqlContainer postgresContainer;
+    protected RedisContainer redisContainer;
 
     protected string authToken = string.Empty;
 
@@ -31,24 +35,8 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         factory = new DataAnalyzeFactory();
         client = factory.CreateClient();
 
-        // Initialize PostgreSQL container
-        postgresContainer = new PostgreSqlBuilder()
-            .WithImage("postgres:14")
-            .WithPortBinding(5432, true)
-            .WithDatabase("data_analyze_test")
-            .WithUsername("postgres")
-            .WithPassword("postgres")
-            .WithCleanUp(true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-            .Build();
-
-        // Initialize Redis container
-        redisContainer = new RedisBuilder()
-            .WithImage("redis:latest")
-            .WithPortBinding(6379, true)
-            .WithCleanUp(true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(6379))
-            .Build();
+        configuration = GetConfiguration();
+        InitializeContainers();
     }
 
     public async Task InitializeAsync()
@@ -60,10 +48,13 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         // Update connection strings in the factory
         factory.UpdateConnectionStrings(
             postgresContainer.GetConnectionString(),
-            $"{redisContainer.Hostname}:{redisContainer.GetMappedPublicPort(6379)}");
+            redisContainer.GetConnectionString());
 
         // Seed the database
         await SeedDatabaseAsync();
+
+        // Get auth token
+        await AuthenticateAsync();
     }
 
     public async Task DisposeAsync()
@@ -73,7 +64,45 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         await redisContainer.StopAsync();
     }
 
-    protected async Task SeedDatabaseAsync()
+    private IConfigurationRoot GetConfiguration()
+    {
+        DotNetEnv.Env.Load(".env.test");
+
+        return new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddJsonFile("appsettings.test.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+    }
+
+    private void InitializeContainers()
+    {
+        var postgresConfig = configuration
+            .GetSection("Postgres")
+            .Get<PostgresConfig>()!;
+
+        // Initialize PostgreSQL container
+        postgresContainer = new PostgreSqlBuilder()
+            .WithImage("postgres")
+            .WithPortBinding(5432, true)
+            .WithDatabase(postgresConfig.Name)
+            .WithUsername(postgresConfig.Username)
+            .WithPassword(postgresConfig.Password)
+            .WithCleanUp(true)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+            .Build();
+
+        // Initialize Redis container
+        redisContainer = new RedisBuilder()
+            .WithImage("redis")
+            .WithPortBinding(6379, true)
+            .WithCleanUp(true)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(6379))
+            .Build();
+    }
+
+    private async Task SeedDatabaseAsync()
     {
         using var scope = factory.Services.CreateScope();
         var serviceProvider = scope.ServiceProvider;
@@ -98,14 +127,14 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         await identitySeeder.SeedAsync();
     }
 
-    protected async Task AuthenticateAsync(string username = "admin", string password = "YourAdminPasswordForTesting")
+    protected async Task AuthenticateAsync()
     {
-        var loginDto = new LoginDto
-        {
-            Username = username,
-            Password = password
-        };
+        var adminConfig = configuration
+            .GetSection("Identity")
+            .GetSection("AdminUser")
+            .Get<AdminUserConfig>()!;
 
+        var loginDto = new LoginDto(adminConfig.Username, adminConfig.Password);
         var response = await client.PostAsJsonAsync("/api/auth/login", loginDto);
 
         if (!response.IsSuccessStatusCode)

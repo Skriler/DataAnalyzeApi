@@ -9,6 +9,7 @@ public class ParameterValue
     [JsonIgnore]
     public long Id { get; set; }
 
+    [StringLength(50, ErrorMessage = "Value cannot exceed 50 characters")]
     public string Value { get; set; } = string.Empty;
 
     [JsonIgnore] public long ParameterId { get; set; }

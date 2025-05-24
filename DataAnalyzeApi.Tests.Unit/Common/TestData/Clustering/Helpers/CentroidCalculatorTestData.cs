@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Tests.Common.Models;
+﻿using DataAnalyzeApi.Tests.Common.Models.Analyse;
 
 namespace DataAnalyzeApi.Tests.Common.TestData.Clustering.Helpers;
 

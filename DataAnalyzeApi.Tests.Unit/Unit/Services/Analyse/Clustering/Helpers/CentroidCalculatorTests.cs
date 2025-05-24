@@ -2,7 +2,7 @@
 using DataAnalyzeApi.Tests.Common.Assertions;
 using DataAnalyzeApi.Tests.Common.Factories;
 using DataAnalyzeApi.Tests.Common.Factories.Models;
-using DataAnalyzeApi.Tests.Common.Models;
+using DataAnalyzeApi.Tests.Common.Models.Analyse;
 using DataAnalyzeApi.Tests.Common.TestData.Clustering.Helpers;
 
 namespace DataAnalyzeApi.Tests.Unit.Services.Analyse.Clustering.Helpers;

@@ -6,7 +6,7 @@ using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
 using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 using DataAnalyzeApi.Tests.Common.Factories.Models;
-using DataAnalyzeApi.Tests.Common.Models;
+using DataAnalyzeApi.Tests.Common.Models.Analyse;
 using DataAnalyzeApi.Tests.Common.TestCases.Clusterers;
 using DataAnalyzeApi.Tests.Common.TestData.Clustering.Clusterers;
 using Moq;

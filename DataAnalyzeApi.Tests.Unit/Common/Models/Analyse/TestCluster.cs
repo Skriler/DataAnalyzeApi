@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Tests.Common.Models;
+﻿namespace DataAnalyzeApi.Tests.Common.Models.Analyse;
 
 /// <summary>
 /// Model of test cluster that can be used as test data.

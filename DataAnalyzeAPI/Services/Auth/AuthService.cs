@@ -75,8 +75,8 @@ public class AuthService
         {
             UserName = registerDto.Username,
             Email = registerDto.Email,
-            FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName
+            FirstName = registerDto.FirstName ?? string.Empty,
+            LastName = registerDto.LastName ?? string.Empty,
         };
 
         var result = await userManager.CreateAsync(newUser, registerDto.Password);
