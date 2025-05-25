@@ -7,6 +7,10 @@ using StackExchange.Redis;
 
 namespace DataAnalyzeApi.Tests.Integration;
 
+/// <summary>
+/// Custom WebApplicationFactory for integration tests
+/// that configures test database and Redis connections.
+/// </summary>
 public class DataAnalyzeFactory : WebApplicationFactory<Program>
 {
     private string postgresConnectionString = string.Empty;
@@ -20,6 +24,9 @@ public class DataAnalyzeFactory : WebApplicationFactory<Program>
         this.redisConnectionString = redisConnectionString;
     }
 
+    /// <summary>
+    /// Configures the web host for the test environment.
+    /// </summary>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -31,6 +38,9 @@ public class DataAnalyzeFactory : WebApplicationFactory<Program>
         });
     }
 
+    /// <summary>
+    /// Removes production database and Redis services from DI container.
+    /// </summary>
     private void RemoveProductionServices(IServiceCollection services)
     {
         var descriptorsToRemove = new[]
@@ -48,13 +58,14 @@ public class DataAnalyzeFactory : WebApplicationFactory<Program>
         }
     }
 
+    /// <summary>
+    /// Adds test database context and Redis connection using test container strings.
+    /// </summary>
     private void AddTestServices(IServiceCollection services)
     {
-        // Add database context using test container connection string
         services.AddDbContext<DataAnalyzeDbContext>(options =>
             options.UseNpgsql(postgresConnectionString));
 
-        // Add Redis using test container connection string
         services.AddSingleton<IConnectionMultiplexer>(_ =>
             ConnectionMultiplexer.Connect(redisConnectionString));
     }

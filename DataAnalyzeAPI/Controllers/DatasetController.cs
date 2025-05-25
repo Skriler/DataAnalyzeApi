@@ -54,7 +54,7 @@ public class DatasetController(
         if (id <= 0)
         {
             return BadRequest("Invalid dataset ID");
-        } 
+        }
 
         var dataset = await repository.GetByIdAsync(id);
 

@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
+using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeApi.Services.Analyse.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +10,16 @@ namespace DataAnalyzeApi.Controllers;
 [ApiController]
 [Route("api/analyse/clustering")]
 [Authorize(Policy = "UserOrAdmin")]
-public class ClusteringController : ControllerBase
+[Produces("application/json")]
+public class ClusteringController(
+    DatasetService datasetService,
+    ClusteringService clusteringService,
+    ILogger<ClusteringController> logger
+    ) : ControllerBase
 {
-    private readonly DatasetService datasetService;
-    private readonly ClusteringService clusteringService;
-
-    public ClusteringController(
-        DatasetService datasetService,
-        ClusteringService clusteringService)
-    {
-        this.datasetService = datasetService;
-        this.clusteringService = clusteringService;
-    }
+    private readonly DatasetService datasetService = datasetService;
+    private readonly ClusteringService clusteringService = clusteringService;
+    private readonly ILogger<ClusteringController> logger = logger;
 
     /// <summary>
     /// Performs K-Means clustering on the specified dataset.
@@ -28,11 +27,24 @@ public class ClusteringController : ControllerBase
     /// <param name="datasetId">The ID of the dataset to analyze</param>
     /// <param name="request">K-Means clustering configuration parameters</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
-    [HttpPost("kmeans/{datasetId}")]
+    [HttpPost("kmeans/{datasetId:long}")]
+    [ProducesResponseType(typeof(ClusteringResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CalculateKMeansClusters(
         long datasetId,
         [FromBody] KMeansClusteringRequest request)
     {
+        var validationResult = ValidateRequest(datasetId);
+
+        if (validationResult != null)
+        {
+            return validationResult;
+        }
+
         var settings = new KMeansSettings(
             request.NumericMetric,
             request.CategoricalMetric,
@@ -50,11 +62,24 @@ public class ClusteringController : ControllerBase
     /// <param name="datasetId">The ID of the dataset to analyze</param>
     /// <param name="request">DBSCAN clustering configuration parameters</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
-    [HttpPost("dbscan/{datasetId}")]
+    [HttpPost("dbscan/{datasetId:long}")]
+    [ProducesResponseType(typeof(ClusteringResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CalculateDBSCANClusters(
         long datasetId,
         [FromBody] DBSCANClusteringRequest request)
     {
+        var validationResult = ValidateRequest(datasetId);
+
+        if (validationResult != null)
+        {
+            return validationResult;
+        }
+
         var settings = new DBSCANSettings(
             request.NumericMetric,
             request.CategoricalMetric,
@@ -71,11 +96,24 @@ public class ClusteringController : ControllerBase
     /// <param name="datasetId">The ID of the dataset to analyze</param>
     /// <param name="request">Agglomerative clustering configuration parameters</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
-    [HttpPost("agglomerative/{datasetId}")]
+    [HttpPost("agglomerative/{datasetId:long}")]
+    [ProducesResponseType(typeof(ClusteringResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CalculateAgglomerativeClusters(
         long datasetId,
         [FromBody] AgglomerativeClusteringRequest request)
     {
+        var validationResult = ValidateRequest(datasetId);
+
+        if (validationResult != null)
+        {
+            return validationResult;
+        }
+
         var settings = new AgglomerativeSettings(
             request.NumericMetric,
             request.CategoricalMetric,
@@ -107,6 +145,10 @@ public class ClusteringController : ControllerBase
 
         if (cachedResult != null)
         {
+            logger.LogInformation(
+                "Returning cached {Algorithm} clustering result for dataset {DatasetId}",
+                datasetId,
+                settings.Algorithm);
             return Ok(cachedResult);
         }
 
@@ -119,6 +161,35 @@ public class ClusteringController : ControllerBase
             request,
             settings);
 
+        logger.LogInformation(
+            "Successfully calculated {Algorithm} clustering for dataset {DatasetId} with {ClusterCount} clusters",
+            settings.Algorithm,
+            datasetId,
+            clusteringResult.Clusters.Count);
+
         return Ok(clusteringResult);
+    }
+
+    /// <summary>
+    /// Validates the dataset ID and the model state.
+    /// </summary>
+    /// <param name="datasetId">The ID of the dataset to validate</param>
+    /// <returns>
+    /// An action result representing a validation error,
+    /// or null if validation succeeds.
+    /// </returns>
+    private IActionResult? ValidateRequest(long datasetId)
+    {
+        if (datasetId <= 0)
+        {
+            return BadRequest("Invalid dataset ID");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return null;
     }
 }

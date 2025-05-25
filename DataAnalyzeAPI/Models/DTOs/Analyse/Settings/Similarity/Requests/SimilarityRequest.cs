@@ -1,7 +1,10 @@
-﻿namespace DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
+﻿using DataAnalyzeApi.Attributes;
+
+namespace DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
 
 public record SimilarityRequest
 {
+    [UniqueParameterId]
     public List<ParameterSettingsDto> ParameterSettings { get; set; } = new();
 
     /// <summary>
