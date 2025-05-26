@@ -16,12 +16,12 @@ public class CentroidCalculator
     /// <summary>
     /// Stores the cumulative sum of numeric parameter values by index.
     /// </summary>
-    private readonly Dictionary<int, double> numericSums = new();
+    private readonly Dictionary<long, double> numericSums = new();
 
     /// <summary>
     /// Stores the cumulative sum of categorical one-hot encoded values by index.
     /// </summary>
-    private readonly Dictionary<int, int[]> categoricalSums = new();
+    private readonly Dictionary<long, int[]> categoricalSums = new();
 
     /// <summary>
     /// Recalculates the centroid by averaging its parameters with the provided merge nodes.
@@ -34,7 +34,7 @@ public class CentroidCalculator
         Validate(centroid, mergeObjects);
 
         ExtractValues(centroid);
-        CalculateValuesSums(mergeObjects);
+        AccumulateMergeObjectValues(mergeObjects);
 
         var newValues = ApplyAverages(centroid, mergeObjects.Count + 1);
         return new Centroid(centroid.Id, centroid.Name, newValues);
@@ -55,73 +55,48 @@ public class CentroidCalculator
             switch (value)
             {
                 case NormalizedNumericValueModel numeric:
-                    numericSums[i] = numeric.NormalizedValue;
+                    numericSums[numeric.ParameterId] = numeric.NormalizedValue;
                     break;
 
                 case NormalizedCategoricalValueModel categorical:
-                    categoricalSums[i] = (int[])categorical.OneHotValues.Clone();
+                    categoricalSums[categorical.ParameterId] = (int[])categorical.OneHotValues.Clone();
                     break;
 
                 default:
                     throw new InvalidOperationException($"Unsupported value type at index {i}: {value?.GetType().Name}");
             }
-        }
+       }
     }
 
     /// <summary>
-    /// Calculates cumulative sums of parameter values from the merge nodes.
+    /// Accumulates parameter values from all merge objects.
     /// </summary>
-    private void CalculateValuesSums(List<DataObjectModel> mergeObjects)
+    private void AccumulateMergeObjectValues(List<DataObjectModel> mergeObjects)
     {
         foreach (var mergeObject in mergeObjects)
         {
-            for (int i = 0; i < mergeObject.Values.Count; ++i)
+            foreach (var value in mergeObject.Values)
             {
-                switch (mergeObject.Values[i])
-                {
-                    case NormalizedNumericValueModel numericParam when numericSums.ContainsKey(i):
-                        numericSums[i] += numericParam.NormalizedValue;
-                        break;
-
-                    case NormalizedCategoricalValueModel categoricalParam when categoricalSums.ContainsKey(i):
-                        AccumulateCategoricalValues(categoricalSums[i], categoricalParam.OneHotValues);
-                        break;
-                }
+                AddToCumulativeSums(value);
             }
         }
     }
 
     /// <summary>
-    /// Applies averaging to the accumulated values and constructs new parameters for the centroid.
+    /// Adds a single parameter value to the appropriate cumulative sum.
     /// </summary>
-    private List<ParameterValueModel> ApplyAverages(Centroid centroid, int mergedObjectsCount)
+    private void AddToCumulativeSums(ParameterValueModel value)
     {
-        var newParameterValues = new List<ParameterValueModel>();
-
-        foreach (var pair in numericSums)
+        switch (value)
         {
-            var valueModel = centroid.Values[pair.Key];
-            var newValue = pair.Value / mergedObjectsCount;
+            case NormalizedNumericValueModel numeric when numericSums.ContainsKey(numeric.ParameterId):
+                numericSums[numeric.ParameterId] += numeric.NormalizedValue;
+                break;
 
-            newParameterValues.Add(new NormalizedNumericValueModel(valueModel, newValue));
+            case NormalizedCategoricalValueModel categorical when categoricalSums.ContainsKey(categorical.ParameterId):
+                AccumulateCategoricalValues(categoricalSums[categorical.ParameterId], categorical.OneHotValues);
+                break;
         }
-
-        foreach (var pair in categoricalSums)
-        {
-            var valueModel = centroid.Values[pair.Key];
-            var newOneHot = new int[pair.Value.Length];
-
-            for (int j = 0; j < newOneHot.Length; ++j)
-            {
-                var avgValue = (double)pair.Value[j] / mergedObjectsCount;
-
-                newOneHot[j] = avgValue >= OneHotThreshold ? 1 : 0;
-            }
-
-            newParameterValues.Add(new NormalizedCategoricalValueModel(valueModel, newOneHot));
-        }
-
-        return newParameterValues;
     }
 
     /// <summary>
@@ -133,6 +108,54 @@ public class CentroidCalculator
         {
             sumArray[j] += values[j];
         }
+    }
+
+    /// <summary>
+    /// Applies averaging to the accumulated values and constructs new parameters for the centroid.
+    /// </summary>
+    private List<ParameterValueModel> ApplyAverages(Centroid centroid, int mergedObjectsCount)
+    {
+        var newParameterValues = new List<ParameterValueModel>(centroid.Values.Count);
+
+        foreach (var numericEntry in numericSums)
+        {
+            var baseValue = GetValueModelByParameterId(centroid, numericEntry.Key);
+            var newValue = numericEntry.Value / mergedObjectsCount;
+
+            newParameterValues.Add(new NormalizedNumericValueModel(baseValue, newValue));
+        }
+
+        foreach (var categoricalEntry in categoricalSums)
+        {
+            var baseValue = GetValueModelByParameterId(centroid, categoricalEntry.Key);
+            var averaged = AverageOneHot(categoricalEntry.Value, mergedObjectsCount);
+
+            newParameterValues.Add(new NormalizedCategoricalValueModel(baseValue, averaged));
+        }
+
+        return newParameterValues;
+    }
+
+    /// <summary>
+    /// Finds a base parameter value in the centroid by ParameterId.
+    /// </summary>
+    private static ParameterValueModel GetValueModelByParameterId(Centroid centroid, long parameterId) =>
+        centroid.Values.First(v => v.ParameterId == parameterId);
+
+    /// <summary>
+    /// Averages one-hot encoded categorical values using thresholding.
+    /// </summary>
+    private static int[] AverageOneHot(int[] sumArray, int totalCount)
+    {
+        var result = new int[sumArray.Length];
+
+        for (int i = 0; i < sumArray.Length; ++i)
+        {
+            double avg = (double)sumArray[i] / totalCount;
+            result[i] = avg >= OneHotThreshold ? 1 : 0;
+        }
+
+        return result;
     }
 
     /// <summary>

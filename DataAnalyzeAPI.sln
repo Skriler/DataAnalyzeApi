@@ -5,7 +5,9 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeApi", "DataAnalyzeAPI\DataAnalyzeApi.csproj", "{EAFC5023-739F-4B0B-BF2F-06A3E352CD88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeApi.Tests", "DataAnalyzeApi.Tests.Unit\DataAnalyzeApi.Tests.csproj", "{50581463-6DC9-4034-BCF8-7A5D54CDE16D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeApi.Unit", "DataAnalyzeApi.Unit\DataAnalyzeApi.Unit.csproj", "{50581463-6DC9-4034-BCF8-7A5D54CDE16D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAnalyzeApi.Integration", "DataAnalyzeApi.Integration\DataAnalyzeApi.Integration.csproj", "{5FC22969-E589-4A80-A7BF-312A23966A52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50581463-6DC9-4034-BCF8-7A5D54CDE16D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FC22969-E589-4A80-A7BF-312A23966A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FC22969-E589-4A80-A7BF-312A23966A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FC22969-E589-4A80-A7BF-312A23966A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FC22969-E589-4A80-A7BF-312A23966A52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

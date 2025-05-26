@@ -8,16 +8,16 @@ namespace DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
 public abstract record BaseClusteringRequest
 {
     [UniqueParameterId]
-    public List<ParameterSettingsDto> ParameterSettings { get; set; } = new();
+    public List<ParameterSettingsDto> ParameterSettings { get; init; } = new();
 
     [EnumDataType(typeof(NumericDistanceMetricType))]
-    public NumericDistanceMetricType NumericMetric { get; set; } = NumericDistanceMetricType.Euclidean;
+    public NumericDistanceMetricType NumericMetric { get; init; } = NumericDistanceMetricType.Euclidean;
 
     [EnumDataType(typeof(CategoricalDistanceMetricType))]
-    public CategoricalDistanceMetricType CategoricalMetric { get; set; } = CategoricalDistanceMetricType.Hamming;
+    public CategoricalDistanceMetricType CategoricalMetric { get; init; } = CategoricalDistanceMetricType.Hamming;
 
     /// <summary>
     /// Include ParameterValues dictionary in responce.
     /// </summary>
-    public bool IncludeParameters { get; set; }
+    public bool IncludeParameters { get; init; }
 }

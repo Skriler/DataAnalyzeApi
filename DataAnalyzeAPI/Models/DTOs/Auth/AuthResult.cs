@@ -2,15 +2,15 @@
 
 public record AuthResult
 {
-    public bool Success { get; set; }
+    public bool Success { get; init; }
 
-    public string Error { get; set; } = string.Empty;
+    public string Error { get; init; } = string.Empty;
 
-    public string Token { get; set; } = string.Empty;
+    public string Token { get; init; } = string.Empty;
 
-    public DateTime Expiration { get; set; }
+    public DateTime Expiration { get; init; }
 
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; init; } = string.Empty;
 
-    public List<string> Roles { get; set; } = new();
+    public List<string> Roles { get; init; } = new();
 }

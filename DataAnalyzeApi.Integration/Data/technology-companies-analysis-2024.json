@@ -1,0 +1,93 @@
+{
+  "name": "Technology Companies Analysis 2024",
+  "parameters": [
+    "Annual Revenue (Billions USD)",
+    "Employee Count (Thousands)",
+    "Market Sector",
+    "Headquarters Region",
+    "Primary Technologies",
+    "Company Age (Years)"
+  ],
+  "objects": [
+    {
+      "name": "Apple Inc",
+      "values": [ "394.3", "164", "Consumer Electronics", "North America", "Hardware,Software", "48" ]
+    },
+    {
+      "name": "Microsoft",
+      "values": [ "211.9", "221", "Software", "North America", "Cloud,Software,AI", "49" ]
+    },
+    {
+      "name": "Alphabet",
+      "values": [ "307.4", "182", "Internet Services", "North America", "Search,AI,Cloud", "25" ]
+    },
+    {
+      "name": "Amazon",
+      "values": [ "574.8", "1541", "E-commerce", "North America", "Cloud,E-commerce,AI", "30" ]
+    },
+    {
+      "name": "Meta",
+      "values": [ "134.9", "77", "Social Media", "North America", "Social,VR,AI", "20" ]
+    },
+    {
+      "name": "Tesla",
+      "values": [ "96.8", "140", "Automotive", "North America", "Electric Vehicles,AI", "21" ]
+    },
+    {
+      "name": "Samsung Electronics",
+      "values": [ "244.2", "267", "Consumer Electronics", "Asia", "Hardware,Semiconductors", "85" ]
+    },
+    {
+      "name": "TSMC",
+      "values": [ "75.9", "73", "Semiconductors", "Asia", "Semiconductors", "37" ]
+    },
+    {
+      "name": "ASML",
+      "values": [ "27.6", "42", "Semiconductors", "Europe", "Semiconductors,Hardware", "40" ]
+    },
+    {
+      "name": "SAP",
+      "values": [ "33.3", "112", "Software", "Europe", "Enterprise Software", "52" ]
+    },
+    {
+      "name": "Oracle",
+      "values": [ "50.0", "164", "Software", "North America", "Database,Cloud", "47" ]
+    },
+    {
+      "name": "Salesforce",
+      "values": [ "34.9", "79", "Software", "North America", "CRM,Cloud", "25" ]
+    },
+    {
+      "name": "Adobe",
+      "values": [ "19.4", "29", "Software", "North America", "Creative Software,AI", "43" ]
+    },
+    {
+      "name": "Nvidia",
+      "values": [ "126.0", "29", "Semiconductors", "North America", "GPU,AI", "31" ]
+    },
+    {
+      "name": "Intel",
+      "values": [ "77.9", "131", "Semiconductors", "North America", "Processors,Hardware", "55" ]
+    },
+    {
+      "name": "Tencent",
+      "values": [ "86.8", "116", "Internet Services", "Asia", "Gaming,Social,Cloud", "26" ]
+    },
+    {
+      "name": "Alibaba",
+      "values": [ "126.5", "245", "E-commerce", "Asia", "E-commerce,Cloud,AI", "25" ]
+    },
+    {
+      "name": "Sony",
+      "values": [ "88.3", "113", "Consumer Electronics", "Asia", "Gaming,Entertainment,Hardware", "78" ]
+    },
+    {
+      "name": "IBM",
+      "values": [ "64.8", "282", "Software", "North America", "AI,Cloud,Consulting", "113" ]
+    },
+    {
+      "name": "Shopify",
+      "values": [ "7.1", "12", "E-commerce", "North America", "E-commerce,SaaS", "19" ]
+    }
+  ]
+}

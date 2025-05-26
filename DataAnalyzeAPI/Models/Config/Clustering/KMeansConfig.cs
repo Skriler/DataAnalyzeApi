@@ -4,9 +4,9 @@ public static class KMeansConfig
 {
     public static class MaxIterations
     {
-        public const int Default = 1000;
+        public const int Default = 200;
 
-        public const int MaxAllowed = 10000;
+        public const int MaxAllowed = 1000;
 
         public const int MinAllowed = 10;
     }

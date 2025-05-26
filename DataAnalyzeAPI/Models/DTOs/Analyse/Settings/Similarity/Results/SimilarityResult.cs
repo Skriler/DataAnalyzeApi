@@ -2,7 +2,7 @@
 
 public record SimilarityResult
 {
-    public long DatasetId { get; set; }
+    public long DatasetId { get; init; }
 
-    public List<SimilarityPairDto> Similarities { get; set; } = new();
+    public List<SimilarityPairDto> Similarities { get; init; } = new();
 }
