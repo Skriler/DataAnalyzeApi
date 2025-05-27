@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -12,8 +12,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: datasets_db 
         options: >-
           --health-cmd pg_isready
@@ -42,20 +42,20 @@ jobs:
         dotnet-version: '9.0'
         
     - name: Restore dependencies
-      run: dotnet restore DataAnalyzeApi.csproj
+      run: dotnet restore DataAnalyzeApi.sln
       
     - name: Build
-      run: dotnet build DataAnalyzeApi.csproj --no-restore --configuration Release
+      run: dotnet build DataAnalyzeApi.sln --no-restore --configuration Release
       
     - name: Run Unit Tests
-      run: dotnet test DataAnalyzeApi.Unit --configuration Release
+      run: dotnet test DataAnalyzeApi.Unit/DataAnalyzeApi.Unit.csproj --configuration Release
       
     - name: Run Integration Tests
-      run: dotnet test DataAnalyzeApi.Integration --configuration Release
+      run: dotnet test DataAnalyzeApi.Integration/DataAnalyzeApi.Integration.csproj --configuration Release
       env:
         Postgres__Host: localhost
-        Postgres__Username: ${{ secrets.POSTGRES_USERNAME }}
-        Postgres__Password: ${{ secrets.POSTGRES_PASSWORD }}
+        Postgres__Username: testuser
+        Postgres__Password: testpassword
         Redis__Host: localhost
 
   deploy:
@@ -82,7 +82,7 @@ jobs:
     - name: Deploy on VM
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.VM__HOST }}
+        host: ${{ secrets.VM_HOST }}
         username: ${{ secrets.VM_USER }}
         key: ${{ secrets.VM_SSH_KEY }}
         script: |
