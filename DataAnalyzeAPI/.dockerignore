@@ -1,0 +1,43 @@
+# Build artifacts
+bin/
+obj/
+out/
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# Test projects
+*Tests/
+*Test/
+*.Tests/
+*.Test/
+
+# User-specific files
+*.user
+*.suo
+*.cache
+*.docstates
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Environment files (will be passed via environment variables)
+.env
+.env.*
+
+# Documentation
+*.md
+README*
+
+# Logs
+logs/
+*.log

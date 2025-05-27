@@ -1,5 +1,7 @@
 ﻿using DataAnalyzeApi.DAL.Seeders;
 using DataAnalyzeApi.Middlewares;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Text.Json;
 
 namespace DataAnalyzeApi.Extensions;
 
@@ -13,10 +15,7 @@ public static class ApplicationExtensions
     /// </summary>
     public static WebApplication ConfigureMiddleware(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            ConfigureDevEnvironment(app);
-        }
+        ConfigureSwagger(app);
 
         app.UseErrorHandlingMiddleware()
             .UseHttpsRedirection()
@@ -42,13 +41,13 @@ public static class ApplicationExtensions
     /// <summary>
     /// Configures development-specific services.
     /// </summary>
-    private static void ConfigureDevEnvironment(WebApplication app)
+    private static void ConfigureSwagger(WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(opt =>
         {
             opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Data Analyze API v1");
-            opt.RoutePrefix = string.Empty;
+            opt.RoutePrefix = "swagger";
         });
     }
 }

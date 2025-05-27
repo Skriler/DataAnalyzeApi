@@ -1,0 +1,102 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: datasets_db 
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0'
+        
+    - name: Restore dependencies
+      run: dotnet restore DataAnalyzeApi.csproj
+      
+    - name: Build
+      run: dotnet build DataAnalyzeApi.csproj --no-restore --configuration Release
+      
+    - name: Run Unit Tests
+      run: dotnet test DataAnalyzeApi.Unit --configuration Release
+      
+    - name: Run Integration Tests
+      run: dotnet test DataAnalyzeApi.Integration --configuration Release
+      env:
+        Postgres__Host: localhost
+        Postgres__Username: ${{ secrets.POSTGRES_USERNAME }}
+        Postgres__Password: ${{ secrets.POSTGRES_PASSWORD }}
+        Redis__Host: localhost
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Build Docker image
+      run: |
+        docker build -t data-analyze-api:latest .
+        docker save data-analyze-api:latest | gzip > data-analyze-api.tar.gz
+        
+    - name: Copy image to VM
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        source: "data-analyze-api.tar.gz"
+        target: "/tmp/"
+        
+    - name: Deploy on VM
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VM__HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          # Load the new image
+          cd /tmp
+          docker load < data-analyze-api.tar.gz
+          rm data-analyze-api.tar.gz
+          
+          # Change to the directory with docker-compose
+          cd /home/deploy/app
+          
+          # Stop and update the container
+          docker-compose stop data-analyze-api
+          docker-compose up -d data-analyze-api
+          
+          # Clean up old images
+          docker image prune -f
