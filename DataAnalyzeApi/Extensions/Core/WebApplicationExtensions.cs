@@ -3,13 +3,29 @@ using DataAnalyzeApi.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Text.Json;
 
-namespace DataAnalyzeApi.Extensions;
+namespace DataAnalyzeApi.Extensions.Core;
 
 /// <summary>
 /// Contains extension methods for application setup and middleware configuration.
 /// </summary>
-public static class ApplicationExtensions
+public static class WebApplicationExtensions
 {
+    /// <summary>
+    /// Loads environment variables from a .env file based on the current environment.
+    /// </summary>
+    public static void LoadEnvironmentVariables(this WebApplicationBuilder builder)
+    {
+        var environmentName = builder.Environment.EnvironmentName ?? "Development";
+        var envFile = environmentName == "Testing" ? ".env.test" : ".env";
+
+        if (File.Exists(envFile))
+        {
+            DotNetEnv.Env.Load(envFile);
+        }
+
+        builder.Configuration.AddEnvironmentVariables();
+    }
+
     /// <summary>
     /// Configures the application middleware pipeline.
     /// </summary>

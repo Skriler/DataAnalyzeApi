@@ -1,9 +1,9 @@
-﻿using DataAnalyzeApi.Extensions;
-using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Services.Analyse.Factories.Metric;
+using DataAnalyzeApi.Extensions.Model;
 
 namespace DataAnalyzeApi.Services.Analyse.DistanceCalculators;
 

@@ -24,7 +24,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace DataAnalyzeApi.Extensions;
+namespace DataAnalyzeApi.Extensions.Core;
 
 /// <summary>
 /// Contains extension methods for registering application services.

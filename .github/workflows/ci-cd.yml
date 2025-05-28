@@ -53,10 +53,23 @@ jobs:
     - name: Run Integration Tests
       run: dotnet test DataAnalyzeApi.Integration/DataAnalyzeApi.Integration.csproj --configuration Release
       env:
+        # Postgres
         Postgres__Host: localhost
         Postgres__Username: testuser
         Postgres__Password: testpassword
+
+        # Redis
         Redis__Host: localhost
+
+        # JWT
+        JwtConfig__Secret: ${{ secrets.JWTCONFIG_SECRET }}
+
+        # Admin user
+        Identity__AdminUser__Username: ${{ secrets.IDENTITY_ADMINUSER_USERNAME }}
+        Identity__AdminUser__Email: ${{ secrets.IDENTITY_ADMINUSER_EMAIL }}
+        Identity__AdminUser__FirstName: ${{ secrets.IDENTITY_ADMINUSER_FIRSTNAME }}
+        Identity__AdminUser__LastName: ${{ secrets.IDENTITY_ADMINUSER_LASTNAME }}
+        Identity__AdminUser__Password: ${{ secrets.IDENTITY_ADMINUSER_PASSWORD }}
 
   deploy:
     needs: test
@@ -67,7 +80,7 @@ jobs:
       
     - name: Build Docker image
       run: |
-        docker build -t data-analyze-api:latest .
+        docker build -f DataAnalyzeApi/Dockerfile -t data-analyze-api:latest DataAnalyzeApi
         docker save data-analyze-api:latest | gzip > data-analyze-api.tar.gz
         
     - name: Copy image to VM

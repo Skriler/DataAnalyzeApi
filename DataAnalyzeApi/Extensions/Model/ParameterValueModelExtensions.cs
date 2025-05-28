@@ -1,6 +1,6 @@
 ﻿using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
 
-namespace DataAnalyzeApi.Extensions;
+namespace DataAnalyzeApi.Extensions.Model;
 
 public static class ParameterValueModelExtensions
 {

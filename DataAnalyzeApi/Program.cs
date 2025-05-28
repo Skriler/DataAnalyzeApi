@@ -1,12 +1,9 @@
-using DataAnalyzeApi.Extensions;
-
-// Load environment variables
-DotNetEnv.Env.Load();
+using DataAnalyzeApi.Extensions.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration
-builder.Configuration.AddEnvironmentVariables();
+// Load environment variables
+builder.LoadEnvironmentVariables();
 
 // Dependency Injection
 builder.Services.ConfigureServices(builder.Configuration);

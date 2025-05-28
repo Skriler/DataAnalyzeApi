@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAnalyzeAPI\DataAnalyzeApi.csproj" />
+    <ProjectReference Include="..\DataAnalyzeApi\DataAnalyzeApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
