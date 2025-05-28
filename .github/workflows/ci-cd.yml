@@ -6,6 +6,7 @@ on:
 
 jobs:
   test:
+    environment: ci
     runs-on: ubuntu-latest
     
     services:
@@ -73,43 +74,12 @@ jobs:
 
   deploy:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
     - uses: actions/checkout@v4
       
-    - name: Build Docker image
+    - name: Build and Deploy
       run: |
+        # Build image
         docker build -f DataAnalyzeApi/Dockerfile -t data-analyze-api:latest DataAnalyzeApi
-        docker save data-analyze-api:latest | gzip > data-analyze-api.tar.gz
-        
-    - name: Copy image to VM
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.VM_HOST }}
-        username: ${{ secrets.VM_USER }}
-        key: ${{ secrets.VM_SSH_KEY }}
-        source: "data-analyze-api.tar.gz"
-        target: "/tmp/"
-        
-    - name: Deploy on VM
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.VM_HOST }}
-        username: ${{ secrets.VM_USER }}
-        key: ${{ secrets.VM_SSH_KEY }}
-        script: |
-          # Load the new image
-          cd /tmp
-          docker load < data-analyze-api.tar.gz
-          rm data-analyze-api.tar.gz
-          
-          # Change to the directory with docker-compose
-          cd /home/deploy/app
-          
-          # Stop and update the container
-          docker-compose stop data-analyze-api
-          docker-compose up -d data-analyze-api
-          
-          # Clean up old images
-          docker image prune -f
