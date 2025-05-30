@@ -30,11 +30,9 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<List<Dataset>>> GetAll()
     {
-        var datasets = await repository.GetAllAsync();
-
-        return Ok(datasets);
+        return await repository.GetAllAsync();
     }
 
     /// <summary>
@@ -49,7 +47,7 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetById(long id)
+    public async Task<ActionResult<DatasetCreateDto>> GetById(long id)
     {
         if (id <= 0)
         {
@@ -63,9 +61,7 @@ public class DatasetController(
             return NotFound($"Dataset with ID {id} not found");
         }
 
-        var dto = mapper.Map<DatasetCreateDto>(dataset);
-
-        return Ok(dto);
+        return mapper.Map<DatasetCreateDto>(dataset);
     }
 
     /// <summary>
@@ -79,7 +75,7 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create([FromBody] DatasetCreateDto dto)
+    public async Task<ActionResult<Dataset>> Create([FromBody] DatasetCreateDto dto)
     {
         if (!ModelState.IsValid)
         {
@@ -111,7 +107,7 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Delete(long id)
+    public async Task<ActionResult> Delete(long id)
     {
         if (id <= 0)
         {

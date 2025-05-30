@@ -27,11 +27,11 @@ public class AuthController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    public async Task<ActionResult<AuthResult>> Login([FromBody] LoginDto dto)
     {
-        if (!ModelState.IsValid)
+        if (!TryValidateModel(dto, out var errorResult))
         {
-            return BadRequest(ModelState);
+            return errorResult!;
         }
 
         var authResult = await authService.LoginAsync(dto);
@@ -43,7 +43,7 @@ public class AuthController(
         }
 
         logger.LogInformation("User {Username} successfully logged in", dto.Username);
-        return Ok(authResult);
+        return authResult;
     }
 
     /// <summary>
@@ -52,15 +52,15 @@ public class AuthController(
     /// <param name="dto">The registration dto containing user information</param>
     /// <returns>An action result indicating the success or failure of the registration</returns>
     [HttpPost("register")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+    public async Task<ActionResult<string>> Register([FromBody] RegisterDto dto)
     {
-        if (!ModelState.IsValid)
+        if (!TryValidateModel(dto, out var errorResult))
         {
-            return BadRequest(ModelState);
+            return errorResult!;
         }
 
         if (await authService.UserExistsAsync(dto.Username))
@@ -75,10 +75,35 @@ public class AuthController(
         {
             logger.LogWarning("Failed to create user: {Username}, Errors: {Errors}",
                 dto.Username, string.Join(", ", result.Errors.Select(e => e.Description)));
+
             return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
         }
 
         logger.LogInformation("User {Username} successfully registered", dto.Username);
-        return Ok("User created successfully.");
+        return Created(string.Empty, "User successfully registered");
+    }
+
+    /// <summary>
+    /// Validates the model state and returns appropriate error response if validation fails.
+    /// </summary>
+    /// <param name="model">The model to validate</param>
+    /// <param name="errorResult">The error result if validation fails</param>
+    /// <returns>True if model is valid, false otherwise</returns>
+    private bool TryValidateModel<T>(T model, out ActionResult? errorResult)
+    {
+        if (model == null)
+        {
+            errorResult = BadRequest("Request body cannot be null");
+            return false;
+        }
+
+        if (!ModelState.IsValid)
+        {
+            errorResult = BadRequest(ModelState);
+            return false;
+        }
+
+        errorResult = null;
+        return true;
     }
 }

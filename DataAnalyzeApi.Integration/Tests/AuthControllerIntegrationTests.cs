@@ -21,7 +21,7 @@ public class AuthControllerIntegrationTests : IntegrationTestBase
             request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
 
     [Theory]

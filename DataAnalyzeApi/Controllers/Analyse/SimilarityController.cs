@@ -1,24 +1,18 @@
 ﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
 using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
 using DataAnalyzeApi.Services.Analyse.Core;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeApi.Controllers;
+namespace DataAnalyzeApi.Controllers.Analyse;
 
-[ApiController]
 [Route("api/analyse/similarity")]
-[Authorize(Policy = "UserOrAdmin")]
-[Produces("application/json")]
 public class SimilarityController(
     DatasetService datasetService,
     SimilarityService similarityService,
     ILogger<SimilarityController> logger
-    ) : ControllerBase
+    ) : BaseAnalyseController<SimilarityController>(datasetService, logger)
 {
-    private readonly DatasetService datasetService = datasetService;
     private readonly SimilarityService similarityService = similarityService;
-    private readonly ILogger<SimilarityController> logger = logger;
 
     /// <summary>
     /// Calculates  similarity results based on full pairwise comparison algorithm.
@@ -35,18 +29,13 @@ public class SimilarityController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CalculateSimilarity(
-        long datasetId,
+    public async Task<ActionResult<SimilarityResult>> CalculateSimilarity(
+        [FromRoute] long datasetId,
         [FromBody] SimilarityRequest? request)
     {
-        if (datasetId <= 0)
+        if (!TryValidateRequest(datasetId, out var errorResult))
         {
-            return BadRequest("Invalid dataset ID");
-        }
-
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
+            return errorResult!;
         }
 
         var cachedResult = await similarityService.GetCachedResultAsync(datasetId, request);
@@ -54,7 +43,7 @@ public class SimilarityController(
         if (cachedResult != null)
         {
             logger.LogInformation("Returning cached similarity result for dataset {DatasetId}", datasetId);
-            return Ok(cachedResult);
+            return cachedResult;
         }
 
         var dataset = await datasetService.GetPreparedDatasetAsync(datasetId, request?.ParameterSettings);
@@ -66,6 +55,6 @@ public class SimilarityController(
             datasetId,
             similarityResult.Similarities.Count);
 
-        return Ok(similarityResult);
+        return similarityResult;
     }
 }

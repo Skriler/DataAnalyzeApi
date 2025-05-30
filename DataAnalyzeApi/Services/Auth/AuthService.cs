@@ -8,26 +8,17 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace DataAnalyzeApi.Services.Auth;
 
-public class AuthService
+public class AuthService(
+    UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    JwtTokenService jwtTokenService,
+    IOptions<IdentityConfig> identityConfigOptions)
 {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly RoleManager<IdentityRole> roleManager;
+    private readonly UserManager<ApplicationUser> userManager = userManager;
+    private readonly RoleManager<IdentityRole> roleManager = roleManager;
 
-    private readonly JwtTokenService jwtTokenService;
-    private readonly IdentityConfig identityConfig;
-
-    public AuthService(
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager,
-        JwtTokenService jwtTokenService,
-        IOptions<IdentityConfig> identityConfigOptions)
-    {
-        this.userManager = userManager;
-        this.roleManager = roleManager;
-
-        this.jwtTokenService = jwtTokenService;
-        identityConfig = identityConfigOptions.Value;
-    }
+    private readonly JwtTokenService jwtTokenService = jwtTokenService;
+    private readonly IdentityConfig identityConfig = identityConfigOptions.Value;
 
     /// <summary>
     /// Checks if a user with the specified username exists.

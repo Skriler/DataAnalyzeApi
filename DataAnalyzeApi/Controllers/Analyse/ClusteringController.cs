@@ -2,24 +2,18 @@
 using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
 using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
 using DataAnalyzeApi.Services.Analyse.Core;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeApi.Controllers;
+namespace DataAnalyzeApi.Controllers.Analyse;
 
-[ApiController]
 [Route("api/analyse/clustering")]
-[Authorize(Policy = "UserOrAdmin")]
-[Produces("application/json")]
 public class ClusteringController(
     DatasetService datasetService,
     ClusteringService clusteringService,
     ILogger<ClusteringController> logger
-    ) : ControllerBase
+    ) : BaseAnalyseController<ClusteringController>(datasetService, logger)
 {
-    private readonly DatasetService datasetService = datasetService;
     private readonly ClusteringService clusteringService = clusteringService;
-    private readonly ILogger<ClusteringController> logger = logger;
 
     /// <summary>
     /// Performs K-Means clustering on the specified dataset.
@@ -34,15 +28,13 @@ public class ClusteringController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CalculateKMeansClusters(
-        long datasetId,
+    public async Task<ActionResult<ClusteringResult>> CalculateKMeansClusters(
+        [FromRoute] long datasetId,
         [FromBody] KMeansClusteringRequest request)
     {
-        var validationResult = ValidateRequest(datasetId);
-
-        if (validationResult != null)
+        if (!TryValidateRequest(datasetId, out var errorResult))
         {
-            return validationResult;
+            return errorResult!;
         }
 
         var settings = new KMeansSettings(
@@ -69,15 +61,13 @@ public class ClusteringController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CalculateDBSCANClusters(
-        long datasetId,
+    public async Task<ActionResult<ClusteringResult>> CalculateDBSCANClusters(
+        [FromRoute] long datasetId,
         [FromBody] DBSCANClusteringRequest request)
     {
-        var validationResult = ValidateRequest(datasetId);
-
-        if (validationResult != null)
+        if (!TryValidateRequest(datasetId, out var errorResult))
         {
-            return validationResult;
+            return errorResult!;
         }
 
         var settings = new DBSCANSettings(
@@ -103,15 +93,13 @@ public class ClusteringController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CalculateAgglomerativeClusters(
-        long datasetId,
+    public async Task<ActionResult<ClusteringResult>> CalculateAgglomerativeClusters(
+        [FromRoute] long datasetId,
         [FromBody] AgglomerativeClusteringRequest request)
     {
-        var validationResult = ValidateRequest(datasetId);
-
-        if (validationResult != null)
+        if (!TryValidateRequest(datasetId, out var errorResult))
         {
-            return validationResult;
+            return errorResult!;
         }
 
         var settings = new AgglomerativeSettings(
@@ -132,7 +120,7 @@ public class ClusteringController(
     /// <param name="request">The base clustering request containing configuration parameters</param>
     /// <param name="settings">The specific settings for the selected algorithm</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
-    private async Task<IActionResult> CalculateClusters<TSettings>(
+    private async Task<ActionResult<ClusteringResult>> CalculateClusters<TSettings>(
         long datasetId,
         BaseClusteringRequest request,
         TSettings settings
@@ -147,9 +135,10 @@ public class ClusteringController(
         {
             logger.LogInformation(
                 "Returning cached {Algorithm} clustering result for dataset {DatasetId}",
-                datasetId,
-                settings.Algorithm);
-            return Ok(cachedResult);
+                settings.Algorithm,
+                datasetId);
+
+            return cachedResult;
         }
 
         var dataset = await datasetService.GetPreparedNormalizedDatasetAsync(
@@ -167,29 +156,6 @@ public class ClusteringController(
             datasetId,
             clusteringResult.Clusters.Count);
 
-        return Ok(clusteringResult);
-    }
-
-    /// <summary>
-    /// Validates the dataset ID and the model state.
-    /// </summary>
-    /// <param name="datasetId">The ID of the dataset to validate</param>
-    /// <returns>
-    /// An action result representing a validation error,
-    /// or null if validation succeeds.
-    /// </returns>
-    private IActionResult? ValidateRequest(long datasetId)
-    {
-        if (datasetId <= 0)
-        {
-            return BadRequest("Invalid dataset ID");
-        }
-
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        return null;
+        return clusteringResult;
     }
 }

@@ -83,3 +83,10 @@ jobs:
       run: |
         # Build image
         docker build -f DataAnalyzeApi/Dockerfile -t data-analyze-api:latest DataAnalyzeApi
+
+        cd /home/Skriler/deploy
+        docker-compose down
+        docker-compose up -d
+
+        # Remove dangling images
+        docker image prune -f
