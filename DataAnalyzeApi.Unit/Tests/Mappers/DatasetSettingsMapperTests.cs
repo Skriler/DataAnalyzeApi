@@ -1,7 +1,7 @@
 ﻿using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Tests.Mappers;
 

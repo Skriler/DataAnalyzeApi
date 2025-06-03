@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using DataAnalyzeApi.Models.Entities;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 

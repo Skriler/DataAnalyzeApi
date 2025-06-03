@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
+﻿using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Cache;
 using System.Text.Json;

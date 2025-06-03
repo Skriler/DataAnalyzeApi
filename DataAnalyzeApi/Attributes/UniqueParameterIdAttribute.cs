@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+﻿using DataAnalyzeApi.Models.DTOs.Analysis;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeApi.Attributes;

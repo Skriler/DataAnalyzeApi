@@ -14,7 +14,7 @@ public class DatasetRepository
 
     public async Task<List<Dataset>> GetAllAsync(bool trackChanges = false)
     {
-        var query = context.Datasets.AsQueryable();
+        var query = GetDatasetsWithIncludes();
 
         if (!trackChanges)
             query = query.AsNoTracking();
@@ -24,10 +24,7 @@ public class DatasetRepository
 
     public async Task<Dataset?> GetByIdAsync(long id, bool trackChanges = false)
     {
-        var query = context.Datasets
-            .Include(d => d.Parameters)
-            .Include(d => d.Objects)
-                .ThenInclude(o => o.Values)
+        var query = GetDatasetsWithIncludes()
             .Where(d => d.Id == id);
 
         if (!trackChanges)
@@ -46,5 +43,13 @@ public class DatasetRepository
     {
         context.Datasets.Remove(dataset);
         await context.SaveChangesAsync();
+    }
+
+    private IQueryable<Dataset> GetDatasetsWithIncludes()
+    {
+        return context.Datasets
+            .Include(d => d.Parameters)
+            .Include(d => d.Objects)
+                .ThenInclude(o => o.Values);
     }
 }

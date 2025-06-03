@@ -1,9 +1,10 @@
 ﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Similarity;
-using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
-using DataAnalyzeApi.Models.DTOs.Dataset;
+using DataAnalyzeApi.Models.DTOs.Analysis;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Settings.Similarity.Results;
 
 namespace DataAnalyzeApi.Unit.Common.Assertions;
 
@@ -76,7 +77,7 @@ public static class AnalysisMapperAssertions
     /// </summary>
     private static void AssertDataObjectsEqual(
         DataObjectModel dataObject,
-        DataObjectDto result,
+        DataObjectAnalysisDto result,
         bool includeParameterValues)
     {
         Assert.Equal(dataObject.Id, result.Id);

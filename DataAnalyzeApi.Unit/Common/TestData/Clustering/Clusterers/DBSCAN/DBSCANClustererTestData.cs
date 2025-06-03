@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Unit.Common.Models.Analyse;
+﻿using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.DBSCAN;
 

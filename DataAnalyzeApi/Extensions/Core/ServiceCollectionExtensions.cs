@@ -6,23 +6,24 @@ using DataAnalyzeApi.Middlewares;
 using DataAnalyzeApi.Models.Config;
 using DataAnalyzeApi.Models.Config.Identity;
 using DataAnalyzeApi.Models.Entities;
-using DataAnalyzeApi.Services.Analyse.Clustering.Clusterers;
-using DataAnalyzeApi.Services.Analyse.Comparers;
-using DataAnalyzeApi.Services.Analyse.Core;
-using DataAnalyzeApi.Services.Analyse.DistanceCalculators;
-using DataAnalyzeApi.Services.Analyse.Metrics.Categorical;
-using DataAnalyzeApi.Services.Analyse.Metrics.Numeric;
+using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
+using DataAnalyzeApi.Services.Analysis.Comparers;
+using DataAnalyzeApi.Services.Analysis.Core;
+using DataAnalyzeApi.Services.Analysis.DistanceCalculators;
+using DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
+using DataAnalyzeApi.Services.Analysis.Metrics.Numeric;
 using DataAnalyzeApi.Services.Auth;
 using DataAnalyzeApi.Services.Cache;
-using DataAnalyzeApi.Services.Analyse.Clustering.Helpers;
-using DataAnalyzeApi.Services.Analyse.Factories.Clusterer;
-using DataAnalyzeApi.Services.Analyse.Factories.Metric;
+using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
+using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
+using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 using DataAnalyzeApi.Services.Normalizers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DataAnalyzeApi.Mappers.Profiles;
 
 namespace DataAnalyzeApi.Extensions.Core;
 
@@ -196,7 +197,8 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddMappers(this IServiceCollection services)
     {
         return services
-            .AddAutoMapper(typeof(DatasetProfile))
+            .AddAutoMapper(typeof(DatasetReadProfile))
+            .AddAutoMapper(typeof(DatasetCreateProfile))
             .AddScoped<DatasetSettingsMapper>()
             .AddScoped<AnalysisMapper>();
     }
@@ -264,6 +266,6 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddFilters(this IServiceCollection services)
     {
         return services
-            .AddScoped<DataAnalyzeExceptionFilter>();
+            .AddScoped<DataAnalysisExceptionFilter>();
     }
 }

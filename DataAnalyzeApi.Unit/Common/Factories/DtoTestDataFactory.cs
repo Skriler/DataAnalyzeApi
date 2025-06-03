@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+using DataAnalyzeApi.Models.DTOs.Analysis.Settings;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 

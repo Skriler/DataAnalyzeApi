@@ -1,9 +1,10 @@
 ﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Similarity;
-using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
-using DataAnalyzeApi.Models.DTOs.Dataset;
+using DataAnalyzeApi.Models.DTOs.Analysis;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
 namespace DataAnalyzeApi.Mappers;
 
@@ -47,11 +48,11 @@ public class AnalysisMapper
     /// <summary>
     /// Maps DataObjectModel to its DTO.
     /// </summary>
-    private static DataObjectDto MapDataObject(DataObjectModel dataObject, bool includeParameters)
+    private static DataObjectAnalysisDto MapDataObject(DataObjectModel dataObject, bool includeParameters)
     {
         var parameterValues = MapParameterValues(dataObject.Values, includeParameters);
 
-        return new DataObjectDto(
+        return new DataObjectAnalysisDto(
             dataObject.Id,
             dataObject.Name,
             parameterValues!);

@@ -1,5 +1,6 @@
 ﻿using DataAnalyzeApi.Exceptions;
-using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Normalizers.Parameters;
 

@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 using DataAnalyzeApi.Unit.Common.Factories.Models;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 

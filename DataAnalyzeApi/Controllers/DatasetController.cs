@@ -4,6 +4,7 @@ using DataAnalyzeApi.Models.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DataAnalyzeApi.Models.DTOs.Dataset.Read;
 
 namespace DataAnalyzeApi.Controllers;
 
@@ -30,9 +31,11 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Dataset>>> GetAll()
+    public async Task<ActionResult<List<DatasetDto>>> GetAll()
     {
-        return await repository.GetAllAsync();
+        var datasets = await repository.GetAllAsync();
+
+        return mapper.Map<List<DatasetDto>>(datasets);
     }
 
     /// <summary>
@@ -47,7 +50,7 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<DatasetCreateDto>> GetById(long id)
+    public async Task<ActionResult<DatasetDto>> GetById(long id)
     {
         if (id <= 0)
         {
@@ -61,7 +64,7 @@ public class DatasetController(
             return NotFound($"Dataset with ID {id} not found");
         }
 
-        return mapper.Map<DatasetCreateDto>(dataset);
+        return mapper.Map<DatasetDto>(dataset);
     }
 
     /// <summary>
@@ -90,8 +93,16 @@ public class DatasetController(
         var dataset = mapper.Map<Dataset>(dto);
         await repository.AddAsync(dataset);
 
-        logger.LogInformation("Dataset created successfully with ID {DatasetId}", dataset.Id);
-        return CreatedAtAction(nameof(GetById), new { id = dataset.Id }, dataset);
+        logger.LogInformation(
+            "Dataset created successfully with ID {DatasetId}",
+            dataset.Id);
+
+        var result = mapper.Map<DatasetDto>(dataset);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = result.Id },
+            result);
     }
 
     /// <summary>
@@ -124,6 +135,7 @@ public class DatasetController(
         await repository.DeleteAsync(dataset);
 
         logger.LogInformation("Dataset deleted successfully with ID {DatasetId}", id);
+
         return NoContent();
     }
 }

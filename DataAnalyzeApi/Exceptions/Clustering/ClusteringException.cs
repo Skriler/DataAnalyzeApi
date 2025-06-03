@@ -1,6 +1,6 @@
 ﻿namespace DataAnalyzeApi.Exceptions.Clustering;
 
-public class ClusteringException : DataAnalyzeException
+public class ClusteringException : DataAnalysisException
 {
     public override int StatusCode { get; } = StatusCodes.Status400BadRequest;
 

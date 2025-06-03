@@ -2,7 +2,7 @@
 using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Unit.Common.Factories.Models;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 

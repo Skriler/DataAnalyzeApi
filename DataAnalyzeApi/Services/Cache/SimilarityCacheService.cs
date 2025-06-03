@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
+﻿using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using System.Text.Json;
 
 namespace DataAnalyzeApi.Services.Cache;

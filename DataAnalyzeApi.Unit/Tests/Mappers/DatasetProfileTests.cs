@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers.Profiles;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Tests.Mappers;
 
@@ -18,7 +18,7 @@ public class DatasetProfileTests
 
     public DatasetProfileTests()
     {
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DatasetProfile>());
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DatasetCreateProfile>());
 
         mapper = configuration.CreateMapper();
         dtoTestDataFactory = new DtoTestDataFactory();

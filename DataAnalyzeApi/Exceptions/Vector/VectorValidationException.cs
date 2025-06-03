@@ -1,6 +1,6 @@
 ﻿namespace DataAnalyzeApi.Exceptions.Vector;
 
-public abstract class VectorValidationException : DataAnalyzeException
+public abstract class VectorValidationException : DataAnalysisException
 {
     public override int StatusCode { get; } = StatusCodes.Status400BadRequest;
 

@@ -1,6 +1,6 @@
 ﻿namespace DataAnalyzeApi.Exceptions;
 
-public class TypeNotFoundException : DataAnalyzeException
+public class TypeNotFoundException : DataAnalysisException
 {
     public override int StatusCode { get; } = StatusCodes.Status404NotFound;
 

@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
-using DataAnalyzeApi.Models.Domain.Dataset.Analyse;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enum;
-using DataAnalyzeApi.Unit.Common.Models.Analyse;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories.Models;
 

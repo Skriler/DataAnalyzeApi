@@ -64,7 +64,7 @@ public static class AnalysisResultAssertions
     /// <summary>
     /// Verifies that the object's parameter values are present or absent as expected.
     /// </summary>
-    private static void AssertParameterValues(DataObjectDto? obj, bool expectParameterValues)
+    private static void AssertParameterValues(DataObjectAnalyseDto? obj, bool expectParameterValues)
     {
         Assert.NotNull(obj);
 
