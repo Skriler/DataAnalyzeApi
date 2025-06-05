@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
+using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
 using DataAnalyzeApi.Unit.Common.Factories.Models;
@@ -27,7 +27,7 @@ public class CentroidCalculatorTests
 
         var objects = new List<NormalizedDataObject>
         {
-            new NormalizedDataObject
+            new()
             {
                 NumericValues = [0.3, 0.4]
             },

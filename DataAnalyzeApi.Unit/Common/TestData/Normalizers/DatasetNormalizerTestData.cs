@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Unit.Common.Models.Analysis;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.TestData.Normalizers;
 
@@ -7,8 +7,8 @@ namespace DataAnalyzeApi.Unit.Common.TestData.Normalizers;
 /// </summary>
 public static class DatasetNormalizerTestData
 {
-    public static TheoryData<DatasetNormalizerTestCase> NormalizeTestCases() => new()
-    {
+    public static TheoryData<DatasetNormalizerTestCase> NormalizeTestCases() =>
+    [
         // Test Case 1: Numeric only
         new DatasetNormalizerTestCase
         {
@@ -95,5 +95,5 @@ public static class DatasetNormalizerTestData
                 },
             ],
         },
-    };
+    ];
 }

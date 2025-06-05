@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Enums;
 
 namespace DataAnalyzeApi.Integration.Common.Factories;

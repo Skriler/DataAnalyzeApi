@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Settings;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 
 namespace DataAnalyzeApi.Integration.Common.Factories;
 

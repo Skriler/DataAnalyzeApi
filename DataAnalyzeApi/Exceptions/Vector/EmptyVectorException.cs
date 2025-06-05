@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Exceptions.Vector;
+namespace DataAnalyzeApi.Exceptions.Vector;
 
 public class EmptyVectorException : VectorValidationException
 {

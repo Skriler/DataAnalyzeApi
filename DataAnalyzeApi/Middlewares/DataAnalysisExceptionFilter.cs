@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions;
+using DataAnalyzeApi.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,18 +8,13 @@ namespace DataAnalyzeApi.Middlewares;
 /// Exception filter for handling business logic errors.
 /// Logs the error and creates ProblemDetails with additional information for the response to the client.
 /// </summary>
-public class DataAnalysisExceptionFilter : IExceptionFilter
+public class DataAnalysisExceptionFilter(
+    ILogger<DataAnalysisExceptionFilter> logger,
+    IHostEnvironment environment
+    ) : IExceptionFilter
 {
-    private readonly ILogger<DataAnalysisExceptionFilter> logger;
-    private readonly IHostEnvironment environment;
-
-    public DataAnalysisExceptionFilter(
-        ILogger<DataAnalysisExceptionFilter> logger,
-        IHostEnvironment environment)
-    {
-        this.logger = logger;
-        this.environment = environment;
-    }
+    private readonly ILogger<DataAnalysisExceptionFilter> logger = logger;
+    private readonly IHostEnvironment environment = environment;
 
     /// <summary>
     /// Handles exceptions of type DataAnalyzeException.

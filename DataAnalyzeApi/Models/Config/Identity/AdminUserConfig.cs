@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.Config.Identity;
+namespace DataAnalyzeApi.Models.Config.Identity;
 
 public class AdminUserConfig
 {

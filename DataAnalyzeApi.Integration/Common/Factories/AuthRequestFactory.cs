@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.DTOs.Auth;
+using DataAnalyzeApi.Models.DTOs.Auth;
 
 namespace DataAnalyzeApi.Integration.Common.Factories;
 
@@ -31,5 +31,5 @@ public static class AuthRequestFactory
     /// Creates a LoginDto with the specified username and password.
     /// </summary>
     public static LoginDto CreateLogin(string username, string password) =>
-        new LoginDto(username, password);
+        new(username, password);
 }

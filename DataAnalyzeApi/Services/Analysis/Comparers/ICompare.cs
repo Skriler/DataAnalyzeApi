@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Analysis.Comparers;
+namespace DataAnalyzeApi.Services.Analysis.Comparers;
 
 public interface ICompare
 {

@@ -1,7 +1,7 @@
-﻿using DataAnalyzeApi.Models.DTOs.Dataset.Create;
+using AutoMapper;
+using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Models.Enum;
-using AutoMapper;
 
 namespace DataAnalyzeApi.Mappers.Profiles;
 
@@ -28,13 +28,27 @@ public class DatasetCreateProfile : Profile
                 dest => dest.Objects,
                 opt => opt.MapFrom(src => MapObjects(src.Objects))
                 )
-            .AfterMap((_, dest) => {
+            .AfterMap((_, dest) =>
+            {
                 AfterMapParameters(dest);
                 AfterMapParameterValues(dest.Objects, dest.Parameters);
             });
 
-        CreateMap<Dataset, DatasetCreateDto>();
-        CreateMap<DataObject, DataObjectCreateDto>();
+        CreateMap<Dataset, DatasetCreateDto>()
+            .ForMember(
+                 dest => dest.Parameters,
+                 opt => opt.MapFrom(src => src.Parameters.ConvertAll(p => p.Name))
+                 )
+            .ForMember(
+                 dest => dest.Objects,
+                 opt => opt.MapFrom(src => src.Objects)
+                );
+
+        CreateMap<DataObject, DataObjectCreateDto>()
+            .ForMember(
+                dest => dest.Values,
+                opt => opt.MapFrom(src => src.Values.ConvertAll(val => val.Value))
+                );
     }
 
     /// <summary>

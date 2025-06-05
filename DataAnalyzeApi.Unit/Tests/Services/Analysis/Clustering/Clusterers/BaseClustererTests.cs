@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
@@ -62,7 +62,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
         // Arrange
         var dataObjects = new List<NormalizedDataObject>
         {
-            new NormalizedDataObject
+            new()
             {
                 NumericValues = [0.2, 0.4],
                 CategoricalValues = [[0, 1, 0]],
@@ -87,13 +87,13 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
         // Arrange
         var dataObjects = new List<NormalizedDataObject>
         {
-            new NormalizedDataObject
+            new()
             {
                 NumericValues = [0.2, 0.4],
                 CategoricalValues = [[0, 1, 0]],
             },
 
-            new NormalizedDataObject
+            new()
             {
                 NumericValues = [0.6, 0.8],
                 CategoricalValues = [[0, 0, 1]],
@@ -190,8 +190,8 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
             .Returns((
                 DataObjectModel objA,
                 DataObjectModel objB,
-                NumericDistanceMetricType numericType,
-                CategoricalDistanceMetricType categoricalType) =>
+                NumericDistanceMetricType _,
+                CategoricalDistanceMetricType __) =>
             {
                 if (objA.Id == objB.Id)
                 {

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Analysis.Metrics;
+namespace DataAnalyzeApi.Services.Analysis.Metrics;
 
 public interface IDistanceMetric<T>
 {

@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Services.Analysis.Metrics;
 
 namespace DataAnalyzeApi.Unit.Tests.Services.Analysis.Metrics.Categorical;
@@ -48,8 +48,8 @@ public abstract class CategoricalDistanceMetricTests
     public void Calculate_ShouldThrowException_WhenVectorsAreEmpty()
     {
         // Arrange
-        var valuesA = new int[0];
-        var valuesB = new int[0];
+        var valuesA = Array.Empty<int>();
+        var valuesB = Array.Empty<int>();
 
         // Act & Assert
         Assert.Throws<EmptyVectorException>(() => Metric.Calculate(valuesA, valuesB));

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Unit.Common.Models.Analysis;
+namespace DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 /// <summary>
 /// Model of test data object that can be used as normalized test data.
@@ -8,10 +8,10 @@ public record NormalizedDataObject
     /// <summary>
     /// Normalized numeric values after processing.
     /// </summary>
-    public List<double> NumericValues { get; init; } = new();
+    public List<double> NumericValues { get; init; } = [];
 
     /// <summary>
     /// Normalized categorical values after processing (one-hot encoded).
     /// </summary>
-    public List<int[]> CategoricalValues { get; init; } = new();
+    public List<int[]> CategoricalValues { get; init; } = [];
 }

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
+namespace DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
 
 public class JaccardDistanceMetric : BaseDistanceMetric<int>
 {
@@ -22,6 +22,6 @@ public class JaccardDistanceMetric : BaseDistanceMetric<int>
                 ++union;
         }
 
-        return union == 0 ? 0 : 1.0 - (double)intersection / union;
+        return union == 0 ? 0 : 1.0 - ((double)intersection / union);
     }
 }

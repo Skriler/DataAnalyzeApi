@@ -1,5 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Normalizers.Parameters;
@@ -8,7 +7,7 @@ namespace DataAnalyzeApi.Services.Normalizers;
 
 public class DatasetNormalizer
 {
-    private readonly Dictionary<long, ITypeNormalizer> normalizers = new();
+    private readonly Dictionary<long, ITypeNormalizer> normalizers = [];
 
     public DatasetModel Normalize(DatasetModel dataset)
     {

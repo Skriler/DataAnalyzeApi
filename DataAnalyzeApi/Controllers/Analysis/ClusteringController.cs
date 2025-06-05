@@ -1,12 +1,13 @@
-﻿using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Attributes;
+using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Services.Analysis.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeApi.Controllers.Analysis;
+namespace DataAnalyzeApi.Controllers;
 
-[Route("api/Analysis/clustering")]
+[Route("api/analysis/clustering")]
 public class ClusteringController(
     DatasetService datasetService,
     ClusteringService clusteringService,
@@ -29,12 +30,12 @@ public class ClusteringController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ClusteringResult>> CalculateKMeansClusters(
-        [FromRoute] long datasetId,
+        [FromRoute][ValidId] long datasetId,
         [FromBody] KMeansClusteringRequest request)
     {
-        if (!TryValidateRequest(datasetId, out var errorResult))
+        if (!ModelState.IsValid)
         {
-            return errorResult!;
+            return BadRequest(ModelState);
         }
 
         var settings = new KMeansSettings(
@@ -62,12 +63,12 @@ public class ClusteringController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ClusteringResult>> CalculateDBSCANClusters(
-        [FromRoute] long datasetId,
+        [FromRoute][ValidId] long datasetId,
         [FromBody] DBSCANClusteringRequest request)
     {
-        if (!TryValidateRequest(datasetId, out var errorResult))
+        if (!ModelState.IsValid)
         {
-            return errorResult!;
+            return BadRequest(ModelState);
         }
 
         var settings = new DBSCANSettings(
@@ -94,12 +95,12 @@ public class ClusteringController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ClusteringResult>> CalculateAgglomerativeClusters(
-        [FromRoute] long datasetId,
+        [FromRoute][ValidId] long datasetId,
         [FromBody] AgglomerativeClusteringRequest request)
     {
-        if (!TryValidateRequest(datasetId, out var errorResult))
+        if (!ModelState.IsValid)
         {
-            return errorResult!;
+            return BadRequest(ModelState);
         }
 
         var settings = new AgglomerativeSettings(

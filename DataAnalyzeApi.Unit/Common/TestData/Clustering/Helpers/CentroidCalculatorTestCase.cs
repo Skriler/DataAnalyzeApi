@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Unit.Common.Models.Analysis;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Helpers;
 
@@ -15,7 +15,7 @@ public record CentroidCalculatorTestCase
     /// <summary>
     /// List of objects with their test data.
     /// </summary>
-    public List<NormalizedDataObject> Objects { get; init; } = new();
+    public List<NormalizedDataObject> Objects { get; init; } = [];
 
     /// <summary>
     /// Expected recalculated centroid.

@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
@@ -7,21 +7,15 @@ using DataAnalyzeApi.Services.Cache;
 
 namespace DataAnalyzeApi.Services.Analysis.Core;
 
-public class SimilarityService : BaseAnalysisService
+public class SimilarityService(
+    DatasetService datasetService,
+    AnalysisMapper analysisMapper,
+    SimilarityComparer comparer,
+    SimilarityCacheService cacheService
+    ) : BaseAnalysisService(datasetService, analysisMapper)
 {
-    private readonly SimilarityComparer comparer;
-    private readonly SimilarityCacheService cacheService;
-
-    public SimilarityService(
-        DatasetService datasetService,
-        AnalysisMapper analysisMapper,
-        SimilarityComparer comparer,
-        SimilarityCacheService cacheService)
-        : base(datasetService, analysisMapper)
-    {
-        this.comparer = comparer;
-        this.cacheService = cacheService;
-    }
+    private readonly SimilarityComparer comparer = comparer;
+    private readonly SimilarityCacheService cacheService = cacheService;
 
     /// <summary>
     /// Performs similarity analysis on the given dataset and returns the result.

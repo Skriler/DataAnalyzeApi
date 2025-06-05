@@ -1,5 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions.Vector;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Models.Enum;
@@ -10,7 +9,7 @@ public class SimilarityComparer(ICompare comparer)
 {
     private readonly ICompare comparer = comparer;
 
-    private readonly Dictionary<long, double> maxRanges = new();
+    private readonly Dictionary<long, double> maxRanges = [];
 
     /// <summary>
     /// Calculates similarity pairs between objects in the dataset
@@ -46,7 +45,7 @@ public class SimilarityComparer(ICompare comparer)
     /// <summary>
     /// Calculates the value range (max - min) for the given numeric parameter across all provided data objects.
     /// </summary>
-    private double CalculateRangeForParameter(
+    private static double CalculateRangeForParameter(
         ParameterStateModel parameterState,
         List<DataObjectModel> objects)
     {

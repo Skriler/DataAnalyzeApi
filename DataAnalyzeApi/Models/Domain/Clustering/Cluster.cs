@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 namespace DataAnalyzeApi.Models.Domain.Clustering;
 
@@ -6,7 +6,7 @@ public class Cluster(string name)
 {
     public string Name { get; } = name;
 
-    public List<DataObjectModel> Objects { get; set; } = new();
+    public List<DataObjectModel> Objects { get; set; } = [];
 
     public void AddObject(DataObjectModel obj)
     {
@@ -18,7 +18,7 @@ public class Cluster(string name)
 
     public void AddObjects(List<DataObjectModel> objects)
     {
-        foreach(var obj in objects)
+        foreach (var obj in objects)
         {
             AddObject(obj);
         }

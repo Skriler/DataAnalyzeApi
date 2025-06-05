@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.DAL.Repositories;
+using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
@@ -8,21 +8,14 @@ using DataAnalyzeApi.Services.Normalizers;
 
 namespace DataAnalyzeApi.Services.Analysis.Core;
 
-public class DatasetService
+public class DatasetService(
+    DatasetRepository repository,
+    DatasetSettingsMapper datasetSettingsMapper,
+    DatasetNormalizer datasetNormalizer)
 {
-    private readonly DatasetRepository repository;
-    private readonly DatasetSettingsMapper settingsMapper;
-    private readonly DatasetNormalizer normalizer;
-
-    public DatasetService(
-        DatasetRepository repository,
-        DatasetSettingsMapper datasetSettingsMapper,
-        DatasetNormalizer datasetNormalizer)
-    {
-        this.repository = repository;
-        settingsMapper = datasetSettingsMapper;
-        normalizer = datasetNormalizer;
-    }
+    private readonly DatasetRepository repository = repository;
+    private readonly DatasetSettingsMapper settingsMapper = datasetSettingsMapper;
+    private readonly DatasetNormalizer normalizer = datasetNormalizer;
 
     /// <summary>
     /// Retrieves a dataset by ID, applies parameter settings if provided, and maps it to a model.

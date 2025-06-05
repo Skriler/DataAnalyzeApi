@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
+namespace DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
 
 public class HammingDistanceMetric : BaseDistanceMetric<int>
 {

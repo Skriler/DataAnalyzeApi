@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 
 namespace DataAnalyzeApi.Integration.Common.TestData.Clustering;
 

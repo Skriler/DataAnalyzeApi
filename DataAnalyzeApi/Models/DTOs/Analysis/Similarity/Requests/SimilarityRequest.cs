@@ -1,11 +1,11 @@
-﻿using DataAnalyzeApi.Attributes;
+using DataAnalyzeApi.Attributes;
 
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 
 public record SimilarityRequest
 {
     [UniqueParameterId]
-    public List<ParameterSettingsDto> ParameterSettings { get; init; } = new();
+    public List<ParameterSettingsDto> ParameterSettings { get; init; } = [];
 
     /// <summary>
     /// Include ParameterValues dictionary in responce.

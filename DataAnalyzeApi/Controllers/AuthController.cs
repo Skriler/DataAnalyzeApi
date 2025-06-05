@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.DTOs.Auth;
+using DataAnalyzeApi.Models.DTOs.Auth;
 using DataAnalyzeApi.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,8 @@ public class AuthController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AuthResult>> Login([FromBody] LoginDto dto)
+    public async Task<ActionResult<AuthResult>> Login(
+        [FromBody] LoginDto dto)
     {
         if (!TryValidateModel(dto, out var errorResult))
         {
@@ -56,7 +57,8 @@ public class AuthController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<string>> Register([FromBody] RegisterDto dto)
+    public async Task<ActionResult<string>> Register(
+        [FromBody] RegisterDto dto)
     {
         if (!TryValidateModel(dto, out var errorResult))
         {
@@ -89,7 +91,9 @@ public class AuthController(
     /// <param name="model">The model to validate</param>
     /// <param name="errorResult">The error result if validation fails</param>
     /// <returns>True if model is valid, false otherwise</returns>
-    private bool TryValidateModel<T>(T model, out ActionResult? errorResult)
+    private bool TryValidateModel<T>(
+        T model,
+        out ActionResult? errorResult)
     {
         if (model == null)
         {

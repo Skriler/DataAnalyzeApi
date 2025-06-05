@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.Enum;
 using System.Text.Json.Serialization;
+using DataAnalyzeApi.Models.Enum;
 
 namespace DataAnalyzeApi.Models.DTOs.Dataset.Read;
 

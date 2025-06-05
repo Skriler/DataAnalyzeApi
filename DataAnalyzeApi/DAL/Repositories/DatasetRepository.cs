@@ -1,16 +1,11 @@
-﻿using DataAnalyzeApi.Models.Entities;
+using DataAnalyzeApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAnalyzeApi.DAL.Repositories;
 
-public class DatasetRepository
+public class DatasetRepository(DataAnalyzeDbContext context)
 {
-    private readonly DataAnalyzeDbContext context;
-
-    public DatasetRepository(DataAnalyzeDbContext context)
-    {
-        this.context = context;
-    }
+    private readonly DataAnalyzeDbContext context = context;
 
     public async Task<List<Dataset>> GetAllAsync(bool trackChanges = false)
     {

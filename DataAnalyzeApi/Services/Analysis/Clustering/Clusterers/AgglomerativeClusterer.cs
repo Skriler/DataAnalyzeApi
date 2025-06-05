@@ -1,6 +1,6 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Clustering.Agglomerative;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;

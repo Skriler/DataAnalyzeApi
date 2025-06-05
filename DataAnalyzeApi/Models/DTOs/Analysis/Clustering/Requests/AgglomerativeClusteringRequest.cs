@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.Config.Clustering;
 using System.ComponentModel.DataAnnotations;
+using DataAnalyzeApi.Models.Config.Clustering;
 
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 

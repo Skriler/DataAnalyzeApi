@@ -1,5 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset;
-using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
 namespace DataAnalyzeApi.Unit.Common.Assertions;

@@ -1,6 +1,6 @@
-﻿using DataAnalyzeApi.Models.DTOs.Dataset.Read;
-using DataAnalyzeApi.Models.Entities;
 using AutoMapper;
+using DataAnalyzeApi.Models.DTOs.Dataset.Read;
+using DataAnalyzeApi.Models.Entities;
 
 namespace DataAnalyzeApi.Mappers.Profiles;
 

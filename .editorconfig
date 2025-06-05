@@ -1,0 +1,42 @@
+# Indicate that this is the root .editorconfig file
+root = true
+
+# =============================================================================
+# BASE SETTINGS FOR ALL FILE TYPES
+# =============================================================================
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# =============================================================================
+# C# FILE SETTINGS
+# =============================================================================
+[*.cs]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# =============================================================================
+# USING DIRECTIVES
+# =============================================================================
+
+# Sort 'System.*' using directives before other namespaces
+dotnet_sort_system_directives_first = true
+
+# Do not separate 'using' directives into groups
+dotnet_separate_import_directive_groups = false
+
+# Treat unused using directives as warnings (IDE0005)
+dotnet_diagnostic.IDE0005.severity = warning
+
+# =============================================================================
+# NAMESPACE RULES
+# =============================================================================
+
+# Enforce that namespaces match folder structure
+dotnet_style_namespace_match_folder = true:warning
+
+# Prefer using file-scoped namespace declarations
+csharp_style_namespace_declarations = file_scoped:warning

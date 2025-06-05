@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Analysis.Comparers;
+namespace DataAnalyzeApi.Services.Analysis.Comparers;
 
 public class NormalizedValueComparer : ICompare
 {
@@ -23,7 +23,7 @@ public class NormalizedValueComparer : ICompare
     private static double CompareNumerical(double valueA, double valueB, double maxRange)
     {
         var difference = Math.Abs(valueA - valueB);
-        var similarity = 1 - difference / maxRange;
+        var similarity = 1 - (difference / maxRange);
 
         return similarity > 1 ? 1 : similarity;
     }

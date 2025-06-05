@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 
 namespace DataAnalyzeApi.Middlewares;
 
@@ -6,23 +6,16 @@ namespace DataAnalyzeApi.Middlewares;
 /// Middleware for global error handling in the application.
 /// Logs errors and sends a JSON response with details about the error to the client.
 /// </summary>
-public class ErrorHandlingMiddleware
+public class ErrorHandlingMiddleware(
+    RequestDelegate next,
+    ILogger<ErrorHandlingMiddleware> logger,
+    IHostEnvironment environment)
 {
     private const int InternalServerStatusCode = StatusCodes.Status500InternalServerError;
 
-    private readonly RequestDelegate next;
-    private readonly ILogger<ErrorHandlingMiddleware> logger;
-    private readonly IHostEnvironment environment;
-
-    public ErrorHandlingMiddleware(
-        RequestDelegate next,
-        ILogger<ErrorHandlingMiddleware> logger,
-        IHostEnvironment environment)
-    {
-        this.next = next;
-        this.logger = logger;
-        this.environment = environment;
-    }
+    private readonly RequestDelegate next = next;
+    private readonly ILogger<ErrorHandlingMiddleware> logger = logger;
+    private readonly IHostEnvironment environment = environment;
 
     /// <summary>
     /// Processes the request and catches any exceptions that may occur during its processing.

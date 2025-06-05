@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Unit.Common.Factories.Models;
@@ -45,5 +45,7 @@ public class AnalysisModelFactory
     /// Creates a SimilarityPair.
     /// </summary>
     public List<SimilarityPair> CreateSimilarityPairList(int count) =>
-        fixture.CreateMany<SimilarityPair>(count).ToList();
+        fixture
+            .CreateMany<SimilarityPair>(count)
+            .ToList();
 }

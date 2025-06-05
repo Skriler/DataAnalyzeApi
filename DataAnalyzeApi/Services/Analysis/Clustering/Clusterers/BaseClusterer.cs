@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analysis.DistanceCalculators;

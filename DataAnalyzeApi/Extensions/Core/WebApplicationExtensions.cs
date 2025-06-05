@@ -1,7 +1,5 @@
-﻿using DataAnalyzeApi.DAL.Seeders;
+using DataAnalyzeApi.DAL.Seeders;
 using DataAnalyzeApi.Middlewares;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using System.Text.Json;
 
 namespace DataAnalyzeApi.Extensions.Core;
 

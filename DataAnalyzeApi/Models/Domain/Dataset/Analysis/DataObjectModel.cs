@@ -1,6 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
-
-namespace DataAnalyzeApi.Models.Domain.Dataset;
+﻿namespace DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 public record DataObjectModel(
     long Id,

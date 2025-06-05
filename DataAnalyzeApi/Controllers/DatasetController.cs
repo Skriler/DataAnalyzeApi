@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
+using DataAnalyzeApi.Attributes;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.DTOs.Dataset.Read;
 using DataAnalyzeApi.Models.Entities;
+using DataAnalyzeApi.Services.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +17,13 @@ namespace DataAnalyzeApi.Controllers;
 public class DatasetController(
     DatasetRepository repository,
     IMapper mapper,
+    DatasetValidator validator,
     ILogger<DatasetController> logger
     ) : ControllerBase
 {
     private readonly DatasetRepository repository = repository;
     private readonly IMapper mapper = mapper;
+    private readonly DatasetValidator validator = validator;
     private readonly ILogger<DatasetController> logger = logger;
 
     /// <summary>
@@ -50,11 +54,12 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<DatasetDto>> GetById(long id)
+    public async Task<ActionResult<DatasetDto>> GetById(
+        [FromRoute][ValidId] long id)
     {
-        if (id <= 0)
+        if (!ModelState.IsValid)
         {
-            return BadRequest("Invalid dataset ID");
+            return BadRequest(ModelState);
         }
 
         var dataset = await repository.GetByIdAsync(id);
@@ -78,16 +83,19 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Dataset>> Create([FromBody] DatasetCreateDto dto)
+    public async Task<ActionResult<Dataset>> Create(
+        [FromBody] DatasetCreateDto dto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        if (dto == null || dto.Objects.Count == 0 || dto.Parameters.Count == 0)
+        var validationResult = validator.ValidateDataset(dto);
+
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Invalid dataset data.");
+            return BadRequest(new { errors = validationResult.Errors });
         }
 
         var dataset = mapper.Map<Dataset>(dto);
@@ -118,11 +126,12 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> Delete(long id)
+    public async Task<ActionResult> Delete(
+        [FromRoute][ValidId] long id)
     {
-        if (id <= 0)
+        if (!ModelState.IsValid)
         {
-            return BadRequest("Invalid dataset ID");
+            return BadRequest(ModelState);
         }
 
         var dataset = await repository.GetByIdAsync(id);

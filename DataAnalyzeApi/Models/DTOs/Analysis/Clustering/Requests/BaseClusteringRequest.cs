@@ -1,13 +1,13 @@
-﻿using DataAnalyzeApi.Attributes;
-using DataAnalyzeApi.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using DataAnalyzeApi.Attributes;
+using DataAnalyzeApi.Models.Enums;
 
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 
 public abstract record BaseClusteringRequest
 {
     [UniqueParameterId]
-    public List<ParameterSettingsDto> ParameterSettings { get; init; } = new();
+    public List<ParameterSettingsDto> ParameterSettings { get; init; } = [];
 
     [EnumDataType(typeof(NumericDistanceMetricType))]
     public NumericDistanceMetricType NumericMetric { get; init; } = NumericDistanceMetricType.Euclidean;

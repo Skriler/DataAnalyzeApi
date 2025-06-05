@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
@@ -35,21 +35,23 @@ public class DatasetSettingsMapperTests
         // Arrange
         var rawObjects = new List<RawDataObject>()
         {
-            new RawDataObject
+            new()
             {
                 Values = valuesA.ToList(),
             },
 
-            new RawDataObject
+            new()
             {
                 Values = valuesB.ToList(),
             },
         };
 
-        var dataset = entityTestDataFactory.CreateDataset(rawObjects, parameterNames.ToList());
+        var dataset = entityTestDataFactory.CreateDataset(
+            rawObjects,
+            parameterNames.ToList());
 
         // Act
-        var datasetModel = mapper.Map(dataset, null!);
+        var datasetModel = mapper.Map(dataset, null);
 
         // Assert
         DatasetModelAssertions.AssertDatasetWithSettingsEqualModel(dataset, datasetModel);
@@ -77,25 +79,31 @@ public class DatasetSettingsMapperTests
         // Arrange
         var rawObjects = new List<RawDataObject>()
         {
-            new RawDataObject
+            new()
             {
                 Values = valuesA.ToList(),
             },
 
-            new RawDataObject
+            new()
             {
                 Values = valuesB.ToList(),
             },
         };
         var rawParameters = parameterNames.ToList();
 
-        var dataset = entityTestDataFactory.CreateDataset(rawObjects, rawParameters);
+        var dataset = entityTestDataFactory.CreateDataset(
+            rawObjects,
+            rawParameters);
+
         var parameterSettings = dtoTestDataFactory.CreateParameterSettingsDtoList(rawParameters);
 
         // Act
         var datasetModel = mapper.Map(dataset, parameterSettings);
 
         // Assert
-        DatasetModelAssertions.AssertDatasetWithSettingsEqualModel(dataset, datasetModel, parameterSettings);
+        DatasetModelAssertions.AssertDatasetWithSettingsEqualModel(
+            dataset,
+            datasetModel,
+            parameterSettings);
     }
 }

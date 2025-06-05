@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.DTOs.Auth;
+namespace DataAnalyzeApi.Models.DTOs.Auth;
 
 public record AuthResult
 {
@@ -12,5 +12,5 @@ public record AuthResult
 
     public string Username { get; init; } = string.Empty;
 
-    public List<string> Roles { get; init; } = new();
+    public List<string> Roles { get; init; } = [];
 }

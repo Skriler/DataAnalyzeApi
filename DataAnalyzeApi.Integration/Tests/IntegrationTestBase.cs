@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.DAL;
+using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Seeders;
 using DataAnalyzeApi.Integration.Common;
 using DataAnalyzeApi.Models.Config;
@@ -75,7 +75,7 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     /// <summary>
     /// Loads configuration from files and environment variables.
     /// </summary>
-    private IConfigurationRoot GetConfiguration()
+    private static IConfigurationRoot GetConfiguration()
     {
         DotNetEnv.Env.Load(".env.test");
 
@@ -110,7 +110,7 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     /// <summary>
     /// Sets up and return Redis container with configuration.
     /// </summary>
-    private RedisContainer GetRedisContainer()
+    private static RedisContainer GetRedisContainer()
     {
         return new RedisBuilder()
             .WithImage("redis")

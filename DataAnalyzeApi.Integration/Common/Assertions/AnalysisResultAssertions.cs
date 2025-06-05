@@ -1,6 +1,6 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
-using DataAnalyzeApi.Models.DTOs.Dataset;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis;
 
 namespace DataAnalyzeApi.Integration.Common.Assertions;
 
@@ -64,7 +64,7 @@ public static class AnalysisResultAssertions
     /// <summary>
     /// Verifies that the object's parameter values are present or absent as expected.
     /// </summary>
-    private static void AssertParameterValues(DataObjectAnalyseDto? obj, bool expectParameterValues)
+    private static void AssertParameterValues(DataObjectAnalysisDto? obj, bool expectParameterValues)
     {
         Assert.NotNull(obj);
 

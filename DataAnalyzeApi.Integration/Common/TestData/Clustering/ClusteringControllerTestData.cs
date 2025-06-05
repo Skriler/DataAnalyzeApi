@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Integration.Common.Factories;
+using DataAnalyzeApi.Integration.Common.Factories;
 using DataAnalyzeApi.Models.Enums;
 
 namespace DataAnalyzeApi.Integration.Common.TestData.Clustering;
@@ -31,7 +31,7 @@ public static class ClusteringControllerTestData
                 epsilon: 0.2,
                 minPoints: 5,
                 numericMetric: NumericDistanceMetricType.Manhattan,
-                parameterSettings: new()),
+                parameterSettings: []),
         },
 
         // Test Case 3: agglomerative test case

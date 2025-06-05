@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.DTOs.Dataset.Read;
+namespace DataAnalyzeApi.Models.DTOs.Dataset.Read;
 
 public record DatasetDto
 {
@@ -8,7 +8,7 @@ public record DatasetDto
 
     public DateTime CreatedAt { get; init; }
 
-    public List<ParameterDto> Parameters { get; init; } = new();
+    public List<ParameterDto> Parameters { get; init; } = [];
 
-    public List<DataObjectDto> Objects { get; init; } = new();
+    public List<DataObjectDto> Objects { get; init; } = [];
 }

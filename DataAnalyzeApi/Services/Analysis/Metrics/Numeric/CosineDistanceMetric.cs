@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Analysis.Metrics.Numeric;
+namespace DataAnalyzeApi.Services.Analysis.Metrics.Numeric;
 
 public class CosineDistanceMetric : BaseDistanceMetric<double>
 {

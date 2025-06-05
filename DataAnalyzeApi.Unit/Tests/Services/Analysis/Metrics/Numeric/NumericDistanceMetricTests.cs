@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Services.Analysis.Metrics;
 
 namespace DataAnalyzeApi.Unit.Tests.Services.Analysis.Metrics.Numeric;
@@ -49,8 +49,8 @@ public abstract class NumericDistanceMetricTests
     public void Calculate_ShouldThrowException_WhenVectorsAreEmpty()
     {
         // Arrange
-        var valuesA = new double[0];
-        var valuesB = new double[0];
+        var valuesA = Array.Empty<double>();
+        var valuesB = Array.Empty<double>();
 
         // Act & Assert
         Assert.Throws<EmptyVectorException>(() => Metric.Calculate(valuesA, valuesB));

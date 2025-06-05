@@ -1,10 +1,9 @@
 ﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
-using DataAnalyzeApi.Models.DTOs.Analysis.Settings.Similarity.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
 namespace DataAnalyzeApi.Unit.Common.Assertions;
 

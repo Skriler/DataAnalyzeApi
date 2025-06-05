@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enums;
 
 namespace DataAnalyzeApi.Services.Analysis.DistanceCalculators;

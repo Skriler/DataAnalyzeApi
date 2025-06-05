@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.DAL;
+using DataAnalyzeApi.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +42,7 @@ public class DataAnalyzeFactory : WebApplicationFactory<Program>
     /// <summary>
     /// Removes production database and Redis services from DI container.
     /// </summary>
-    private void RemoveProductionServices(IServiceCollection services)
+    private static void RemoveProductionServices(IServiceCollection services)
     {
         var descriptorsToRemove = new[]
         {

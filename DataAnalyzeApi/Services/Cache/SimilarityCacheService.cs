@@ -1,17 +1,12 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
-using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using System.Text.Json;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
 namespace DataAnalyzeApi.Services.Cache;
 
-public class SimilarityCacheService
+public class SimilarityCacheService(ICacheService cacheService)
 {
-    private readonly ICacheService cacheService;
-
-    public SimilarityCacheService(ICacheService cacheService)
-    {
-        this.cacheService = cacheService;
-    }
+    private readonly ICacheService cacheService = cacheService;
 
     public async Task<SimilarityResult?> GetCachedResultAsync(
         long datasetId,

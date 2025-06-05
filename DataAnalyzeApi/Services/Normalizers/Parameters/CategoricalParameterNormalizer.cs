@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
 namespace DataAnalyzeApi.Services.Normalizers.Parameters;
@@ -8,7 +8,7 @@ public class CategoricalParameterNormalizer : ITypeNormalizer
     /// <summary>
     /// List of all unique categories for this parameter.
     /// </summary>
-    public List<string> Categories { get; } = new();
+    public List<string> Categories { get; } = [];
 
     public CategoricalParameterNormalizer(string value)
     {

@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
@@ -18,12 +18,12 @@ public class DBSCANClusterer(
     /// <summary>
     /// A set of visited objects to prevent reprocessing.
     /// </summary>
-    private readonly HashSet<DataObjectModel> visitedObjects = new();
+    private readonly HashSet<DataObjectModel> visitedObjects = [];
 
     /// <summary>
     /// A set of objects classified as noise.
     /// </summary>
-    private readonly HashSet<DataObjectModel> noiseObjects = new();
+    private readonly HashSet<DataObjectModel> noiseObjects = [];
 
     private DBSCANSettings settings = default!;
 

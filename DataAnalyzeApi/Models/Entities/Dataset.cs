@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace DataAnalyzeApi.Models.Entities;
@@ -15,8 +15,8 @@ public class Dataset
     public DateTime CreatedAt { get; set; }
 
     [JsonIgnore]
-    public List<Parameter> Parameters { get; set; } = new();
+    public List<Parameter> Parameters { get; set; } = [];
 
     [JsonIgnore]
-    public List<DataObject> Objects { get; set; } = new();
+    public List<DataObject> Objects { get; set; } = [];
 }

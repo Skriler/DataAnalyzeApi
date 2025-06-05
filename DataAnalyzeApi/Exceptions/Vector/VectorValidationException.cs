@@ -1,12 +1,10 @@
-﻿namespace DataAnalyzeApi.Exceptions.Vector;
+namespace DataAnalyzeApi.Exceptions.Vector;
 
-public abstract class VectorValidationException : DataAnalysisException
+public abstract class VectorValidationException(
+    string message
+    ) : DataAnalysisException(message)
 {
     public override int StatusCode { get; } = StatusCodes.Status400BadRequest;
 
     public override string ErrorTitle { get; } = "Vector validation error";
-
-    public VectorValidationException(string message)
-        : base(message)
-    { }
 }

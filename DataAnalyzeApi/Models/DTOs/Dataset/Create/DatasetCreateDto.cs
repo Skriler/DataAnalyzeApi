@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Attributes;
 using System.ComponentModel.DataAnnotations;
+using DataAnalyzeApi.Attributes;
 
 namespace DataAnalyzeApi.Models.DTOs.Dataset.Create;
 
@@ -12,9 +12,9 @@ public record DatasetCreateDto
     [Required(ErrorMessage = "Parameters are required")]
     [MinLength(1, ErrorMessage = "At least one parameter is required")]
     [MinStringLengthInList(3, ErrorMessage = "Each parameter must be at least 3 characters long")]
-    public List<string> Parameters { get; init; } = new();
+    public List<string> Parameters { get; init; } = [];
 
     [Required(ErrorMessage = "Objects are required")]
     [MinLength(1, ErrorMessage = "At least one data object is required")]
-    public List<DataObjectCreateDto> Objects { get; init; } = new();
+    public List<DataObjectCreateDto> Objects { get; init; } = [];
 }

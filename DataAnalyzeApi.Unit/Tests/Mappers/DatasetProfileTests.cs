@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DataAnalyzeApi.Mappers.Profiles;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
@@ -50,18 +50,20 @@ public class DatasetProfileTests
         // Arrange
         var rawObjects = new List<RawDataObject>()
         {
-            new RawDataObject
+            new()
             {
                 Values = valuesA.ToList(),
             },
 
-            new RawDataObject
+            new()
             {
                 Values = valuesB.ToList(),
             },
         };
 
-        var createDto = dtoTestDataFactory.CreateDatasetCreateDto(rawObjects, parameterNames.ToList());
+        var createDto = dtoTestDataFactory.CreateDatasetCreateDto(
+            rawObjects,
+            parameterNames.ToList());
 
         // Act
         var dataset = mapper.Map<Dataset>(createDto);
@@ -95,18 +97,20 @@ public class DatasetProfileTests
         // Arrange
         var rawObjects = new List<RawDataObject>()
         {
-            new RawDataObject
+            new()
             {
                 Values = valuesA.ToList(),
             },
 
-            new RawDataObject
+            new()
             {
                 Values = valuesB.ToList(),
             },
         };
 
-        var dataset = entityTestDataFactory.CreateDataset(rawObjects, parameterNames.ToList());
+        var dataset = entityTestDataFactory.CreateDataset(
+            rawObjects,
+            parameterNames.ToList());
 
         // Act
         var createDto = mapper.Map<DatasetCreateDto>(dataset);

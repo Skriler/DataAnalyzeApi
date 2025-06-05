@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Unit.Common.Models.Analysis;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.KMeans;
 
@@ -59,7 +59,6 @@ public static class KMeansClustererTestData
 
             ExpectedClusterSizes = [2, 2],
         },
-
 
         // Test Case 2: 5 objects & 2 clusters, sizes - [3, 2]
         new KMeansClustererTestCase
@@ -189,7 +188,6 @@ public static class KMeansClustererTestData
             // Algorithm should split one of the natural clusters
             ExpectedClusterSizes = [2, 2, 1],
         },
-
 
         // Test Case 4: 8 objects & 3 clusters, sizes - [3, 3, 2]
         new KMeansClustererTestCase

@@ -1,6 +1,5 @@
-﻿using DataAnalyzeApi.Models.Config.Clustering;
+using DataAnalyzeApi.Models.Config.Clustering;
 using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
-using DataAnalyzeApi.Models.Domain.Dataset;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
@@ -17,12 +16,12 @@ public class CentroidCalculator
     /// <summary>
     /// Stores the cumulative sum of numeric parameter values by index.
     /// </summary>
-    private readonly Dictionary<long, double> numericSums = new();
+    private readonly Dictionary<long, double> numericSums = [];
 
     /// <summary>
     /// Stores the cumulative sum of categorical one-hot encoded values by index.
     /// </summary>
-    private readonly Dictionary<long, int[]> categoricalSums = new();
+    private readonly Dictionary<long, int[]> categoricalSums = [];
 
     /// <summary>
     /// Recalculates the centroid by averaging its parameters with the provided merge nodes.
@@ -66,7 +65,7 @@ public class CentroidCalculator
                 default:
                     throw new InvalidOperationException($"Unsupported value type at index {i}: {value?.GetType().Name}");
             }
-       }
+        }
     }
 
     /// <summary>

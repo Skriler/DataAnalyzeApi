@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.DTOs.Dataset.Read;
+namespace DataAnalyzeApi.Models.DTOs.Dataset.Read;
 
 public record ParameterValueDto
 {

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.Enums;
+namespace DataAnalyzeApi.Models.Enums;
 
 public enum NumericDistanceMetricType
 {

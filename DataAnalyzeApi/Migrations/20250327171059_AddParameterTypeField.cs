@@ -1,47 +1,46 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DataAnalyzeApi.Migrations
+namespace DataAnalyzeApi.Migrations;
+
+/// <inheritdoc />
+public partial class AddParameterTypeField : Migration
 {
     /// <inheritdoc />
-    public partial class AddParameterTypeField : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<string>(
-                name: "Value",
-                table: "ParameterValues",
-                type: "text",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
+        migrationBuilder.AlterColumn<string>(
+            name: "Value",
+            table: "ParameterValues",
+            type: "text",
+            nullable: false,
+            defaultValue: "",
+            oldClrType: typeof(string),
+            oldType: "text",
+            oldNullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "Type",
-                table: "Parameters",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
-        }
+        migrationBuilder.AddColumn<int>(
+            name: "Type",
+            table: "Parameters",
+            type: "integer",
+            nullable: false,
+            defaultValue: 0);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "Type",
-                table: "Parameters");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "Type",
+            table: "Parameters");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Value",
-                table: "ParameterValues",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
-        }
+        migrationBuilder.AlterColumn<string>(
+            name: "Value",
+            table: "ParameterValues",
+            type: "text",
+            nullable: true,
+            oldClrType: typeof(string),
+            oldType: "text");
     }
 }

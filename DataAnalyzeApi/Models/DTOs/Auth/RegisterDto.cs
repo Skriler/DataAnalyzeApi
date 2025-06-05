@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeApi.Models.DTOs.Auth;
 
@@ -6,7 +6,7 @@ public record RegisterDto
 {
     [Required(ErrorMessage = "Username is required")]
     [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 50 characters")]
-    [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username can only contain letters (a-z, A-Z), numbers, and underscores")]
+    [RegularExpression("^[a-zA-Z0-9_]+$", ErrorMessage = "Username can only contain letters (a-z, A-Z), numbers, and underscores")]
     public string Username { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "Email is required")]
@@ -23,11 +23,11 @@ public record RegisterDto
     public string ConfirmPassword { get; init; }
 
     [StringLength(50, MinimumLength = 3, ErrorMessage = "First name must be between 3 and 50 characters")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First name can only contain letters (a-z, A-Z)")]
+    [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "First name can only contain letters (a-z, A-Z)")]
     public string? FirstName { get; init; }
 
     [StringLength(50, MinimumLength = 3, ErrorMessage = "Last name must be between 3 and 50 characters")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last name can only contain letters (a-z, A-Z)")]
+    [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Last name can only contain letters (a-z, A-Z)")]
     public string? LastName { get; init; }
 
     public RegisterDto(

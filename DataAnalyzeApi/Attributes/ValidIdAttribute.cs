@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeApi.Attributes;
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+[AttributeUsage(
+    AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
+    AllowMultiple = false)]
 public class ValidIdAttribute : ValidationAttribute
 {
     public ValidIdAttribute()

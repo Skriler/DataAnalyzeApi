@@ -1,7 +1,7 @@
-﻿using DataAnalyzeApi.Integration.Common.Assertions;
+using DataAnalyzeApi.Integration.Common.Assertions;
 using DataAnalyzeApi.Integration.Common.Factories;
 using DataAnalyzeApi.Integration.Common.TestData.Clustering;
-using DataAnalyzeApi.Models.DTOs.Analyse.Clustering.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Models.Enums;
 using System.Net;
 using System.Net.Http.Json;
@@ -10,7 +10,7 @@ namespace DataAnalyzeApi.Integration.Tests;
 
 public class ClusteringControllerIntegrationTests : IntegrationTestBase
 {
-    private readonly string BaseUrl = "/api/analyse/clustering";
+    private readonly string BaseUrl = "/api/analysis/clustering";
 
     [Theory]
     [MemberData(nameof(ClusteringControllerTestData.ValidClusteringRequestTestCases),

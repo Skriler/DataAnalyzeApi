@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.Enum;
+namespace DataAnalyzeApi.Models.Enum;
 
 public enum ParameterType
 {

@@ -1,6 +1,6 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
@@ -26,7 +26,7 @@ public class KMeansClusterer(
     /// Used to track the current cluster assignment of each object, enabling the detection
     /// of changes in object assignments during the clustering process.
     /// </summary>
-    private Dictionary<DataObjectModel, int> objectClusterMap = new();
+    private Dictionary<DataObjectModel, int> objectClusterMap = [];
 
     public override List<Cluster> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
     {
@@ -121,11 +121,11 @@ public class KMeansClusterer(
 
         for (int i = 0; i < clusters.Count; ++i)
         {
-           var distance = distanceCalculator.Calculate(
-               obj,
-               clusters[i].Centroid,
-               settings.NumericMetric,
-               settings.CategoricalMetric);
+            var distance = distanceCalculator.Calculate(
+                obj,
+                clusters[i].Centroid,
+                settings.NumericMetric,
+                settings.CategoricalMetric);
 
             if (distance >= minDistance)
                 continue;

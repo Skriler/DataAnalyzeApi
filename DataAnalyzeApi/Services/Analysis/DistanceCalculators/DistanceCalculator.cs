@@ -1,10 +1,9 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
-using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Exceptions.Vector;
-using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 using DataAnalyzeApi.Extensions.Model;
-using DataAnalyzeApi.Models.Domain.Dataset;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
+using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 
 namespace DataAnalyzeApi.Services.Analysis.DistanceCalculators;
 
@@ -87,7 +86,7 @@ public class DistanceCalculator(IMetricFactory metricFactory) : IDistanceCalcula
     /// Calculates weighted average distance based on numeric and categorical distances
     /// and their respective parameter counts.
     /// </summary>
-    private double CalculateAverageDistance(
+    private static double CalculateAverageDistance(
         double numericDistance,
         int numericParametersCount,
         double categoricalDistance,

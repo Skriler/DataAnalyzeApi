@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeApi.Models.DTOs.Dataset.Create;
 
@@ -10,5 +10,5 @@ public record DataObjectCreateDto
 
     [Required(ErrorMessage = "Values are required")]
     [MinLength(1, ErrorMessage = "At least one value is required")]
-    public List<string> Values { get; init; } = new();
+    public List<string> Values { get; init; } = [];
 }

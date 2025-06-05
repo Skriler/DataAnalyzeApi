@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAnalyzeApi.Attributes;
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+[AttributeUsage(
+    AttributeTargets.Property | AttributeTargets.Field,
+    AllowMultiple = false)]
 public class MinStringLengthInListAttribute : ValidationAttribute
 {
     public int MinLength { get; }

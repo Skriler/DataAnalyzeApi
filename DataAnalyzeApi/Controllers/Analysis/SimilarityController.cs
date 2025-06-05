@@ -1,11 +1,12 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
+using DataAnalyzeApi.Attributes;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using DataAnalyzeApi.Services.Analysis.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataAnalyzeApi.Controllers.Analysis;
+namespace DataAnalyzeApi.Controllers;
 
-[Route("api/Analysis/similarity")]
+[Route("api/analysis/similarity")]
 public class SimilarityController(
     DatasetService datasetService,
     SimilarityService similarityService,
@@ -30,12 +31,12 @@ public class SimilarityController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<SimilarityResult>> CalculateSimilarity(
-        [FromRoute] long datasetId,
+        [FromRoute][ValidId] long datasetId,
         [FromBody] SimilarityRequest? request)
     {
-        if (!TryValidateRequest(datasetId, out var errorResult))
+        if (!ModelState.IsValid)
         {
-            return errorResult!;
+            return BadRequest(ModelState);
         }
 
         var cachedResult = await similarityService.GetCachedResultAsync(datasetId, request);

@@ -1,21 +1,16 @@
-﻿using DataAnalyzeApi.Models.Config;
-using DataAnalyzeApi.Models.Entities;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DataAnalyzeApi.Models.Config;
+using DataAnalyzeApi.Models.Entities;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DataAnalyzeApi.Services.Auth;
 
-public class JwtTokenService
+public class JwtTokenService(IOptions<JwtConfig> jwtOptions)
 {
-    private readonly JwtConfig jwtConfig;
-
-    public JwtTokenService(IOptions<JwtConfig> jwtOptions)
-    {
-        jwtConfig = jwtOptions.Value;
-    }
+    private readonly JwtConfig jwtConfig = jwtOptions.Value;
 
     /// <summary>
     /// Generates a JWT token containing user information and roles.

@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
+using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 using DataAnalyzeApi.Services.Normalizers.Parameters;
 using DataAnalyzeApi.Unit.Common.Factories.Models;
 
@@ -45,7 +45,7 @@ public class CategoricalParameterNormalizerTests
         // Arrange
         const string categories = "Red, Green, Blue, Yellow";
         const string categoriesForNormalize = "Red, Blue";
-        int[] expectedNormalizedValue = { 1, 0, 1, 0 };
+        int[] expectedNormalizedValue = [1, 0, 1, 0];
 
         var parameterValue = valueModelFactory.Create(categoriesForNormalize);
         var normalizer = new CategoricalParameterNormalizer(categories);
@@ -64,7 +64,7 @@ public class CategoricalParameterNormalizerTests
     {
         // Arrange
         const string categories = "Red, Green, Blue";
-        int[] expectedNormalizedValue = { 0, 0, 0 };
+        int[] expectedNormalizedValue = [0, 0, 0];
 
         var parameterValue = valueModelFactory.Create(string.Empty);
         var normalizer = new CategoricalParameterNormalizer(categories);
@@ -84,7 +84,7 @@ public class CategoricalParameterNormalizerTests
         // Arrange
         const string categories = "Red, Green, Blue";
         const string categoriesForNormalize = "Purple, Red";
-        int[] expectedNormalizedValue = { 1, 0, 0 };
+        int[] expectedNormalizedValue = [1, 0, 0];
 
         var parameterValue = valueModelFactory.Create(categoriesForNormalize);
         var normalizer = new CategoricalParameterNormalizer(categories);

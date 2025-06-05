@@ -1,17 +1,13 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
+using System.Text.Json;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Models.Enums;
-using DataAnalyzeApi.Services.Cache;
-using System.Text.Json;
 
-public class ClusteringCacheService
+namespace DataAnalyzeApi.Services.Cache;
+
+public class ClusteringCacheService(ICacheService cacheService)
 {
-    private readonly ICacheService cacheService;
-
-    public ClusteringCacheService(ICacheService cacheService)
-    {
-        this.cacheService = cacheService;
-    }
+    private readonly ICacheService cacheService = cacheService;
 
     public async Task<ClusteringResult?> GetCachedResultAsync(
         long datasetId,

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+namespace DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 public record ParameterValueModel(
     long Id,

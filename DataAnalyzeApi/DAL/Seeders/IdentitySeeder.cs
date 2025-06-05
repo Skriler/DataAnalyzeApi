@@ -1,30 +1,21 @@
-﻿using DataAnalyzeApi.Models.Config.Identity;
+using DataAnalyzeApi.Models.Config.Identity;
 using DataAnalyzeApi.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace DataAnalyzeApi.DAL.Seeders;
 
-public class IdentitySeeder
+public class IdentitySeeder(
+    UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    IOptions<IdentityConfig> identityConfigOptions,
+    ILogger<IdentitySeeder> logger)
 {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly RoleManager<IdentityRole> roleManager;
+    private readonly UserManager<ApplicationUser> userManager = userManager;
+    private readonly RoleManager<IdentityRole> roleManager = roleManager;
 
-    private readonly IdentityConfig identityConfig;
-    private readonly ILogger<IdentitySeeder> logger;
-
-    public IdentitySeeder(
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager,
-        IOptions<IdentityConfig> identityConfigOptions,
-        ILogger<IdentitySeeder> logger)
-    {
-        this.userManager = userManager;
-        this.roleManager = roleManager;
-
-        identityConfig = identityConfigOptions.Value;
-        this.logger = logger;
-    }
+    private readonly IdentityConfig identityConfig = identityConfigOptions.Value;
+    private readonly ILogger<IdentitySeeder> logger = logger;
 
     public async Task SeedAsync()
     {

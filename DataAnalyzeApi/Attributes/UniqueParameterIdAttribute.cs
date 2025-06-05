@@ -1,9 +1,11 @@
-﻿using DataAnalyzeApi.Models.DTOs.Analysis;
 using System.ComponentModel.DataAnnotations;
+using DataAnalyzeApi.Models.DTOs.Analysis;
 
 namespace DataAnalyzeApi.Attributes;
 
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+[AttributeUsage(
+    AttributeTargets.Property | AttributeTargets.Field,
+    AllowMultiple = false)]
 public class UniqueParameterIdAttribute : ValidationAttribute
 {
     public UniqueParameterIdAttribute()

@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions;
+using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;

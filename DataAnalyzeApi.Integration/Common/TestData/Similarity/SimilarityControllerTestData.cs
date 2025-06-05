@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Integration.Common.Factories;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
+using DataAnalyzeApi.Integration.Common.Factories;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 
 namespace DataAnalyzeApi.Integration.Common.TestData.Similarity;
 
@@ -16,7 +16,7 @@ public static class SimilarityControllerTestData
         // Test Case 2
         SimilarityRequestFactory.Create(
             includeParameters: true,
-            parameterSettings: new()),
+            parameterSettings: []),
 
         // Test Case 3
         SimilarityRequestFactory.Create(

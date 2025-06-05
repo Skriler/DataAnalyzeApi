@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Unit.Common.Models.Analysis;
+namespace DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 /// <summary>
 /// Model of test cluster that can be used as test data.
@@ -8,5 +8,5 @@ public record TestCluster
     /// <summary>
     /// List of objects with their test data.
     /// </summary>
-    public List<NormalizedDataObject> Objects { get; init; } = new();
+    public List<NormalizedDataObject> Objects { get; init; } = [];
 }

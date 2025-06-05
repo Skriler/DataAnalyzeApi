@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 namespace DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 

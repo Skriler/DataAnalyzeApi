@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 namespace DataAnalyzeApi.Services.Normalizers.Parameters;
 

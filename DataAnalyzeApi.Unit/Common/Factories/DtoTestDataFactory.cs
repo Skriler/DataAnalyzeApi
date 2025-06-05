@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using DataAnalyzeApi.Models.DTOs.Analysis.Settings;
+using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 

@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Exceptions.Vector;
 
 namespace DataAnalyzeApi.Services.Analysis.Metrics;
 

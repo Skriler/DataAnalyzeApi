@@ -1,4 +1,3 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Entities;
@@ -44,9 +43,9 @@ public class DatasetSettingsMapper
                 ?.FirstOrDefault(ps => ps.ParameterId == parameter.Id);
 
             parameterSetting ??= new ParameterSettingsDto()
-                {
-                    ParameterId = parameter.Id,
-                };
+            {
+                ParameterId = parameter.Id,
+            };
 
             var parameterState = new ParameterStateModel(
                 parameter.Id,

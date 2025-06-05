@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Exceptions;
+namespace DataAnalyzeApi.Exceptions;
 
 public class TypeNotFoundException : DataAnalysisException
 {

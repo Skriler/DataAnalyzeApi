@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
@@ -53,7 +53,7 @@ public class AnalysisMapperTest
         const bool includeParameterValues = false;
         var rawClusters = new List<TestCluster>()
         {
-            new TestCluster
+            new()
             {
                 Objects =
                 [
@@ -69,7 +69,7 @@ public class AnalysisMapperTest
                     },
                 ]
             },
-            new TestCluster
+            new()
             {
                 Objects =
                 [
@@ -106,7 +106,7 @@ public class AnalysisMapperTest
         const bool includeParameterValues = true;
         var rawClusters = new List<TestCluster>()
         {
-            new TestCluster
+            new()
             {
                 Objects =
                 [
@@ -122,7 +122,7 @@ public class AnalysisMapperTest
                     },
                 ]
             },
-            new TestCluster
+            new()
             {
                 Objects =
                 [

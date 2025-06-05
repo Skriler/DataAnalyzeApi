@@ -1,4 +1,5 @@
-﻿using DataAnalyzeApi.Models.DTOs.Dataset.Create;
+using DataAnalyzeApi.Models.DTOs.Dataset.Create;
+using DataAnalyzeApi.Models.DTOs.Dataset.Read;
 using DataAnalyzeApi.Models.Entities;
 using Newtonsoft.Json;
 using System.Net;
@@ -35,7 +36,7 @@ public class DatasetControllerIntegrationTests : IntegrationTestBase
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var dataset = await response.Content.ReadFromJsonAsync<DatasetCreateDto>();
+        var dataset = await response.Content.ReadFromJsonAsync<DatasetDto>();
         Assert.NotNull(dataset);
     }
 
@@ -104,7 +105,7 @@ public class DatasetControllerIntegrationTests : IntegrationTestBase
         // Arrange
         var jsonDataset = await File.ReadAllTextAsync("Data/technology-companies-analysis-2024.json");
         var datasetDto = JsonConvert.DeserializeObject<DatasetCreateDto>(jsonDataset)!;
-        var emptyParametersDatasetDto = datasetDto with { Parameters = new() };
+        var emptyParametersDatasetDto = datasetDto with { Parameters = [] };
 
         // Act
         var response = await client.PostAsJsonAsync(BaseUrl, emptyParametersDatasetDto);
@@ -119,7 +120,7 @@ public class DatasetControllerIntegrationTests : IntegrationTestBase
         // Arrange
         var jsonDataset = await File.ReadAllTextAsync("Data/technology-companies-analysis-2024.json");
         var datasetDto = JsonConvert.DeserializeObject<DatasetCreateDto>(jsonDataset)!;
-        var emptyObjectsDatasetDto = datasetDto with { Objects = new() };
+        var emptyObjectsDatasetDto = datasetDto with { Objects = [] };
 
         // Act
         var response = await client.PostAsJsonAsync(BaseUrl, emptyObjectsDatasetDto);

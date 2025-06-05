@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions;
+using DataAnalyzeApi.Exceptions;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Metrics;
 using DataAnalyzeApi.Services.Analysis.Metrics.Categorical;

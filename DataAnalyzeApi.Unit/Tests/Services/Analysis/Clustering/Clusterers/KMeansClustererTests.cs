@@ -1,5 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
@@ -27,7 +27,7 @@ public class KMeansClustererTests : BaseClustererTests<KMeansClusterer, KMeansSe
             .Setup(c => c.Recalculate(
                 It.IsAny<Centroid>(),
                 It.IsAny<List<DataObjectModel>>()))
-            .Returns((Centroid centroid, List<DataObjectModel> objects) => centroid);
+            .Returns((Centroid centroid, List<DataObjectModel> _) => centroid);
 
         return new KMeansClusterer(
             calculator,

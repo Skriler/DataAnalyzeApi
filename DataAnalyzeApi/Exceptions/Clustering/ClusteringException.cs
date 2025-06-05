@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Exceptions.Clustering;
+namespace DataAnalyzeApi.Exceptions.Clustering;
 
 public class ClusteringException : DataAnalysisException
 {

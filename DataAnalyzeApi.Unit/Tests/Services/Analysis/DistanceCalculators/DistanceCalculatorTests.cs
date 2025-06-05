@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.DistanceCalculators;
@@ -44,7 +44,7 @@ public class DistanceCalculatorTests
     {
         // Arrange
         var objectA = new DataObjectModel(0, string.Empty, null!);
-        var objectB = new DataObjectModel(0, string.Empty, new());
+        var objectB = new DataObjectModel(0, string.Empty, []);
 
         // Act & Assert
         Assert.Throws<VectorNullException>(() => calculator.Calculate(objectA, objectB, default, default));

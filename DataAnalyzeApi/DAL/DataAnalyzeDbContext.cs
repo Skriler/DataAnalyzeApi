@@ -1,10 +1,12 @@
-﻿using DataAnalyzeApi.Models.Entities;
+using DataAnalyzeApi.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAnalyzeApi.DAL;
 
-public class DataAnalyzeDbContext : IdentityDbContext<ApplicationUser>
+public class DataAnalyzeDbContext(
+    DbContextOptions<DataAnalyzeDbContext> options
+    ) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Dataset> Datasets { get; set; }
 
@@ -13,10 +15,6 @@ public class DataAnalyzeDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Parameter> Parameters { get; set; }
 
     public DbSet<ParameterValue> ParameterValues { get; set; }
-
-    public DataAnalyzeDbContext(DbContextOptions<DataAnalyzeDbContext> options)
-        : base(options)
-    { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

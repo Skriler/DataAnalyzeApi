@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Metrics;
 
 namespace DataAnalyzeApi.Services.Analysis.Factories.Metric;

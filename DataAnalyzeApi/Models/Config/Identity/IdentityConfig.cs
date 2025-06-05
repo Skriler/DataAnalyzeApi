@@ -1,8 +1,8 @@
-﻿namespace DataAnalyzeApi.Models.Config.Identity;
+namespace DataAnalyzeApi.Models.Config.Identity;
 
 public class IdentityConfig
 {
-    public List<string> Roles { get; set; } = new();
+    public List<string> Roles { get; set; } = [];
 
     public string AdminRole { get; set; } = string.Empty;
 

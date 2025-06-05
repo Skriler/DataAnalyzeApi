@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.Config.Clustering;
+namespace DataAnalyzeApi.Models.Config.Clustering;
 
 public static class DBSCANConfig
 {

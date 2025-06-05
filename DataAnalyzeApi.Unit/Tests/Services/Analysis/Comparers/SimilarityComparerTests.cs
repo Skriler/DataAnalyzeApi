@@ -1,5 +1,4 @@
-﻿using DataAnalyzeApi.Exceptions.Vector;
-using DataAnalyzeApi.Models.Domain.Dataset;
+using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Analysis.Comparers;
@@ -51,7 +50,7 @@ public class SimilarityComparerTests
         var parameterStates = new List<ParameterStateModel>();
         var rawObjects = new List<RawDataObject>
         {
-            new RawDataObject
+            new()
             {
                 Values =  ["0.5", "0.2"]
             },
@@ -70,12 +69,12 @@ public class SimilarityComparerTests
         // Arrange
         var parameterStates = new List<ParameterStateModel>
         {
-            new ParameterStateModel(0, string.Empty, ParameterType.Categorical, true, 1),
+            new(0, string.Empty, ParameterType.Categorical, true, 1),
         };
         var dataObjects = new List<DataObjectModel>()
         {
-            new DataObjectModel(0, string.Empty, null!),
-            new DataObjectModel(0, string.Empty, null!),
+            new(0, string.Empty, null!),
+            new(0, string.Empty, null!),
         };
 
         var datasetModel = new DatasetModel(0, string.Empty, parameterStates, dataObjects);
@@ -90,12 +89,12 @@ public class SimilarityComparerTests
         // Arrange
         var parameterStates = new List<ParameterStateModel>
         {
-            new ParameterStateModel(0, string.Empty, ParameterType.Categorical, true, 1),
+            new(0, string.Empty, ParameterType.Categorical, true, 1),
         };
         var dataObjects = new List<DataObjectModel>()
         {
-            new DataObjectModel(0, string.Empty, new()),
-            new DataObjectModel(0, string.Empty, new()),
+            new(0, string.Empty, []),
+            new(0, string.Empty, []),
         };
 
         var datasetModel = new DatasetModel(0, string.Empty, parameterStates, dataObjects);
@@ -110,12 +109,12 @@ public class SimilarityComparerTests
         // Arrange
         var rawObjects = new List<RawDataObject>
         {
-            new RawDataObject
+            new()
             {
                 Values = ["0.2", "0.4"],
             },
 
-            new RawDataObject
+            new()
             {
                 Values = ["0.6", "0.8", "0.3"],
             },
@@ -174,7 +173,7 @@ public class SimilarityComparerTests
             .Returns((
                 string valA,
                 string valB,
-                double maxRange) =>
+                double _) =>
             {
                 if (valA == valB)
                 {

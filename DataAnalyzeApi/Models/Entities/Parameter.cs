@@ -1,6 +1,6 @@
-﻿using DataAnalyzeApi.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using DataAnalyzeApi.Models.Enum;
 
 namespace DataAnalyzeApi.Models.Entities;
 

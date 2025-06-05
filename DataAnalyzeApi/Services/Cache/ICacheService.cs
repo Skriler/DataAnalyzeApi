@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Services.Cache;
+namespace DataAnalyzeApi.Services.Cache;
 
 public interface ICacheService
 {

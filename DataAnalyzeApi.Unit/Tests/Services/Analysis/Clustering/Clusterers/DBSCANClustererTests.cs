@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
@@ -17,7 +17,7 @@ public class DBSCANClustererTests : BaseClustererTests<DBSCANClusterer, DBSCANSe
         : base((calculator, generator) => new DBSCANClusterer(calculator, generator))
     { }
 
-    private DBSCANSettings CreateDBSCANSettings(
+    private static DBSCANSettings CreateDBSCANSettings(
         NumericDistanceMetricType numericMetric,
         CategoricalDistanceMetricType categoricalMetric,
         double epsilon,

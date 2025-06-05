@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers;
 
 namespace DataAnalyzeApi.Services.Analysis.Core;
 

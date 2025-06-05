@@ -1,23 +1,18 @@
-﻿using DataAnalyzeApi.Models.Config;
+using System.Text;
+using System.Text.Json;
+using DataAnalyzeApi.Models.Config;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
-using System.Text;
 
 namespace DataAnalyzeApi.Services.Cache;
 
-public class DistributedCacheService : ICacheService
+public class DistributedCacheService(
+    IDistributedCache cache,
+    IOptions<RedisConfig> redisConfigOptions
+    ) : ICacheService
 {
-    private readonly IDistributedCache cache;
-    private readonly RedisConfig redisConfig;
-
-    public DistributedCacheService(
-        IDistributedCache cache,
-        IOptions<RedisConfig> redisConfigOptions)
-    {
-        this.cache = cache;
-        redisConfig = redisConfigOptions.Value;
-    }
+    private readonly IDistributedCache cache = cache;
+    private readonly RedisConfig redisConfig = redisConfigOptions.Value;
 
     /// <summary>
     /// Retrieves a cached value from the distributed cache.

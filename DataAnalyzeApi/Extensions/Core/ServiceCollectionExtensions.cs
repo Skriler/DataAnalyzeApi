@@ -1,29 +1,30 @@
-﻿using DataAnalyzeApi.DAL;
+using System.Text;
+using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.DAL.Seeders;
 using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers.Profiles;
 using DataAnalyzeApi.Middlewares;
 using DataAnalyzeApi.Models.Config;
 using DataAnalyzeApi.Models.Config.Identity;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
+using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analysis.Comparers;
 using DataAnalyzeApi.Services.Analysis.Core;
 using DataAnalyzeApi.Services.Analysis.DistanceCalculators;
+using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
+using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 using DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
 using DataAnalyzeApi.Services.Analysis.Metrics.Numeric;
 using DataAnalyzeApi.Services.Auth;
 using DataAnalyzeApi.Services.Cache;
-using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
-using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
-using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 using DataAnalyzeApi.Services.Normalizers;
+using DataAnalyzeApi.Services.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using DataAnalyzeApi.Mappers.Profiles;
 
 namespace DataAnalyzeApi.Extensions.Core;
 
@@ -183,7 +184,8 @@ public static class ServiceCollectionExtensions
             .AddDistanceServices()
             .AddClusteringServices()
             .AddFactories()
-            .AddFilters();
+            .AddFilters()
+            .AddValidators();
     }
 
     private static IServiceCollection AddCacheServices(this IServiceCollection services)
@@ -267,5 +269,11 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddScoped<DataAnalysisExceptionFilter>();
+    }
+
+    private static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        return services
+            .AddScoped<DatasetValidator>();
     }
 }

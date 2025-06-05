@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
 namespace DataAnalyzeApi.Services.Normalizers.Parameters;
@@ -37,7 +37,6 @@ public class NumericParameterNormalizer : ITypeNormalizer
         var normalizedValue = NormalizeMinMax(value);
 
         return new NormalizedNumericValueModel(parameterValue, normalizedValue);
-
     }
 
     /// <summary>

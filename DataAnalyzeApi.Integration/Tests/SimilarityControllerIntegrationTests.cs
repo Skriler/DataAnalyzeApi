@@ -1,8 +1,8 @@
-﻿using DataAnalyzeApi.Integration.Common.Assertions;
+using DataAnalyzeApi.Integration.Common.Assertions;
 using DataAnalyzeApi.Integration.Common.Factories;
 using DataAnalyzeApi.Integration.Common.TestData.Similarity;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Requests;
-using DataAnalyzeApi.Models.DTOs.Analyse.Settings.Similarity.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -10,7 +10,7 @@ namespace DataAnalyzeApi.Integration.Tests;
 
 public class SimilarityControllerIntegrationTests : IntegrationTestBase
 {
-    private readonly string BaseUrl = "/api/analyse/similarity";
+    private readonly string BaseUrl = "/api/analysis/similarity";
 
     [Theory]
     [MemberData(nameof(SimilarityControllerTestData.ValidSimilarityRequestTestCases),
@@ -47,7 +47,7 @@ public class SimilarityControllerIntegrationTests : IntegrationTestBase
         var firstResponse = await client.PostAsJsonAsync(
             $"{BaseUrl}/{datasetId}",
             request);
-        
+
         var secondResponse = await client.PostAsJsonAsync(
             $"{BaseUrl}/{datasetId}",
             request);

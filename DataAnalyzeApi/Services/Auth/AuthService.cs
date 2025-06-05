@@ -1,10 +1,10 @@
-﻿using DataAnalyzeApi.Models.Config.Identity;
+using System.IdentityModel.Tokens.Jwt;
+using DataAnalyzeApi.Models.Config.Identity;
 using DataAnalyzeApi.Models.DTOs.Auth;
 using DataAnalyzeApi.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace DataAnalyzeApi.Services.Auth;
 
@@ -52,10 +52,9 @@ public class AuthService(
             Token = new JwtSecurityTokenHandler().WriteToken(token),
             Expiration = token.ValidTo,
             Username = user.UserName!,
-            Roles = userRoles.ToList()
+            Roles = userRoles.ToList(),
         };
     }
-
 
     /// <summary>
     /// Registers a new user, creates the user in the database, and assigns a default role.

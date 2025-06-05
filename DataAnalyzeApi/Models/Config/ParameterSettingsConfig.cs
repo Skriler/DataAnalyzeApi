@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Models.Config;
+namespace DataAnalyzeApi.Models.Config;
 
 public static class ParameterSettingsConfig
 {

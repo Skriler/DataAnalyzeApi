@@ -1,6 +1,5 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset;
-using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
-using DataAnalyzeApi.Models.DTOs.Analysis.Settings;
+﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Entities;
 
 namespace DataAnalyzeApi.Unit.Common.Assertions;
