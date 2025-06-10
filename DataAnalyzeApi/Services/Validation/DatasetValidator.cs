@@ -36,8 +36,10 @@ public class DatasetValidator
         {
             context = validator(dto);
 
-            if (!context.IsValid)
-                break;
+            if (context.IsValid)
+                continue;
+
+            return AnalysisValidationResult.Invalid(context.Errors.ToList());
         }
 
         return AnalysisValidationResult.Valid();

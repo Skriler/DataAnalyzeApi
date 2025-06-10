@@ -79,9 +79,11 @@ public class DatasetControllerIntegrationTests : IntegrationTestBase
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        var dataset = await response.Content.ReadFromJsonAsync<Dataset>();
+        var dataset = await response.Content.ReadFromJsonAsync<DatasetDto>();
         Assert.NotNull(dataset);
         Assert.True(dataset.Id > 0);
+        Assert.NotEmpty(dataset.Parameters);
+        Assert.NotEmpty(dataset.Objects);
     }
 
     [Fact]

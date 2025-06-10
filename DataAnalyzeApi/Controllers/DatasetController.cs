@@ -83,7 +83,7 @@ public class DatasetController(
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Dataset>> Create(
+    public async Task<ActionResult<DatasetDto>> Create(
         [FromBody] DatasetCreateDto dto)
     {
         if (!ModelState.IsValid)
