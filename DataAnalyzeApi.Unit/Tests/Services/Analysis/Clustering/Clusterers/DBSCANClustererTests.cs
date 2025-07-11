@@ -48,7 +48,7 @@ public class DBSCANClustererTests : BaseClustererTests<DBSCANClusterer, DBSCANSe
     /// <summary>
     /// Additional verify for the presence of a noise cluster.
     /// </summary>
-    protected override void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<Cluster> result)
+    protected override void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<ClusterModel> result)
     {
         base.AssertClustersEqualsExpected(testCase, result);
 

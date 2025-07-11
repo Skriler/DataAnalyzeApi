@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Unit.Common.Models.Analysis;
+using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.Agglomerative;
 

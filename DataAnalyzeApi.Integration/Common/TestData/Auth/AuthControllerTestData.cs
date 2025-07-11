@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Integration.Common.Factories;
+using DataAnalyzeApi.Integration.Common.Factories;
 using DataAnalyzeApi.Models.DTOs.Auth;
 
 namespace DataAnalyzeApi.Integration.Common.TestData.Auth;

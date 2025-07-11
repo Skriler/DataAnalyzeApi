@@ -19,5 +19,5 @@ public abstract class BaseClusterer<TSettings>(
     /// </summary>
     protected abstract string ClusterPrefix { get; }
 
-    public abstract List<Cluster> Cluster(List<DataObjectModel> Objects, TSettings settings);
+    public abstract List<ClusterModel> Cluster(List<DataObjectModel> Objects, TSettings settings);
 }

@@ -5,30 +5,43 @@ namespace DataAnalyzeApi.Attributes;
 [AttributeUsage(
     AttributeTargets.Property | AttributeTargets.Field,
     AllowMultiple = false)]
-public class MinStringLengthInListAttribute : ValidationAttribute
+public class StringLengthRangeInListAttribute : ValidationAttribute
 {
     public int MinLength { get; }
+    public int MaxLength { get; }
 
-    public MinStringLengthInListAttribute(int minLength)
+    public StringLengthRangeInListAttribute(int minLength, int maxLength)
     {
+        if (minLength < 0)
+            throw new ArgumentOutOfRangeException(nameof(minLength), "Minimum length cannot be negative.");
+
+        if (maxLength < minLength)
+            throw new ArgumentOutOfRangeException(nameof(maxLength), "Maximum length cannot be less than minimum length.");
+
         MinLength = minLength;
-        ErrorMessage = $"Each string in the list must be at least {MinLength} characters long.";
+        MaxLength = maxLength;
+
+        ErrorMessage = $"Each string in the list must be between {MinLength} and {MaxLength} characters long.";
     }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is not IEnumerable<string> list)
-            return new ValidationResult($"{validationContext.DisplayName} cannot be null.");
-
-        var invalidItem = list.FirstOrDefault(item => item == null || item.Length < MinLength);
-
-        if (invalidItem != null)
         {
-            return new ValidationResult(
-                ErrorMessage ?? $"Item {invalidItem} in {validationContext.DisplayName} must be at least {MinLength} characters long."
-            );
+            return new ValidationResult($"{validationContext.DisplayName} must be a list of strings.");
         }
 
-        return ValidationResult.Success;
+        var invalidItem = list.FirstOrDefault(item =>
+            string.IsNullOrEmpty(item) ||
+            item.Length < MinLength ||
+            item.Length > MaxLength);
+
+        if (invalidItem == null)
+            return ValidationResult.Success;
+
+        return new ValidationResult(
+            ErrorMessage ??
+            $"Item \"{invalidItem}\" in {validationContext.DisplayName} must be between {MinLength} and {MaxLength} characters long."
+        );
     }
 }

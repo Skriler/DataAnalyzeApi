@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Models.Enums;
 
 namespace DataAnalyzeApi.Models.Domain.Settings;
 

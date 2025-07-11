@@ -33,10 +33,10 @@ public class DBSCANClusterer(
     /// If it does, a new cluster is created, and the cluster is expanded by adding neighboring objects.
     /// Objects with insufficient neighbors are marked as noise.
     /// </summary>
-    public override List<Cluster> Cluster(List<DataObjectModel> objects, DBSCANSettings settings)
+    public override List<ClusterModel> Cluster(List<DataObjectModel> objects, DBSCANSettings settings)
     {
         this.settings = settings;
-        var clusters = new List<Cluster>();
+        var clusters = new List<ClusterModel>();
 
         foreach (var obj in objects)
         {
@@ -55,7 +55,7 @@ public class DBSCANClusterer(
                 continue;
             }
 
-            var cluster = new Cluster(nameGenerator.GenerateName(ClusterPrefix));
+            var cluster = new ClusterModel(nameGenerator.GenerateName(ClusterPrefix));
             cluster.AddObject(obj);
             noiseObjects.Remove(obj);
 
@@ -102,7 +102,7 @@ public class DBSCANClusterer(
     /// and their neighbors recursively.
     /// </summary>
     private void ExpandCluster(
-        Cluster cluster,
+        ClusterModel cluster,
         List<DataObjectModel> neighbors,
         List<DataObjectModel> objects)
     {
@@ -141,12 +141,12 @@ public class DBSCANClusterer(
     /// Adds a noise cluster to the list of clusters
     /// if there are any noise objects.
     /// </summary>
-    private void AddNoiseCluster(List<Cluster> clusters)
+    private void AddNoiseCluster(List<ClusterModel> clusters)
     {
         if (noiseObjects.Count == 0)
             return;
 
-        var noiseCluster = new Cluster(nameGenerator.GenerateName(NoiseClusterPrefix));
+        var noiseCluster = new ClusterModel(nameGenerator.GenerateName(NoiseClusterPrefix));
         noiseCluster.AddObjects(noiseObjects.ToList());
 
         clusters.Add(noiseCluster);

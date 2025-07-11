@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Clustering;
+using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Models.DTOs.Analysis;
@@ -43,11 +43,11 @@ public static class AnalysisMapperAssertions
     }
 
     /// <summary>
-    /// Verifies that a SimilarityPair matches the expected SimilarityPairDto.
+    /// Verifies that a SimilarityPairDto matches the expected SimilarityPairDtoDto.
     /// </summary>
-    public static void AssertSimilarityPairEqualDto(
-        SimilarityPair expected,
-        SimilarityPairDto actual,
+    public static void AssertSimilarityPairDtoEqualDto(
+        SimilarityPairDto expected,
+        SimilarityPairDtoDto actual,
         bool includeParameterValues)
     {
         Assert.Equal(expected.SimilarityPercentage, actual.SimilarityPercentage);
@@ -56,18 +56,18 @@ public static class AnalysisMapperAssertions
     }
 
     /// <summary>
-    /// Verifies that SimilarityPair list matches the expected SimilarityPairDto list.
+    /// Verifies that SimilarityPairDto list matches the expected SimilarityPairDtoDto list.
     /// </summary>
-    public static void AssertSimilarityPairListEqualDtoList(
-        List<SimilarityPair> expectedList,
-        List<SimilarityPairDto> actualList,
+    public static void AssertSimilarityPairDtoListEqualDtoList(
+        List<SimilarityPairDto> expectedList,
+        List<SimilarityPairDtoDto> actualList,
         bool includeParameterValues)
     {
         Assert.Equal(expectedList.Count, actualList.Count);
 
         for (int i = 0; i < expectedList.Count; ++i)
         {
-            AssertSimilarityPairEqualDto(expectedList[i], actualList[i], includeParameterValues);
+            AssertSimilarityPairDtoEqualDto(expectedList[i], actualList[i], includeParameterValues);
         }
     }
 

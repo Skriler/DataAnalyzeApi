@@ -18,7 +18,7 @@ public class KMeansClusterer(
 
     private readonly CentroidCalculator centroidCalculator = centroidCalculator;
 
-    private List<KMeansCluster> clusters = default!;
+    private List<KMeansClusterModel> clusters = default!;
     private KMeansSettings settings = default!;
 
     /// <summary>
@@ -28,19 +28,19 @@ public class KMeansClusterer(
     /// </summary>
     private Dictionary<DataObjectModel, int> objectClusterMap = [];
 
-    public override List<Cluster> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
+    public override List<ClusterModel> Cluster(List<DataObjectModel> objects, KMeansSettings settings)
     {
         Validate(objects, settings);
 
         this.settings = settings;
-        clusters = new List<KMeansCluster>(settings.NumberOfClusters);
+        clusters = new List<KMeansClusterModel>(settings.NumberOfClusters);
         objectClusterMap = new Dictionary<DataObjectModel, int>(objects.Count);
 
         InitializeClusters(objects);
         PerformClustering(objects);
 
         return clusters
-            .Cast<Cluster>()
+            .Cast<ClusterModel>()
             .OrderByDescending(c => c.Objects.Count)
             .ToList();
     }
@@ -61,7 +61,7 @@ public class KMeansClusterer(
 
             middleIndex = Math.Max(0, Math.Min(middleIndex, objects.Count - 1));
 
-            var cluster = new KMeansCluster(objects[middleIndex], nameGenerator.GenerateName(ClusterPrefix));
+            var cluster = new KMeansClusterModel(objects[middleIndex], nameGenerator.GenerateName(ClusterPrefix));
             clusters.Add(cluster);
         }
     }

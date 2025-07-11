@@ -2,7 +2,7 @@ using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 namespace DataAnalyzeApi.Models.Domain.Clustering;
 
-public class Cluster(string name)
+public class ClusterModel(string name)
 {
     public string Name { get; } = name;
 

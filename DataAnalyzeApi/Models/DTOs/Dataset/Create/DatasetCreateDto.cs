@@ -11,7 +11,7 @@ public record DatasetCreateDto
 
     [Required(ErrorMessage = "Parameters are required")]
     [MinLength(1, ErrorMessage = "At least one parameter is required")]
-    [MinStringLengthInList(3, ErrorMessage = "Each parameter must be at least 3 characters long")]
+    [StringLengthRangeInList(3, 50, ErrorMessage = "Each parameter must be between 3 and 50 characters long")]
     public List<string> Parameters { get; init; } = [];
 
     [Required(ErrorMessage = "Objects are required")]

@@ -20,7 +20,7 @@ public static class AnalysisResultAssertions
 
         Assert.All(
             result.Similarities,
-            similarity => AssertSimilarityPair(similarity, expectParameterValues));
+            similarity => AssertSimilarityPairDto(similarity, expectParameterValues));
     }
 
     /// <summary>
@@ -41,12 +41,12 @@ public static class AnalysisResultAssertions
     }
 
     /// <summary>
-    /// Verifies that both objects in the SimilarityPair have expected parameter values,
+    /// Verifies that both objects in the SimilarityPairDto have expected parameter values,
     /// present and non-empty if expectParameterValues is true,
     /// otherwise, ensures they are null.
     /// </summary>
-    private static void AssertSimilarityPair(
-        SimilarityPairDto similarity,
+    private static void AssertSimilarityPairDto(
+        SimilarityPairDtoDto similarity,
         bool expectParameterValues)
     {
         AssertParameterValues(similarity.ObjectA, expectParameterValues);

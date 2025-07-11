@@ -25,7 +25,7 @@ public class SimilarityService(
         var similarities = comparer.CompareAllObjects(dataset);
 
         var includeParameters = request?.IncludeParameters ?? false;
-        var similaritiesDto = analysisMapper.MapSimilarityPairList(similarities, includeParameters);
+        var similaritiesDto = analysisMapper.MapSimilarityPairDtoList(similarities, includeParameters);
 
         var similarityResult = new SimilarityResult()
         {

@@ -1,8 +1,8 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 
 namespace DataAnalyzeApi.Models.Domain.Similarity;
 
-public record SimilarityPair(
+public record SimilarityPairModel(
     DataObjectModel ObjectA,
     DataObjectModel ObjectB,
     double SimilarityPercentage

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.KMeans;
+namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.KMeans;
 
 /// <summary>
 /// Test case class for KMeanslustererTests

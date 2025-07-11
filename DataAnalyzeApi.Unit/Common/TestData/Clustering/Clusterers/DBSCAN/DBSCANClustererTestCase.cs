@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.DBSCAN;
+namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.DBSCAN;
 
 /// <summary>
 /// Test case class for DBSCANClustererTests

@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.Agglomerative;
+namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.Agglomerative;
 
 /// <summary>
 /// Test case class for AgglomerativeClustererTests

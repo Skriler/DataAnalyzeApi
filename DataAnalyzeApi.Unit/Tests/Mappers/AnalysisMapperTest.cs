@@ -153,52 +153,52 @@ public class AnalysisMapperTest
     }
 
     [Fact]
-    public void MapSimilarityPair_ReturnsCorrectSimilarityPairDto()
+    public void MapSimilarityPairDto_ReturnsCorrectSimilarityPairDtoDto()
     {
         // Arrange
         const bool includeParameterValues = false;
-        var similarityPair = analysisModelFactory.CreateSimilarityPair();
+        var SimilarityPairDto = analysisModelFactory.CreateSimilarityPairDto();
 
         // Act
-        var result = mapper.MapSimilarityPair(similarityPair, includeParameterValues);
+        var result = mapper.MapSimilarityPairDto(SimilarityPairDto, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairEqualDto(
-            similarityPair,
+        AnalysisMapperAssertions.AssertSimilarityPairDtoEqualDto(
+            SimilarityPairDto,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapSimilarityPairList_ReturnsCorrectSimilarityPairDtoList()
+    public void MapSimilarityPairDtoList_ReturnsCorrectSimilarityPairDtoDtoList()
     {
         // Arrange
         const bool includeParameterValues = false;
-        var similarityPairs = analysisModelFactory.CreateSimilarityPairList(3);
+        var SimilarityPairDtos = analysisModelFactory.CreateSimilarityPairDtoList(3);
 
         // Act
-        var result = mapper.MapSimilarityPairList(similarityPairs, includeParameterValues);
+        var result = mapper.MapSimilarityPairDtoList(SimilarityPairDtos, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairListEqualDtoList(
-            similarityPairs,
+        AnalysisMapperAssertions.AssertSimilarityPairDtoListEqualDtoList(
+            SimilarityPairDtos,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapSimilarityPairList_WithIncludeParameterValues_ReturnsCorrectSimilarityPairDtoList()
+    public void MapSimilarityPairDtoList_WithIncludeParameterValues_ReturnsCorrectSimilarityPairDtoDtoList()
     {
         // Arrange
         const bool includeParameterValues = true;
-        var similarityPairs = analysisModelFactory.CreateSimilarityPairList(3);
+        var SimilarityPairDtos = analysisModelFactory.CreateSimilarityPairDtoList(3);
 
         // Act
-        var result = mapper.MapSimilarityPairList(similarityPairs, includeParameterValues);
+        var result = mapper.MapSimilarityPairDtoList(SimilarityPairDtos, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairListEqualDtoList(
-            similarityPairs,
+        AnalysisMapperAssertions.AssertSimilarityPairDtoListEqualDtoList(
+            SimilarityPairDtos,
             result,
             includeParameterValues);
     }

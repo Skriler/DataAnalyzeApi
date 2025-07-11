@@ -1,4 +1,4 @@
-﻿using DataAnalyzeApi.Models.Domain.Settings;
+using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
 using DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers.Agglomerative;

@@ -36,16 +36,16 @@ public class AnalysisModelFactory
         rawClusters.ConvertAll(CreateCluster);
 
     /// <summary>
-    /// Creates a SimilarityPair.
+    /// Creates a SimilarityPairDto.
     /// </summary>
-    public SimilarityPair CreateSimilarityPair() =>
-        fixture.Create<SimilarityPair>();
+    public SimilarityPairDto CreateSimilarityPairDto() =>
+        fixture.Create<SimilarityPairDto>();
 
     /// <summary>
-    /// Creates a SimilarityPair.
+    /// Creates a SimilarityPairDto.
     /// </summary>
-    public List<SimilarityPair> CreateSimilarityPairList(int count) =>
+    public List<SimilarityPairDto> CreateSimilarityPairDtoList(int count) =>
         fixture
-            .CreateMany<SimilarityPair>(count)
+            .CreateMany<SimilarityPairDto>(count)
             .ToList();
 }

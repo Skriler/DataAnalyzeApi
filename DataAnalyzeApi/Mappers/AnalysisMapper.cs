@@ -27,11 +27,11 @@ public class AnalysisMapper
         => clusters.ConvertAll(c => MapCluster(c, includeParameters));
 
     /// <summary>
-    /// Maps SimilarityPair to its DTO.
+    /// Maps SimilarityPairDto to its DTO.
     /// </summary>
-    public virtual SimilarityPairDto MapSimilarityPair(SimilarityPair pair, bool includeParameters = false)
+    public virtual SimilarityPairDtoDto MapSimilarityPairDto(SimilarityPairDto pair, bool includeParameters = false)
     {
-        return new SimilarityPairDto(
+        return new SimilarityPairDtoDto(
             MapDataObject(pair.ObjectA, includeParameters),
             MapDataObject(pair.ObjectB, includeParameters),
             pair.SimilarityPercentage
@@ -39,10 +39,10 @@ public class AnalysisMapper
     }
 
     /// <summary>
-    /// Maps SimilarityPair list to their DTOs.
+    /// Maps SimilarityPairDto list to their DTOs.
     /// </summary>
-    public virtual List<SimilarityPairDto> MapSimilarityPairList(List<SimilarityPair> pairs, bool includeParameters = false)
-        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
+    public virtual List<SimilarityPairDtoDto> MapSimilarityPairDtoList(List<SimilarityPairDto> pairs, bool includeParameters = false)
+        => pairs.ConvertAll(p => MapSimilarityPairDto(p, includeParameters));
 
     /// <summary>
     /// Maps DataObjectModel to its DTO.

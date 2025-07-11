@@ -15,14 +15,14 @@ public class AgglomerativeClusterer(
 {
     protected override string ClusterPrefix => nameof(ClusterAlgorithm.Agglomerative);
 
-    private List<AgglomerativeCluster> clusters = default!;
+    private List<AgglomerativeClusterModel> clusters = default!;
     private AgglomerativeSettings settings = default!;
 
-    public override List<Cluster> Cluster(List<DataObjectModel> objects, AgglomerativeSettings settings)
+    public override List<ClusterModel> Cluster(List<DataObjectModel> objects, AgglomerativeSettings settings)
     {
         this.settings = settings;
         clusters = objects.ConvertAll(
-            obj => new AgglomerativeCluster(obj, nameGenerator.GenerateName(ClusterPrefix))
+            obj => new AgglomerativeClusterModel(obj, nameGenerator.GenerateName(ClusterPrefix))
             );
 
         PerformClustering();
@@ -30,7 +30,7 @@ public class AgglomerativeClusterer(
         return clusters
             .Where(c => !c.IsMerged)
             .OrderByDescending(c => c.Objects.Count)
-            .Cast<Cluster>()
+            .Cast<ClusterModel>()
             .ToList();
     }
 
@@ -84,7 +84,7 @@ public class AgglomerativeClusterer(
     /// <summary>
     /// Calculates the average distance between two clusters based on their objects.
     /// </summary>
-    private double GetAverageDistance(AgglomerativeCluster clusterA, AgglomerativeCluster clusterB)
+    private double GetAverageDistance(AgglomerativeClusterModel clusterA, AgglomerativeClusterModel clusterB)
     {
         var distances = new List<double>();
 

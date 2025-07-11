@@ -1,6 +1,6 @@
-﻿namespace DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
+namespace DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
-public record SimilarityPairDto(
+public record SimilarityPairDtoDto(
     DataObjectAnalysisDto ObjectA,
     DataObjectAnalysisDto ObjectB,
     double SimilarityPercentage

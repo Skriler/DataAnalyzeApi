@@ -151,7 +151,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
     /// <summary>
     /// Verifies that the clustering result matches the expected outcome
     /// </summary>
-    protected virtual void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<Cluster> result)
+    protected virtual void AssertClustersEqualsExpected(BaseClustererTestCase testCase, List<ClusterModel> result)
     {
         Assert.NotEmpty(result);
         Assert.Equal(testCase.ExpectedClusterCount, result.Count);

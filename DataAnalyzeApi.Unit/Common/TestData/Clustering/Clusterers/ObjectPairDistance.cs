@@ -1,4 +1,4 @@
-﻿namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers;
+namespace DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers;
 
 /// <summary>
 /// Represents the distance between two objects identified by their indices.
