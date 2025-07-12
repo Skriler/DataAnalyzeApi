@@ -4,5 +4,5 @@ public record SimilarityResult
 {
     public long DatasetId { get; init; }
 
-    public List<SimilarityPairDtoDto> Similarities { get; init; } = [];
+    public List<SimilarityPairDto> Similarities { get; init; } = [];
 }

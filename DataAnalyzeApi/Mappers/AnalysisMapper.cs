@@ -10,9 +10,9 @@ namespace DataAnalyzeApi.Mappers;
 public class AnalysisMapper
 {
     /// <summary>
-    /// Maps Cluster to its DTO.
+    /// Maps ClusterModel to its DTO.
     /// </summary>
-    public virtual ClusterDto MapCluster(Cluster cluster, bool includeParameters = false)
+    public virtual ClusterDto MapCluster(ClusterModel cluster, bool includeParameters = false)
     {
         var objectsDto = cluster.Objects
             .ConvertAll(obj => MapDataObject(obj, includeParameters));
@@ -21,17 +21,17 @@ public class AnalysisMapper
     }
 
     /// <summary>
-    /// Maps Cluster list to their DTOs.
+    /// Maps ClusterModel list to dto list.
     /// </summary>
-    public virtual List<ClusterDto> MapClusterList(List<Cluster> clusters, bool includeParameters = false)
+    public virtual List<ClusterDto> MapClusterList(List<ClusterModel> clusters, bool includeParameters = false)
         => clusters.ConvertAll(c => MapCluster(c, includeParameters));
 
     /// <summary>
-    /// Maps SimilarityPairDto to its DTO.
+    /// Maps SimilarityPairModel to its DTO.
     /// </summary>
-    public virtual SimilarityPairDtoDto MapSimilarityPairDto(SimilarityPairDto pair, bool includeParameters = false)
+    public virtual SimilarityPairDto MapSimilarityPair(SimilarityPairModel pair, bool includeParameters = false)
     {
-        return new SimilarityPairDtoDto(
+        return new SimilarityPairDto(
             MapDataObject(pair.ObjectA, includeParameters),
             MapDataObject(pair.ObjectB, includeParameters),
             pair.SimilarityPercentage
@@ -39,10 +39,10 @@ public class AnalysisMapper
     }
 
     /// <summary>
-    /// Maps SimilarityPairDto list to their DTOs.
+    /// Maps SimilarityPairModel list to their DTOs.
     /// </summary>
-    public virtual List<SimilarityPairDtoDto> MapSimilarityPairDtoList(List<SimilarityPairDto> pairs, bool includeParameters = false)
-        => pairs.ConvertAll(p => MapSimilarityPairDto(p, includeParameters));
+    public virtual List<SimilarityPairDto> MapSimilarityPairList(List<SimilarityPairModel> pairs, bool includeParameters = false)
+        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
 
     /// <summary>
     /// Maps DataObjectModel to its DTO.

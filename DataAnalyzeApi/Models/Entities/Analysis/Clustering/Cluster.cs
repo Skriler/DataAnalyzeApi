@@ -8,9 +8,9 @@ public class Cluster
     [Key]
     public long Id { get; set; }
 
-    public long ClusterGroupId { get; set; }
-    [JsonIgnore] public ClusterGroup ClusterGroup { get; set; } = default!;
+    [JsonIgnore]
+    public List<DataObject> Objects { get; set; } = [];
 
-    public long DataObjectId { get; set; }
-    [JsonIgnore] public DataObject DataObject { get; set; } = default!;
+    public long ClusterAnalysisResultId { get; set; }
+    [JsonIgnore] public ClusterAnalysisResult ClusterAnalysisResult { get; set; } = default!;
 }

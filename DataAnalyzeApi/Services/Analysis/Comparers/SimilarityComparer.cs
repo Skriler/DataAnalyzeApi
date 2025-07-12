@@ -15,7 +15,7 @@ public class SimilarityComparer(ICompare comparer)
     /// Calculates similarity pairs between objects in the dataset
     /// based on their parameter values.
     /// </summary>
-    public List<SimilarityPairDto> CompareAllObjects(DatasetModel dataset)
+    public List<SimilarityPairModel> CompareAllObjects(DatasetModel dataset)
     {
         ValidateDataset(dataset);
 
@@ -74,7 +74,7 @@ public class SimilarityComparer(ICompare comparer)
     /// <summary>
     /// Compares all objects in the dataset and calculates their similarity.
     /// </summary>
-    private List<SimilarityPairDto> CompareObjects(
+    private List<SimilarityPairModel> CompareObjects(
         List<DataObjectModel> objects,
         List<ParameterStateModel> parameterStates)
     {
@@ -82,7 +82,7 @@ public class SimilarityComparer(ICompare comparer)
             .Where(ps => ps.IsActive)
             .ToList();
 
-        var similarities = new List<SimilarityPairDto>();
+        var similarities = new List<SimilarityPairModel>();
 
         for (int i = 0; i < objects.Count; ++i)
         {
@@ -92,7 +92,7 @@ public class SimilarityComparer(ICompare comparer)
             {
                 var objectB = objects[j];
 
-                var similarity = new SimilarityPairDto(
+                var similarity = new SimilarityPairModel(
                     objectA,
                     objectB,
                     CalculateSimilarityPercentage(objectA, objectB, activeParameterStates)

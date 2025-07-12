@@ -16,6 +16,6 @@ public class SimilarityPair
 
     public double SimilarityPercentage { get; set; }
 
-    public long SimilarityAnalysisId { get; set; }
-    [JsonIgnore] public SimilarityAnalysis SimilarityAnalysis { get; set; } = default!;
+    public long SimilarityAnalysisResultId { get; set; }
+    [JsonIgnore] public SimilarityAnalysisResult SimilarityAnalysisResult { get; set; } = default!;
 }
