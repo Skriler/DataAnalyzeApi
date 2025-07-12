@@ -18,34 +18,34 @@ public class AnalysisModelFactory
     }
 
     /// <summary>
-    /// Creates a Cluster with numeric and categorical values.
+    /// Creates a ClusterModel with numeric and categorical values.
     /// </summary>
-    public Cluster CreateCluster(TestCluster rawCluster)
+    public ClusterModel CreateClusterModel(TestCluster rawCluster)
     {
         var objectsModels = dataObjectModelFactory.CreateNormalizedList(rawCluster.Objects);
 
-        return fixture.Build<Cluster>()
+        return fixture.Build<ClusterModel>()
             .With(c => c.Objects, objectsModels)
             .Create();
     }
 
     /// <summary>
-    /// Creates Cluster list with numeric and categorical values.
+    /// Creates ClusterModel list with numeric and categorical values.
     /// </summary>
-    public List<Cluster> CreateClusterList(List<TestCluster> rawClusters) =>
-        rawClusters.ConvertAll(CreateCluster);
+    public List<ClusterModel> CreateClusterModelList(List<TestCluster> rawClusters) =>
+        rawClusters.ConvertAll(CreateClusterModel);
 
     /// <summary>
-    /// Creates a SimilarityPairDto.
+    /// Creates a SimilarityPairModel.
     /// </summary>
-    public SimilarityPairDto CreateSimilarityPairDto() =>
-        fixture.Create<SimilarityPairDto>();
+    public SimilarityPairModel CreateSimilarityPairModel() =>
+        fixture.Create<SimilarityPairModel>();
 
     /// <summary>
-    /// Creates a SimilarityPairDto.
+    /// Creates a SimilarityPairModel list.
     /// </summary>
-    public List<SimilarityPairDto> CreateSimilarityPairDtoList(int count) =>
+    public List<SimilarityPairModel> CreateSimilarityPairModelList(int count) =>
         fixture
-            .CreateMany<SimilarityPairDto>(count)
+            .CreateMany<SimilarityPairModel>(count)
             .ToList();
 }

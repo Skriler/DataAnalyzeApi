@@ -13,7 +13,7 @@ public class AnalysisMapperTest
     private readonly AnalysisModelFactory analysisModelFactory = new();
 
     [Fact]
-    public void MapCluster_ReturnsCorrectClusterDto()
+    public void MapClusterModel_ReturnsCorrectClusterDto()
     {
         // Arrange
         const bool includeParameterValues = false;
@@ -34,20 +34,20 @@ public class AnalysisMapperTest
             ]
         };
 
-        var cluster = analysisModelFactory.CreateCluster(rawCluster);
+        var cluster = analysisModelFactory.CreateClusterModel(rawCluster);
 
         // Act
         var result = mapper.MapCluster(cluster, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterEqualDto(
+        AnalysisMapperAssertions.AssertClusterModelEqualDto(
             cluster,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapClusterList_ReturnsCorrectClusterDtoList()
+    public void MapClusterModelList_ReturnsCorrectClusterDtoList()
     {
         // Arrange
         const bool includeParameterValues = false;
@@ -87,20 +87,20 @@ public class AnalysisMapperTest
             },
         };
 
-        var clusters = analysisModelFactory.CreateClusterList(rawClusters);
+        var clusters = analysisModelFactory.CreateClusterModelList(rawClusters);
 
         // Act
         var result = mapper.MapClusterList(clusters, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterListsEqualDtoList(
+        AnalysisMapperAssertions.AssertClusterModelListsEqualDtoList(
             clusters,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapClusterList_WithIncludeParameterValues_ReturnsCorrectClusterDtoList()
+    public void MapClusterModelList_WithIncludeParameterValues_ReturnsCorrectClusterDtoList()
     {
         // Arrange
         const bool includeParameterValues = true;
@@ -140,65 +140,65 @@ public class AnalysisMapperTest
             },
         };
 
-        var clusters = analysisModelFactory.CreateClusterList(rawClusters);
+        var clusters = analysisModelFactory.CreateClusterModelList(rawClusters);
 
         // Act
         var result = mapper.MapClusterList(clusters, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterListsEqualDtoList(
+        AnalysisMapperAssertions.AssertClusterModelListsEqualDtoList(
             clusters,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapSimilarityPairDto_ReturnsCorrectSimilarityPairDtoDto()
+    public void MapSimilarityPairModel_ReturnsCorrectSimilarityPairDto()
     {
         // Arrange
         const bool includeParameterValues = false;
-        var SimilarityPairDto = analysisModelFactory.CreateSimilarityPairDto();
+        var similarityPair = analysisModelFactory.CreateSimilarityPairModel();
 
         // Act
-        var result = mapper.MapSimilarityPairDto(SimilarityPairDto, includeParameterValues);
+        var result = mapper.MapSimilarityPair(similarityPair, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairDtoEqualDto(
-            SimilarityPairDto,
+        AnalysisMapperAssertions.AssertSimilarityPairModelEqualDto(
+            similarityPair,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapSimilarityPairDtoList_ReturnsCorrectSimilarityPairDtoDtoList()
+    public void MapSimilarityPairModelList_ReturnsCorrectSimilarityPairDtoList()
     {
         // Arrange
         const bool includeParameterValues = false;
-        var SimilarityPairDtos = analysisModelFactory.CreateSimilarityPairDtoList(3);
+        var similarityPairs = analysisModelFactory.CreateSimilarityPairModelList(3);
 
         // Act
-        var result = mapper.MapSimilarityPairDtoList(SimilarityPairDtos, includeParameterValues);
+        var result = mapper.MapSimilarityPairList(similarityPairs, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairDtoListEqualDtoList(
-            SimilarityPairDtos,
+        AnalysisMapperAssertions.AssertSimilarityPairModelListEqualDtoList(
+            similarityPairs,
             result,
             includeParameterValues);
     }
 
     [Fact]
-    public void MapSimilarityPairDtoList_WithIncludeParameterValues_ReturnsCorrectSimilarityPairDtoDtoList()
+    public void MapSimilarityPairModelList_WithIncludeParameterValues_ReturnsCorrectSimilarityPairDtoList()
     {
         // Arrange
         const bool includeParameterValues = true;
-        var SimilarityPairDtos = analysisModelFactory.CreateSimilarityPairDtoList(3);
+        var similarityPairs = analysisModelFactory.CreateSimilarityPairModelList(3);
 
         // Act
-        var result = mapper.MapSimilarityPairDtoList(SimilarityPairDtos, includeParameterValues);
+        var result = mapper.MapSimilarityPairList(similarityPairs, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairDtoListEqualDtoList(
-            SimilarityPairDtos,
+        AnalysisMapperAssertions.AssertSimilarityPairModelListEqualDtoList(
+            similarityPairs,
             result,
             includeParameterValues);
     }

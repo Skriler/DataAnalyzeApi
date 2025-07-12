@@ -37,7 +37,7 @@ public static class AnalysisResultAssertions
 
         Assert.All(
             result.Clusters,
-            cluster => AssertCluster(cluster, expectParameterValues));
+            cluster => AssertClusterDto(cluster, expectParameterValues));
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public static class AnalysisResultAssertions
     /// otherwise, ensures they are null.
     /// </summary>
     private static void AssertSimilarityPairDto(
-        SimilarityPairDtoDto similarity,
+        SimilarityPairDto similarity,
         bool expectParameterValues)
     {
         AssertParameterValues(similarity.ObjectA, expectParameterValues);
@@ -54,11 +54,11 @@ public static class AnalysisResultAssertions
     }
 
     /// <summary>
-    /// Verifies that all objects in the cluster have expected parameter values,
+    /// Verifies that all objects in the ClusterDto have expected parameter values,
     /// present and non-empty if expectParameterValues is true,
     /// otherwise, ensures they are null.
     /// </summary>
-    private static void AssertCluster(ClusterDto cluster, bool expectParameterValues) =>
+    private static void AssertClusterDto(ClusterDto cluster, bool expectParameterValues) =>
         Assert.All(cluster.Objects, obj => AssertParameterValues(obj, expectParameterValues));
 
     /// <summary>

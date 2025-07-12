@@ -10,10 +10,10 @@ namespace DataAnalyzeApi.Unit.Common.Assertions;
 public static class AnalysisMapperAssertions
 {
     /// <summary>
-    /// Verifies that the Cluster matches the expected ClusterDto.
+    /// Verifies that the ClusterModel matches the expected ClusterDto.
     /// </summary>
-    public static void AssertClusterEqualDto(
-        Cluster cluster,
+    public static void AssertClusterModelEqualDto(
+        ClusterModel cluster,
         ClusterDto result,
         bool includeParameterValues)
     {
@@ -27,10 +27,10 @@ public static class AnalysisMapperAssertions
     }
 
     /// <summary>
-    /// Verifies that Cluster list matches the expected ClusterDto list.
+    /// Verifies that ClusterModel list matches the expected ClusterDto list.
     /// </summary>
-    public static void AssertClusterListsEqualDtoList(
-        List<Cluster> clusters,
+    public static void AssertClusterModelListsEqualDtoList(
+        List<ClusterModel> clusters,
         List<ClusterDto> result,
         bool includeParameterValues)
     {
@@ -38,16 +38,16 @@ public static class AnalysisMapperAssertions
 
         for (int i = 0; i < clusters.Count; ++i)
         {
-            AssertClusterEqualDto(clusters[i], result[i], includeParameterValues);
+            AssertClusterModelEqualDto(clusters[i], result[i], includeParameterValues);
         }
     }
 
     /// <summary>
-    /// Verifies that a SimilarityPairDto matches the expected SimilarityPairDtoDto.
+    /// Verifies that a SimilarityPairModel matches the expected SimilarityPairDto.
     /// </summary>
-    public static void AssertSimilarityPairDtoEqualDto(
-        SimilarityPairDto expected,
-        SimilarityPairDtoDto actual,
+    public static void AssertSimilarityPairModelEqualDto(
+        SimilarityPairModel expected,
+        SimilarityPairDto actual,
         bool includeParameterValues)
     {
         Assert.Equal(expected.SimilarityPercentage, actual.SimilarityPercentage);
@@ -56,18 +56,18 @@ public static class AnalysisMapperAssertions
     }
 
     /// <summary>
-    /// Verifies that SimilarityPairDto list matches the expected SimilarityPairDtoDto list.
+    /// Verifies that SimilarityPairModel list matches the expected SimilarityPairDto list.
     /// </summary>
-    public static void AssertSimilarityPairDtoListEqualDtoList(
-        List<SimilarityPairDto> expectedList,
-        List<SimilarityPairDtoDto> actualList,
+    public static void AssertSimilarityPairModelListEqualDtoList(
+        List<SimilarityPairModel> expectedList,
+        List<SimilarityPairDto> actualList,
         bool includeParameterValues)
     {
         Assert.Equal(expectedList.Count, actualList.Count);
 
         for (int i = 0; i < expectedList.Count; ++i)
         {
-            AssertSimilarityPairDtoEqualDto(expectedList[i], actualList[i], includeParameterValues);
+            AssertSimilarityPairModelEqualDto(expectedList[i], actualList[i], includeParameterValues);
         }
     }
 
