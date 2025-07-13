@@ -8,18 +8,18 @@ public class SimilarityCacheService(ICacheService cacheService)
 {
     private readonly ICacheService cacheService = cacheService;
 
-    public async Task<SimilarityResult?> GetCachedResultAsync(
+    public async Task<SimilarityAnalysisResultDto?> GetCachedResultAsync(
         long datasetId,
         SimilarityRequest? request)
     {
         var cacheKey = BuildCacheKey(datasetId, request);
-        return await cacheService.GetAsync<SimilarityResult>(cacheKey);
+        return await cacheService.GetAsync<SimilarityAnalysisResultDto>(cacheKey);
     }
 
     public async Task CacheResultAsync(
         long datasetId,
         SimilarityRequest? request,
-        SimilarityResult result)
+        SimilarityAnalysisResultDto result)
     {
         var cacheKey = BuildCacheKey(datasetId, request);
         await cacheService.SetAsync(cacheKey, result);

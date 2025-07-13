@@ -10,7 +10,7 @@ public static class AnalysisResultAssertions
     /// Verifies that the SimilarityResult is valid and contains expected data.
     /// </summary>
     public static void AssertSimilarityResult(
-        SimilarityResult? result,
+        SimilarityAnalysisResultDto? result,
         long expectedDatasetId,
         bool expectParameterValues)
     {
@@ -27,7 +27,7 @@ public static class AnalysisResultAssertions
     /// Verifies that the ClusteringResult is valid and contains expected data.
     /// </summary>
     public static void AssertClusteringResult(
-        ClusteringResult? result,
+        ClusterAnalysisResultDto? result,
         long expectedDatasetId,
         bool expectParameterValues)
     {

@@ -28,7 +28,7 @@ public class SimilarityControllerIntegrationTests : IntegrationTestBase
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var result = await response.Content.ReadFromJsonAsync<SimilarityResult>();
+        var result = await response.Content.ReadFromJsonAsync<SimilarityAnalysisResultDto>();
         AnalysisResultAssertions.AssertSimilarityResult(
             result,
             datasetId,
@@ -56,10 +56,10 @@ public class SimilarityControllerIntegrationTests : IntegrationTestBase
         Assert.Equal(HttpStatusCode.OK, firstResponse.StatusCode);
         Assert.Equal(HttpStatusCode.OK, secondResponse.StatusCode);
 
-        var firstResult = await firstResponse.Content.ReadFromJsonAsync<SimilarityResult>();
+        var firstResult = await firstResponse.Content.ReadFromJsonAsync<SimilarityAnalysisResultDto>();
         AnalysisResultAssertions.AssertSimilarityResult(firstResult, datasetId, includeParameters);
 
-        var secondResult = await secondResponse.Content.ReadFromJsonAsync<SimilarityResult>();
+        var secondResult = await secondResponse.Content.ReadFromJsonAsync<SimilarityAnalysisResultDto>();
         AnalysisResultAssertions.AssertSimilarityResult(secondResult, datasetId, includeParameters);
     }
 

@@ -1,11 +1,11 @@
-﻿using AutoFixture;
+using AutoFixture;
 using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 
-public class DtoTestDataFactory
+public class DatasetDtoTestFactory
 {
     protected readonly Fixture fixture = new();
 

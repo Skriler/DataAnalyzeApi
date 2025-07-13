@@ -1,12 +1,13 @@
-using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers.Analysis;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
-namespace DataAnalyzeApi.Unit.Tests.Mappers;
+namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis;
 
 [Trait("Category", "Unit")]
 [Trait("Component", "Mapper")]
+[Trait("SubComponent", "Analysis")]
 public class AnalysisMapperTest
 {
     private readonly AnalysisMapper mapper = new();
@@ -93,7 +94,7 @@ public class AnalysisMapperTest
         var result = mapper.MapClusterList(clusters, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterModelListsEqualDtoList(
+        AnalysisMapperAssertions.AssertClusterModelListEqualDtoList(
             clusters,
             result,
             includeParameterValues);
@@ -146,7 +147,7 @@ public class AnalysisMapperTest
         var result = mapper.MapClusterList(clusters, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterModelListsEqualDtoList(
+        AnalysisMapperAssertions.AssertClusterModelListEqualDtoList(
             clusters,
             result,
             includeParameterValues);

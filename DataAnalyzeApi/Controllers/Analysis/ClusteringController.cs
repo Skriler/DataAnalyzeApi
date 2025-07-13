@@ -23,13 +23,13 @@ public class ClusteringController(
     /// <param name="request">K-Means clustering configuration parameters</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
     [HttpPost("kmeans/{datasetId:long}")]
-    [ProducesResponseType(typeof(ClusteringResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ClusterAnalysisResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ClusteringResult>> CalculateKMeansClusters(
+    public async Task<ActionResult<ClusterAnalysisResultDto>> CalculateKMeansClusters(
         [FromRoute][ValidId] long datasetId,
         [FromBody] KMeansClusteringRequest request)
     {
@@ -56,13 +56,13 @@ public class ClusteringController(
     /// <param name="request">DBSCAN clustering configuration parameters</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
     [HttpPost("dbscan/{datasetId:long}")]
-    [ProducesResponseType(typeof(ClusteringResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ClusterAnalysisResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ClusteringResult>> CalculateDBSCANClusters(
+    public async Task<ActionResult<ClusterAnalysisResultDto>> CalculateDBSCANClusters(
         [FromRoute][ValidId] long datasetId,
         [FromBody] DBSCANClusteringRequest request)
     {
@@ -88,13 +88,13 @@ public class ClusteringController(
     /// <param name="request">Agglomerative clustering configuration parameters</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
     [HttpPost("agglomerative/{datasetId:long}")]
-    [ProducesResponseType(typeof(ClusteringResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ClusterAnalysisResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ClusteringResult>> CalculateAgglomerativeClusters(
+    public async Task<ActionResult<ClusterAnalysisResultDto>> CalculateAgglomerativeClusters(
         [FromRoute][ValidId] long datasetId,
         [FromBody] AgglomerativeClusteringRequest request)
     {
@@ -121,7 +121,7 @@ public class ClusteringController(
     /// <param name="request">The base clustering request containing configuration parameters</param>
     /// <param name="settings">The specific settings for the selected algorithm</param>
     /// <returns>An action result containing the clustering results or an error response</returns>
-    private async Task<ActionResult<ClusteringResult>> CalculateClusters<TSettings>(
+    private async Task<ActionResult<ClusterAnalysisResultDto>> CalculateClusters<TSettings>(
         long datasetId,
         BaseClusteringRequest request,
         TSettings settings

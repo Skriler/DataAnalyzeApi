@@ -1,4 +1,4 @@
-using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers.Analysis;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
@@ -22,7 +22,7 @@ public class ClusteringService(
     /// <summary>
     /// Performs clustering analysis on the given dataset using the specified algorithm and settings.
     /// </summary>
-    public async Task<ClusteringResult> PerformAnalysisAsync<TSettings>(
+    public async Task<ClusterAnalysisResultDto> PerformAnalysisAsync<TSettings>(
         DatasetModel dataset,
         BaseClusteringRequest request,
         TSettings settings) where TSettings : BaseClusterSettings
@@ -32,7 +32,7 @@ public class ClusteringService(
 
         var clustersDto = analysisMapper.MapClusterList(clusters, settings.IncludeParameters);
 
-        var clusteringResult = new ClusteringResult()
+        var clusteringResult = new ClusterAnalysisResultDto()
         {
             DatasetId = dataset.Id,
             Clusters = clustersDto,
@@ -46,7 +46,7 @@ public class ClusteringService(
     /// <summary>
     /// Retrieves a cached clustering result for the given dataset, algorithm, and request, if available.
     /// </summary>
-    public async Task<ClusteringResult?> GetCachedResultAsync(
+    public async Task<ClusterAnalysisResultDto?> GetCachedResultAsync(
         long datasetId,
         ClusterAlgorithm algorithm,
         BaseClusteringRequest request)

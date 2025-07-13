@@ -9,7 +9,7 @@ namespace DataAnalyzeApi.Unit.Tests.Services.Validation;
 [Trait("SubComponent", "DatasetValidator")]
 public class DatasetValidatorTests
 {
-    private readonly DtoTestDataFactory factory = new();
+    private readonly DatasetDtoTestFactory factory = new();
     private readonly DatasetValidator validator = new();
 
     [Fact]

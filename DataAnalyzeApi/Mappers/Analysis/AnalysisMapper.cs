@@ -5,7 +5,7 @@ using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
-namespace DataAnalyzeApi.Mappers;
+namespace DataAnalyzeApi.Mappers.Analysis;
 
 public class AnalysisMapper
 {

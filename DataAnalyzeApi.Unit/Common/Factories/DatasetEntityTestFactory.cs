@@ -1,10 +1,10 @@
-﻿using AutoFixture;
+using AutoFixture;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 
-public class EntityTestDataFactory
+public class DatasetEntityTestFactory
 {
     protected readonly Fixture fixture = new();
 

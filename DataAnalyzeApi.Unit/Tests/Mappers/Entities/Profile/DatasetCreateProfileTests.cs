@@ -1,28 +1,29 @@
 using AutoMapper;
-using DataAnalyzeApi.Mappers.Profiles;
+using DataAnalyzeApi.Mappers.Entities.Profiles;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
-namespace DataAnalyzeApi.Unit.Tests.Mappers;
+namespace DataAnalyzeApi.Unit.Tests.Mappers.Entities.Profile;
 
 [Trait("Category", "Unit")]
 [Trait("Component", "Mapper")]
-public class DatasetProfileTests
+[Trait("SubComponent", "Entities")]
+public class DatasetCreateProfileTests
 {
     private readonly IMapper mapper;
-    private readonly DtoTestDataFactory dtoTestDataFactory;
-    private readonly EntityTestDataFactory entityTestDataFactory;
+    private readonly DatasetDtoTestFactory dtoTestDataFactory;
+    private readonly DatasetEntityTestFactory entityTestDataFactory;
 
-    public DatasetProfileTests()
+    public DatasetCreateProfileTests()
     {
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DatasetCreateProfile>());
 
         mapper = configuration.CreateMapper();
-        dtoTestDataFactory = new DtoTestDataFactory();
-        entityTestDataFactory = new EntityTestDataFactory();
+        dtoTestDataFactory = new DatasetDtoTestFactory();
+        entityTestDataFactory = new DatasetEntityTestFactory();
     }
 
     [Theory]

@@ -9,20 +9,20 @@ public class ClusteringCacheService(ICacheService cacheService)
 {
     private readonly ICacheService cacheService = cacheService;
 
-    public async Task<ClusteringResult?> GetCachedResultAsync(
+    public async Task<ClusterAnalysisResultDto?> GetCachedResultAsync(
         long datasetId,
         ClusterAlgorithm algorithm,
         BaseClusteringRequest request)
     {
         var cacheKey = BuildCacheKey(datasetId, algorithm, request);
-        return await cacheService.GetAsync<ClusteringResult>(cacheKey);
+        return await cacheService.GetAsync<ClusterAnalysisResultDto>(cacheKey);
     }
 
     public async Task CacheResultAsync(
         long datasetId,
         ClusterAlgorithm algorithm,
         BaseClusteringRequest request,
-        ClusteringResult result)
+        ClusterAnalysisResultDto result)
     {
         var cacheKey = BuildCacheKey(datasetId, algorithm, request);
         await cacheService.SetAsync(cacheKey, result);

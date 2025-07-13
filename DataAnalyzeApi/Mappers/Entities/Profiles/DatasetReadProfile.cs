@@ -2,7 +2,7 @@ using AutoMapper;
 using DataAnalyzeApi.Models.DTOs.Dataset.Read;
 using DataAnalyzeApi.Models.Entities;
 
-namespace DataAnalyzeApi.Mappers.Profiles;
+namespace DataAnalyzeApi.Mappers.Profiles.Entities;
 
 /// <summary>
 /// AutoMapper profile for Dataset read operations (Dataset -> DatasetDto)

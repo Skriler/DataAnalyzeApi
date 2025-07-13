@@ -2,8 +2,11 @@ using System.Text;
 using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.DAL.Seeders;
-using DataAnalyzeApi.Mappers;
-using DataAnalyzeApi.Mappers.Profiles;
+using DataAnalyzeApi.Mappers.Analysis;
+using DataAnalyzeApi.Mappers.Analysis.Profiles;
+using DataAnalyzeApi.Mappers.Entities;
+using DataAnalyzeApi.Mappers.Entities.Profiles;
+using DataAnalyzeApi.Mappers.Profiles.Entities;
 using DataAnalyzeApi.Middlewares;
 using DataAnalyzeApi.Models.Config;
 using DataAnalyzeApi.Models.Config.Identity;
@@ -201,6 +204,8 @@ public static class ServiceCollectionExtensions
         return services
             .AddAutoMapper(typeof(DatasetReadProfile))
             .AddAutoMapper(typeof(DatasetCreateProfile))
+            .AddAutoMapper(typeof(SimilarityAnalysisResultProfile))
+            .AddAutoMapper(typeof(ClusterAnalysisResultProfile))
             .AddScoped<DatasetSettingsMapper>()
             .AddScoped<AnalysisMapper>();
     }

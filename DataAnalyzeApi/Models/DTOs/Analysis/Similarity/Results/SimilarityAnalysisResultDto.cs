@@ -1,6 +1,6 @@
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
-public record SimilarityResult
+public record SimilarityAnalysisResultDto
 {
     public long DatasetId { get; init; }
 

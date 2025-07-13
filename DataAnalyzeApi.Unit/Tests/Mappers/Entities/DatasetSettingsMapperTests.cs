@@ -1,17 +1,18 @@
-using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers.Entities;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
-namespace DataAnalyzeApi.Unit.Tests.Mappers;
+namespace DataAnalyzeApi.Unit.Tests.Mappers.Entities;
 
 [Trait("Category", "Unit")]
 [Trait("Component", "Mapper")]
+[Trait("SubComponent", "Entities")]
 public class DatasetSettingsMapperTests
 {
     private readonly DatasetSettingsMapper mapper = new();
-    private readonly EntityTestDataFactory entityTestDataFactory = new();
-    private readonly DtoTestDataFactory dtoTestDataFactory = new();
+    private readonly DatasetEntityTestFactory entityTestDataFactory = new();
+    private readonly DatasetDtoTestFactory dtoTestDataFactory = new();
 
     [Theory]
     [InlineData(

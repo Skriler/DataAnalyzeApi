@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Models.Enum;
 
-namespace DataAnalyzeApi.Mappers.Profiles;
+namespace DataAnalyzeApi.Mappers.Entities.Profiles;
 
 /// <summary>
 /// AutoMapper profile for Dataset creation operations (Dataset <-> DatasetCreateDto)

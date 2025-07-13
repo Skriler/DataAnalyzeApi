@@ -1,6 +1,6 @@
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.Exceptions;
-using DataAnalyzeApi.Mappers;
+using DataAnalyzeApi.Mappers.Entities;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Entities;

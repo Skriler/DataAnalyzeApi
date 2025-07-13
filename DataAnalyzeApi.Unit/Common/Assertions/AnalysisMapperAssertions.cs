@@ -29,7 +29,7 @@ public static class AnalysisMapperAssertions
     /// <summary>
     /// Verifies that ClusterModel list matches the expected ClusterDto list.
     /// </summary>
-    public static void AssertClusterModelListsEqualDtoList(
+    public static void AssertClusterModelListEqualDtoList(
         List<ClusterModel> clusters,
         List<ClusterDto> result,
         bool includeParameterValues)

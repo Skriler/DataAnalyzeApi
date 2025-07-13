@@ -1,6 +1,6 @@
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 
-public record ClusteringResult
+public record ClusterAnalysisResultDto
 {
     public long DatasetId { get; set; }
 

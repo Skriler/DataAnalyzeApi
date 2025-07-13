@@ -24,13 +24,13 @@ public class SimilarityController(
     /// <param name="request">Similarity configuration parameters (optional)</param>
     /// <returns>An action result containing the similarity results or an error response</returns>
     [HttpPost("{datasetId:long}")]
-    [ProducesResponseType(typeof(SimilarityResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SimilarityAnalysisResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<SimilarityResult>> CalculateSimilarity(
+    public async Task<ActionResult<SimilarityAnalysisResultDto>> CalculateSimilarity(
         [FromRoute][ValidId] long datasetId,
         [FromBody] SimilarityRequest? request)
     {

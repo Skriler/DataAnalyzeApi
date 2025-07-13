@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Entities;
 using ParamConfig = DataAnalyzeApi.Models.Config.ParameterSettingsConfig;
 
-namespace DataAnalyzeApi.Mappers;
+namespace DataAnalyzeApi.Mappers.Entities;
 
 public class DatasetSettingsMapper
 {
