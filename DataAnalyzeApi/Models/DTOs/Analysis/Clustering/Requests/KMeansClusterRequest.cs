@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.Config.Clustering;
 
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 
-public record KMeansClusteringRequest : BaseClusteringRequest
+public record KMeansClusterRequest : BaseClusteringRequest
 {
     [Range(KMeansConfig.MaxIterations.MinAllowed, KMeansConfig.MaxIterations.MaxAllowed)]
     public int MaxIterations { get; init; } = KMeansConfig.MaxIterations.Default;

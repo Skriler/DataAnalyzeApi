@@ -16,21 +16,20 @@ namespace DataAnalyzeApi.Migrations
                 name: "AnalysisResultSequence");
 
             migrationBuilder.CreateTable(
-                name: "ClusterAnalysisResults",
+                name: "ClusteringAnalysisResults",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false, defaultValueSql: "nextval('\"AnalysisResultSequence\"')"),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RequestHash = table.Column<string>(type: "text", nullable: false),
-                    IncludeParameters = table.Column<bool>(type: "boolean", nullable: false),
                     DatasetId = table.Column<long>(type: "bigint", nullable: false),
                     Algorithm = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClusterAnalysisResults", x => x.Id);
+                    table.PrimaryKey("PK_ClusteringAnalysisResults", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClusterAnalysisResults_Datasets_DatasetId",
+                        name: "FK_ClusteringAnalysisResults_Datasets_DatasetId",
                         column: x => x.DatasetId,
                         principalTable: "Datasets",
                         principalColumn: "Id",
@@ -44,7 +43,6 @@ namespace DataAnalyzeApi.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false, defaultValueSql: "nextval('\"AnalysisResultSequence\"')"),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RequestHash = table.Column<string>(type: "text", nullable: false),
-                    IncludeParameters = table.Column<bool>(type: "boolean", nullable: false),
                     DatasetId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -64,15 +62,15 @@ namespace DataAnalyzeApi.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ClusterAnalysisResultId = table.Column<long>(type: "bigint", nullable: false)
+                    ClusteringAnalysisResultId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clusters", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clusters_ClusterAnalysisResults_ClusterAnalysisResultId",
-                        column: x => x.ClusterAnalysisResultId,
-                        principalTable: "ClusterAnalysisResults",
+                        name: "FK_Clusters_ClusteringAnalysisResults_ClusteringAnalysisResult~",
+                        column: x => x.ClusteringAnalysisResultId,
+                        principalTable: "ClusteringAnalysisResults",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -136,24 +134,24 @@ namespace DataAnalyzeApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClusterAnalysisResults_DatasetId",
-                table: "ClusterAnalysisResults",
-                column: "DatasetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClusterAnalysisResults_RequestHash",
-                table: "ClusterAnalysisResults",
-                column: "RequestHash");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ClusterDataObjects_ObjectsId",
                 table: "ClusterDataObjects",
                 column: "ObjectsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clusters_ClusterAnalysisResultId",
+                name: "IX_ClusteringAnalysisResults_DatasetId",
+                table: "ClusteringAnalysisResults",
+                column: "DatasetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClusteringAnalysisResults_RequestHash",
+                table: "ClusteringAnalysisResults",
+                column: "RequestHash");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clusters_ClusteringAnalysisResultId",
                 table: "Clusters",
-                column: "ClusterAnalysisResultId");
+                column: "ClusteringAnalysisResultId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SimilarityAnalysisResults_DatasetId",
@@ -197,7 +195,7 @@ namespace DataAnalyzeApi.Migrations
                 name: "SimilarityAnalysisResults");
 
             migrationBuilder.DropTable(
-                name: "ClusterAnalysisResults");
+                name: "ClusteringAnalysisResults");
 
             migrationBuilder.DropSequence(
                 name: "AnalysisResultSequence");

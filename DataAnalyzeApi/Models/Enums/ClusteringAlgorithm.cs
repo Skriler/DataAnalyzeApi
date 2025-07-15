@@ -1,6 +1,6 @@
 namespace DataAnalyzeApi.Models.Enums;
 
-public enum ClusterAlgorithm
+public enum ClusteringAlgorithm
 {
     KMeans,
     DBSCAN,

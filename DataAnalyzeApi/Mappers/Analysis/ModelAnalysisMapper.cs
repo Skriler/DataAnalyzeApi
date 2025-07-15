@@ -7,8 +7,18 @@ using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
 namespace DataAnalyzeApi.Mappers.Analysis;
 
-public class AnalysisMapper
+/// <summary>
+/// Mapper for converting domain models to analysis DTOs.
+/// Handles ClusterModel and SimilarityPairModel conversions.
+/// </summary>
+public class ModelAnalysisMapper
 {
+    /// <summary>
+    /// Maps ClusterModel list to dto list.
+    /// </summary>
+    public virtual List<ClusterDto> MapClusterList(List<ClusterModel> clusters, bool includeParameters = false)
+        => clusters.ConvertAll(c => MapCluster(c, includeParameters));
+
     /// <summary>
     /// Maps ClusterModel to its DTO.
     /// </summary>
@@ -21,10 +31,10 @@ public class AnalysisMapper
     }
 
     /// <summary>
-    /// Maps ClusterModel list to dto list.
+    /// Maps SimilarityPairModel list to their DTOs.
     /// </summary>
-    public virtual List<ClusterDto> MapClusterList(List<ClusterModel> clusters, bool includeParameters = false)
-        => clusters.ConvertAll(c => MapCluster(c, includeParameters));
+    public virtual List<SimilarityPairDto> MapSimilarityPairList(List<SimilarityPairModel> pairs, bool includeParameters = false)
+        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
 
     /// <summary>
     /// Maps SimilarityPairModel to its DTO.
@@ -37,12 +47,6 @@ public class AnalysisMapper
             pair.SimilarityPercentage
             );
     }
-
-    /// <summary>
-    /// Maps SimilarityPairModel list to their DTOs.
-    /// </summary>
-    public virtual List<SimilarityPairDto> MapSimilarityPairList(List<SimilarityPairModel> pairs, bool includeParameters = false)
-        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
 
     /// <summary>
     /// Maps DataObjectModel to its DTO.

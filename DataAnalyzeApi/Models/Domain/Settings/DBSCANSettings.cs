@@ -9,7 +9,7 @@ public record DBSCANSettings(
     double Epsilon,
     int MinPoints
 ) : BaseClusterSettings(
-    ClusterAlgorithm.DBSCAN,
+    ClusteringAlgorithm.DBSCAN,
     NumericMetric,
     CategoricalMetric,
     IncludeParameters

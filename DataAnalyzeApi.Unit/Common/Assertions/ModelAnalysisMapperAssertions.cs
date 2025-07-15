@@ -7,7 +7,7 @@ using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 
 namespace DataAnalyzeApi.Unit.Common.Assertions;
 
-public static class AnalysisMapperAssertions
+public static class ModelAnalysisMapperAssertions
 {
     /// <summary>
     /// Verifies that the ClusterModel matches the expected ClusterDto.

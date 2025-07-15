@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.Config.Clustering;
 
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 
-public record DBSCANClusteringRequest : BaseClusteringRequest
+public record DBSCANClusterRequest : BaseClusteringRequest
 {
     [Range(DBSCANConfig.Epsilon.MinAllowed, DBSCANConfig.Epsilon.MaxAllowed)]
     public double Epsilon { get; init; } = DBSCANConfig.Epsilon.Default;

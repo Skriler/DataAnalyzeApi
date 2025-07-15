@@ -19,11 +19,11 @@ public class DataAnalyzeDbContext(
 
     public DbSet<ParameterValue> ParameterValues { get; set; }
 
-    public DbSet<SimilarityAnalysisResult> SimilarityAnalyses { get; set; }
+    public DbSet<SimilarityAnalysisResult> SimilarityAnalysisResults { get; set; }
 
     public DbSet<SimilarityPair> SimilarityPairs { get; set; }
 
-    public DbSet<ClusterAnalysisResult> ClusterAnalyses { get; set; }
+    public DbSet<ClusteringAnalysisResult> ClusteringAnalysisResults { get; set; }
 
     public DbSet<Cluster> Clusters { get; set; }
 
@@ -43,7 +43,7 @@ public class DataAnalyzeDbContext(
         // Configure inheritance strategy for AnalysisResult
         modelBuilder.Entity<AnalysisResult>().UseTpcMappingStrategy();
         modelBuilder.Entity<SimilarityAnalysisResult>().ToTable("SimilarityAnalysisResults");
-        modelBuilder.Entity<ClusterAnalysisResult>().ToTable("ClusterAnalysisResults");
+        modelBuilder.Entity<ClusteringAnalysisResult>().ToTable("ClusteringAnalysisResults");
 
         // Main entities relationships - cascade delete enabled for all child entities
         modelBuilder.Entity<Dataset>(entity =>
@@ -91,16 +91,16 @@ public class DataAnalyzeDbContext(
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        modelBuilder.Entity<ClusterAnalysisResult>()
+        modelBuilder.Entity<ClusteringAnalysisResult>()
             .HasOne(ca => ca.Dataset)
             .WithMany()
             .HasForeignKey(ca => ca.DatasetId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Cluster>()
-            .HasOne(c => c.ClusterAnalysisResult)
+            .HasOne(c => c.ClusteringAnalysisResult)
             .WithMany(ca => ca.Clusters)
-            .HasForeignKey(c => c.ClusterAnalysisResultId)
+            .HasForeignKey(c => c.ClusteringAnalysisResultId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Cluster>()

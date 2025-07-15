@@ -29,7 +29,7 @@ public class ClusteringControllerIntegrationTests : IntegrationTestBase
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var result = await response.Content.ReadFromJsonAsync<ClusterAnalysisResultDto>();
+        var result = await response.Content.ReadFromJsonAsync<ClusteringAnalysisResultDto>();
         AnalysisResultAssertions.AssertClusteringResult(
             result,
             datasetId,
@@ -62,10 +62,10 @@ public class ClusteringControllerIntegrationTests : IntegrationTestBase
         Assert.Equal(HttpStatusCode.OK, firstResponse.StatusCode);
         Assert.Equal(HttpStatusCode.OK, secondResponse.StatusCode);
 
-        var firstResult = await firstResponse.Content.ReadFromJsonAsync<ClusterAnalysisResultDto>();
+        var firstResult = await firstResponse.Content.ReadFromJsonAsync<ClusteringAnalysisResultDto>();
         AnalysisResultAssertions.AssertClusteringResult(firstResult, datasetId, includeParameters);
 
-        var secondResult = await secondResponse.Content.ReadFromJsonAsync<ClusterAnalysisResultDto>();
+        var secondResult = await secondResponse.Content.ReadFromJsonAsync<ClusteringAnalysisResultDto>();
         AnalysisResultAssertions.AssertClusteringResult(secondResult, datasetId, includeParameters);
     }
 

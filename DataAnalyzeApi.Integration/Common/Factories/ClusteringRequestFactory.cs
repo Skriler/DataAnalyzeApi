@@ -12,7 +12,7 @@ public static class ClusteringRequestFactory
     /// <summary>
     /// Creates a KMeans clustering request with the given configuration.
     /// </summary>
-    public static KMeansClusteringRequest CreateKMeans(
+    public static KMeansClusterRequest CreateKMeans(
         bool includeParameters,
         int numberOfClusters,
         int maxIterations,
@@ -20,7 +20,7 @@ public static class ClusteringRequestFactory
         CategoricalDistanceMetricType categoricalMetric = CategoricalDistanceMetricType.Hamming,
         List<ParameterSettingsDto>? parameterSettings = null)
     {
-        return new KMeansClusteringRequest
+        return new KMeansClusterRequest
         {
             NumericMetric = numericMetric,
             CategoricalMetric = categoricalMetric,
@@ -34,7 +34,7 @@ public static class ClusteringRequestFactory
     /// <summary>
     /// Creates a DBSCAN clustering request with the given configuration.
     /// </summary>
-    public static DBSCANClusteringRequest CreateDBSCAN(
+    public static DBSCANClusterRequest CreateDBSCAN(
         bool includeParameters,
         double epsilon,
         int minPoints,
@@ -42,7 +42,7 @@ public static class ClusteringRequestFactory
         CategoricalDistanceMetricType categoricalMetric = CategoricalDistanceMetricType.Hamming,
         List<ParameterSettingsDto>? parameterSettings = null)
     {
-        return new DBSCANClusteringRequest
+        return new DBSCANClusterRequest
         {
             NumericMetric = numericMetric,
             CategoricalMetric = categoricalMetric,
@@ -56,14 +56,14 @@ public static class ClusteringRequestFactory
     /// <summary>
     /// Creates an Agglomerative clustering request with the given configuration.
     /// </summary>
-    public static AgglomerativeClusteringRequest CreateAgglomerative(
+    public static AgglomerativeClusterRequest CreateAgglomerative(
         bool includeParameters,
         double threshold,
         NumericDistanceMetricType numericMetric = NumericDistanceMetricType.Euclidean,
         CategoricalDistanceMetricType categoricalMetric = CategoricalDistanceMetricType.Hamming,
         List<ParameterSettingsDto>? parameterSettings = null)
     {
-        return new AgglomerativeClusteringRequest
+        return new AgglomerativeClusterRequest
         {
             NumericMetric = numericMetric,
             CategoricalMetric = categoricalMetric,

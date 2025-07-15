@@ -8,10 +8,10 @@ namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis;
 [Trait("Category", "Unit")]
 [Trait("Component", "Mapper")]
 [Trait("SubComponent", "Analysis")]
-public class AnalysisMapperTest
+public class ModelAnalysisMapperTest
 {
-    private readonly AnalysisMapper mapper = new();
-    private readonly AnalysisModelFactory analysisModelFactory = new();
+    private readonly ModelAnalysisMapper mapper = new();
+    private readonly ModelAnalysisTestFactory analysisModelFactory = new();
 
     [Fact]
     public void MapClusterModel_ReturnsCorrectClusterDto()
@@ -41,7 +41,7 @@ public class AnalysisMapperTest
         var result = mapper.MapCluster(cluster, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterModelEqualDto(
+        ModelAnalysisMapperAssertions.AssertClusterModelEqualDto(
             cluster,
             result,
             includeParameterValues);
@@ -94,7 +94,7 @@ public class AnalysisMapperTest
         var result = mapper.MapClusterList(clusters, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterModelListEqualDtoList(
+        ModelAnalysisMapperAssertions.AssertClusterModelListEqualDtoList(
             clusters,
             result,
             includeParameterValues);
@@ -147,7 +147,7 @@ public class AnalysisMapperTest
         var result = mapper.MapClusterList(clusters, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertClusterModelListEqualDtoList(
+        ModelAnalysisMapperAssertions.AssertClusterModelListEqualDtoList(
             clusters,
             result,
             includeParameterValues);
@@ -164,7 +164,7 @@ public class AnalysisMapperTest
         var result = mapper.MapSimilarityPair(similarityPair, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairModelEqualDto(
+        ModelAnalysisMapperAssertions.AssertSimilarityPairModelEqualDto(
             similarityPair,
             result,
             includeParameterValues);
@@ -181,7 +181,7 @@ public class AnalysisMapperTest
         var result = mapper.MapSimilarityPairList(similarityPairs, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairModelListEqualDtoList(
+        ModelAnalysisMapperAssertions.AssertSimilarityPairModelListEqualDtoList(
             similarityPairs,
             result,
             includeParameterValues);
@@ -198,7 +198,7 @@ public class AnalysisMapperTest
         var result = mapper.MapSimilarityPairList(similarityPairs, includeParameterValues);
 
         // Assert
-        AnalysisMapperAssertions.AssertSimilarityPairModelListEqualDtoList(
+        ModelAnalysisMapperAssertions.AssertSimilarityPairModelListEqualDtoList(
             similarityPairs,
             result,
             includeParameterValues);

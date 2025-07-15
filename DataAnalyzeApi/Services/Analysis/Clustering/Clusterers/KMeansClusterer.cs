@@ -14,7 +14,7 @@ public class KMeansClusterer(
     CentroidCalculator centroidCalculator
     ) : BaseClusterer<KMeansSettings>(distanceCalculator, nameGenerator)
 {
-    protected override string ClusterPrefix => nameof(ClusterAlgorithm.KMeans);
+    protected override string ClusterPrefix => nameof(ClusteringAlgorithm.KMeans);
 
     private readonly CentroidCalculator centroidCalculator = centroidCalculator;
 

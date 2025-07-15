@@ -1,14 +1,7 @@
-using DataAnalyzeApi.Attributes;
-
 namespace DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 
-public record SimilarityRequest
+public record SimilarityRequest : BaseAnalysisRequest
 {
-    [UniqueParameterId]
-    public List<ParameterSettingsDto> ParameterSettings { get; init; } = [];
-
-    /// <summary>
-    /// Include ParameterValues dictionary in responce.
-    /// </summary>
-    public bool IncludeParameters { get; init; }
+    // Marker type for similarity analysis requests.
+    // Contains only common analysis properties via BaseAnalysisRequest.
 }

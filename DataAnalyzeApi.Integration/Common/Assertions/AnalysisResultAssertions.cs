@@ -27,7 +27,7 @@ public static class AnalysisResultAssertions
     /// Verifies that the ClusteringResult is valid and contains expected data.
     /// </summary>
     public static void AssertClusteringResult(
-        ClusterAnalysisResultDto? result,
+        ClusteringAnalysisResultDto? result,
         long expectedDatasetId,
         bool expectParameterValues)
     {

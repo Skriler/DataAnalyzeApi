@@ -12,7 +12,7 @@ public class DBSCANClusterer(
     ClusterNameGenerator nameGenerator
     ) : BaseClusterer<DBSCANSettings>(distanceCalculator, nameGenerator)
 {
-    protected override string ClusterPrefix => nameof(ClusterAlgorithm.DBSCAN);
+    protected override string ClusterPrefix => nameof(ClusteringAlgorithm.DBSCAN);
     protected string NoiseClusterPrefix => "Noise";
 
     /// <summary>

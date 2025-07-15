@@ -9,7 +9,7 @@ public record KMeansSettings(
     int MaxIterations,
     int NumberOfClusters
 ) : BaseClusterSettings(
-    ClusterAlgorithm.KMeans,
+    ClusteringAlgorithm.KMeans,
     NumericMetric,
     CategoricalMetric,
     IncludeParameters

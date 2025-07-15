@@ -2,17 +2,23 @@ using DataAnalyzeApi.Attributes;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using DataAnalyzeApi.Services.Analysis.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataAnalyzeApi.Controllers;
 
+[ApiController]
 [Route("api/analysis/similarity")]
+[Authorize(Policy = "UserOrAdmin")]
+[Produces("application/json")]
 public class SimilarityController(
     DatasetService datasetService,
     SimilarityService similarityService,
     ILogger<SimilarityController> logger
-    ) : BaseAnalysisController<SimilarityController>(datasetService, logger)
+    ) : ControllerBase
 {
+    protected readonly DatasetService datasetService = datasetService;
+    protected readonly ILogger<SimilarityController> logger = logger;
     private readonly SimilarityService similarityService = similarityService;
 
     /// <summary>
@@ -39,23 +45,29 @@ public class SimilarityController(
             return BadRequest(ModelState);
         }
 
-        var cachedResult = await similarityService.GetCachedResultAsync(datasetId, request);
+        var storedResult = await similarityService.GetResultFromCacheOrDbAsync(
+            datasetId,
+            request);
 
-        if (cachedResult != null)
+        if (storedResult != null)
         {
-            logger.LogInformation("Returning cached similarity result for dataset {DatasetId}", datasetId);
-            return cachedResult;
+            logger.LogInformation("Returning stored similarity result for dataset {DatasetId}", datasetId);
+            return storedResult;
         }
 
-        var dataset = await datasetService.GetPreparedDatasetAsync(datasetId, request?.ParameterSettings);
+        var dataset = await datasetService.GetPreparedDatasetAsync(
+            datasetId,
+            request?.ParameterSettings);
 
-        var similarityResult = await similarityService.PerformAnalysisAsync(dataset, request);
+        var result = await similarityService.PerformAnalysisAsync(
+            dataset,
+            request);
 
         logger.LogInformation(
             "Successfully calculated similarity for dataset {DatasetId} with {PairCount} pairs",
             datasetId,
-            similarityResult.Similarities.Count);
+            result.Similarities.Count);
 
-        return similarityResult;
+        return result;
     }
 }

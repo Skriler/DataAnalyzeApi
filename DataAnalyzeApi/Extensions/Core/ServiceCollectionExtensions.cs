@@ -1,8 +1,10 @@
 using System.Text;
 using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Repositories;
+using DataAnalyzeApi.DAL.Repositories.Analysis;
 using DataAnalyzeApi.DAL.Seeders;
 using DataAnalyzeApi.Mappers.Analysis;
+using DataAnalyzeApi.Mappers.Analysis.Entities;
 using DataAnalyzeApi.Mappers.Analysis.Profiles;
 using DataAnalyzeApi.Mappers.Entities;
 using DataAnalyzeApi.Mappers.Entities.Profiles;
@@ -10,6 +12,8 @@ using DataAnalyzeApi.Mappers.Profiles.Entities;
 using DataAnalyzeApi.Middlewares;
 using DataAnalyzeApi.Models.Config;
 using DataAnalyzeApi.Models.Config.Identity;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
+using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
@@ -20,6 +24,7 @@ using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
 using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 using DataAnalyzeApi.Services.Analysis.Metrics.Categorical;
 using DataAnalyzeApi.Services.Analysis.Metrics.Numeric;
+using DataAnalyzeApi.Services.Analysis.Results;
 using DataAnalyzeApi.Services.Auth;
 using DataAnalyzeApi.Services.Cache;
 using DataAnalyzeApi.Services.Normalizers;
@@ -104,6 +109,8 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddScoped<DatasetRepository>()
+            .AddScoped<SimilarityAnalysisResultRepository>()
+            .AddScoped<ClusteringAnalysisResultRepository>()
             .AddScoped<IdentitySeeder>();
     }
 
@@ -195,19 +202,21 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddSingleton<ICacheService, DistributedCacheService>()
-            .AddScoped<ClusteringCacheService>()
-            .AddScoped<SimilarityCacheService>();
+            .AddScoped<AnalysisCacheService<SimilarityAnalysisResultDto>>()
+            .AddScoped<AnalysisCacheService<ClusteringAnalysisResultDto>>();
     }
 
     private static IServiceCollection AddMappers(this IServiceCollection services)
-    {
+    {  
         return services
             .AddAutoMapper(typeof(DatasetReadProfile))
             .AddAutoMapper(typeof(DatasetCreateProfile))
             .AddAutoMapper(typeof(SimilarityAnalysisResultProfile))
-            .AddAutoMapper(typeof(ClusterAnalysisResultProfile))
+            .AddAutoMapper(typeof(ClusteringAnalysisResultProfile))
             .AddScoped<DatasetSettingsMapper>()
-            .AddScoped<AnalysisMapper>();
+            .AddScoped<ModelAnalysisMapper>()
+            .AddScoped<SimlarityEntityAnalysisMapper>()
+            .AddScoped<ClusteringEntityAnalysisMapper>();
     }
 
     private static IServiceCollection AddHelpers(this IServiceCollection services)
@@ -227,6 +236,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ICompare, NormalizedValueComparer>();
 
         // Core services
+        services.AddScoped<SimilarityAnalysisResultService>();
         services.AddScoped<SimilarityService>();
 
         return services;
@@ -258,6 +268,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AgglomerativeClusterer>();
 
         // Core services
+        services.AddScoped<ClusteringAnalysisResultService>();
         services.AddScoped<ClusteringService>();
 
         return services;

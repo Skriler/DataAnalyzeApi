@@ -12,8 +12,6 @@ public abstract class AnalysisResult
 
     public string RequestHash { get; set; } = string.Empty;
 
-    public bool IncludeParameters { get; set; }
-
     [JsonIgnore] public long DatasetId { get; set; }
     [JsonIgnore] public Dataset Dataset { get; set; } = default!;
 }

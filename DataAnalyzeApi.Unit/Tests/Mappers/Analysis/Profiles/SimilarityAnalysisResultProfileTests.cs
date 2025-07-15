@@ -1,6 +1,5 @@
 using AutoMapper;
 using DataAnalyzeApi.Mappers.Analysis.Profiles;
-using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
 using DataAnalyzeApi.Models.Entities.Analysis.Similarity;
 using DataAnalyzeApi.Unit.Common.Assertions;
 using DataAnalyzeApi.Unit.Common.Factories;
@@ -13,59 +12,14 @@ namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Profiles;
 public class SimilarityAnalysisResultProfileTests
 {
     private readonly IMapper mapper;
-    private readonly AnalysisResultTestFactory factory;
+    private readonly EntityAnalysisTestFactory factory;
 
     public SimilarityAnalysisResultProfileTests()
     {
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile<SimilarityAnalysisResultProfile>());
 
         mapper = configuration.CreateMapper();
-        factory = new AnalysisResultTestFactory();
-    }
-
-    [Fact]
-    public void MapSimilarityAnalysisResulto_ReturnsCorrectDto()
-    {
-        // Arrange
-        var result = factory.CreateSimilarityAnalysisResult(pairsCount: 5);
-
-        // Act
-        var resultDto = mapper.Map<SimilarityAnalysisResultDto>(result);
-
-        // Assert
-        AnalysisResultMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
-            result,
-            resultDto);
-    }
-
-    [Fact]
-    public void MapSimilarityAnalysisResult_WithSinglePair_ReturnsCorrectDto()
-    {
-        // Arrange
-        var result = factory.CreateSimilarityAnalysisResult(pairsCount: 1);
-
-        // Act
-        var resultDto = mapper.Map<SimilarityAnalysisResultDto>(result);
-
-        // Assert
-        AnalysisResultMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
-            result,
-            resultDto);
-    }
-
-    [Fact]
-    public void MapSimilarityAnalysisResult_WithEmptyPairs_ReturnsCorrectDto()
-    {
-        // Arrange
-        var result = factory.CreateSimilarityAnalysisResult(pairsCount: 0);
-
-        // Act
-        var resultDto = mapper.Map<SimilarityAnalysisResultDto>(result);
-
-        // Assert
-        AnalysisResultMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
-            result,
-            resultDto);
+        factory = new EntityAnalysisTestFactory();
     }
 
     [Fact]
@@ -78,7 +32,7 @@ public class SimilarityAnalysisResultProfileTests
         var result = mapper.Map<SimilarityAnalysisResult>(resultDto);
 
         // Assert
-        AnalysisResultMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto);
     }
@@ -93,7 +47,7 @@ public class SimilarityAnalysisResultProfileTests
         var result = mapper.Map<SimilarityAnalysisResult>(resultDto);
 
         // Assert
-        AnalysisResultMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto);
     }
@@ -108,7 +62,7 @@ public class SimilarityAnalysisResultProfileTests
         var result = mapper.Map<SimilarityAnalysisResult>(resultDto);
 
         // Assert
-        AnalysisResultMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto);
     }

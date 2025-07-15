@@ -11,6 +11,6 @@ public class Cluster
     [JsonIgnore]
     public List<DataObject> Objects { get; set; } = [];
 
-    public long ClusterAnalysisResultId { get; set; }
-    [JsonIgnore] public ClusterAnalysisResult ClusterAnalysisResult { get; set; } = default!;
+    public long ClusteringAnalysisResultId { get; set; }
+    [JsonIgnore] public ClusteringAnalysisResult ClusteringAnalysisResult { get; set; } = default!;
 }

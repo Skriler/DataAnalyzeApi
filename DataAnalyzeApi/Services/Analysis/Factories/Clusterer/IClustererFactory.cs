@@ -6,5 +6,5 @@ namespace DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
 
 public interface IClustererFactory
 {
-    BaseClusterer<TSettings> Get<TSettings>(ClusterAlgorithm algorithm) where TSettings : BaseClusterSettings;
+    BaseClusterer<TSettings> Get<TSettings>(ClusteringAlgorithm algorithm) where TSettings : BaseClusterSettings;
 }

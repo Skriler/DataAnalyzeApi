@@ -3,26 +3,38 @@ using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
-using DataAnalyzeApi.Models.Enums;
+using DataAnalyzeApi.Models.Entities.Analysis.Clustering;
 using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
+using DataAnalyzeApi.Services.Analysis.Results;
 using DataAnalyzeApi.Services.Cache;
 
 namespace DataAnalyzeApi.Services.Analysis.Core;
 
-public class ClusteringService(
-    DatasetService datasetService,
-    AnalysisMapper analysisMapper,
-    IClustererFactory clustererFactory,
-    ClusteringCacheService cacheService
-    ) : BaseAnalysisService(datasetService, analysisMapper)
+public class ClusteringService
+    : BaseAnalysisService<
+        BaseClusteringRequest,
+        ClusteringAnalysisResult,
+        ClusteringAnalysisResultDto,
+        ClusteringAnalysisResultService>
 {
-    private readonly IClustererFactory clustererFactory = clustererFactory;
-    private readonly ClusteringCacheService cacheService = cacheService;
+    private const string analysisType = "clustering";
+
+    private readonly IClustererFactory clustererFactory;
+
+    public ClusteringService(
+        ModelAnalysisMapper modelAnalysisMapper,
+        IClustererFactory clustererFactory,
+        AnalysisCacheService<ClusteringAnalysisResultDto> cacheService,
+        ClusteringAnalysisResultService resultService
+    ) : base(modelAnalysisMapper, cacheService, resultService, analysisType)
+    {
+        this.clustererFactory = clustererFactory;
+    }
 
     /// <summary>
     /// Performs clustering analysis on the given dataset using the specified algorithm and settings.
     /// </summary>
-    public async Task<ClusterAnalysisResultDto> PerformAnalysisAsync<TSettings>(
+    public async Task<ClusteringAnalysisResultDto> PerformAnalysisAsync<TSettings>(
         DatasetModel dataset,
         BaseClusteringRequest request,
         TSettings settings) where TSettings : BaseClusterSettings
@@ -30,27 +42,21 @@ public class ClusteringService(
         var clusterer = clustererFactory.Get<TSettings>(settings.Algorithm);
         var clusters = clusterer.Cluster(dataset.Objects, settings);
 
-        var clustersDto = analysisMapper.MapClusterList(clusters, settings.IncludeParameters);
+        var clustersDto = modelAnalysisMapper.MapClusterList(
+            clusters,
+            settings.IncludeParameters);
 
-        var clusteringResult = new ClusterAnalysisResultDto()
+        var result = new ClusteringAnalysisResultDto()
         {
             DatasetId = dataset.Id,
             Clusters = clustersDto,
         };
 
-        await cacheService.CacheResultAsync(dataset.Id, settings.Algorithm, request, clusteringResult);
+        var requestHash = GenerateRequestHash(request);
 
-        return clusteringResult;
-    }
+        await resultService.SaveDtoAsync(result, requestHash, settings.Algorithm);
+        await cacheService.SetAsync(analysisType, dataset.Id, requestHash, result);
 
-    /// <summary>
-    /// Retrieves a cached clustering result for the given dataset, algorithm, and request, if available.
-    /// </summary>
-    public async Task<ClusterAnalysisResultDto?> GetCachedResultAsync(
-        long datasetId,
-        ClusterAlgorithm algorithm,
-        BaseClusteringRequest request)
-    {
-        return await cacheService.GetCachedResultAsync(datasetId, algorithm, request);
+        return result;
     }
 }

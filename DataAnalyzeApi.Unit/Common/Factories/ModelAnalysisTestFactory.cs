@@ -6,12 +6,12 @@ using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Common.Factories;
 
-public class AnalysisModelFactory
+public class ModelAnalysisTestFactory
 {
     private readonly Fixture fixture;
     private readonly DataObjectModelFactory dataObjectModelFactory;
 
-    public AnalysisModelFactory()
+    public ModelAnalysisTestFactory()
     {
         fixture = new Fixture();
         dataObjectModelFactory = new DataObjectModelFactory(fixture);

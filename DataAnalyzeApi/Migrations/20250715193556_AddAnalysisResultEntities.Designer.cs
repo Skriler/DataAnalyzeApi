@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAnalyzeApi.Migrations
 {
     [DbContext(typeof(DataAnalyzeDbContext))]
-    [Migration("20250712202854_AddAnalysisResultEntities")]
+    [Migration("20250715193556_AddAnalysisResultEntities")]
     partial class AddAnalysisResultEntities
     {
         /// <inheritdoc />
@@ -57,9 +57,6 @@ namespace DataAnalyzeApi.Migrations
                     b.Property<long>("DatasetId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("IncludeParameters")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("RequestHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -81,12 +78,12 @@ namespace DataAnalyzeApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClusterAnalysisResultId")
+                    b.Property<long>("ClusteringAnalysisResultId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClusterAnalysisResultId");
+                    b.HasIndex("ClusteringAnalysisResultId");
 
                     b.ToTable("Clusters");
                 });
@@ -427,18 +424,18 @@ namespace DataAnalyzeApi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusterAnalysisResult", b =>
+            modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusteringAnalysisResult", b =>
                 {
                     b.HasBaseType("DataAnalyzeApi.Models.Entities.Analysis.AnalysisResult");
 
                     b.Property<int>("Algorithm")
                         .HasColumnType("integer");
 
-                    b.HasIndex(new[] { "DatasetId" }, "IX_ClusterAnalysisResults_DatasetId");
+                    b.HasIndex(new[] { "DatasetId" }, "IX_ClusteringAnalysisResults_DatasetId");
 
-                    b.HasIndex(new[] { "RequestHash" }, "IX_ClusterAnalysisResults_RequestHash");
+                    b.HasIndex(new[] { "RequestHash" }, "IX_ClusteringAnalysisResults_RequestHash");
 
-                    b.ToTable("ClusterAnalysisResults", (string)null);
+                    b.ToTable("ClusteringAnalysisResults", (string)null);
                 });
 
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Similarity.SimilarityAnalysisResult", b =>
@@ -480,13 +477,13 @@ namespace DataAnalyzeApi.Migrations
 
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.Cluster", b =>
                 {
-                    b.HasOne("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusterAnalysisResult", "ClusterAnalysisResult")
+                    b.HasOne("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusteringAnalysisResult", "ClusteringAnalysisResult")
                         .WithMany("Clusters")
-                        .HasForeignKey("ClusterAnalysisResultId")
+                        .HasForeignKey("ClusteringAnalysisResultId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ClusterAnalysisResult");
+                    b.Navigation("ClusteringAnalysisResult");
                 });
 
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Similarity.SimilarityPair", b =>
@@ -620,7 +617,7 @@ namespace DataAnalyzeApi.Migrations
                     b.Navigation("Parameters");
                 });
 
-            modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusterAnalysisResult", b =>
+            modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusteringAnalysisResult", b =>
                 {
                     b.Navigation("Clusters");
                 });

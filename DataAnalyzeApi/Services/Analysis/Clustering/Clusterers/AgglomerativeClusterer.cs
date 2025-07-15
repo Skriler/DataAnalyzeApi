@@ -13,7 +13,7 @@ public class AgglomerativeClusterer(
     ClusterNameGenerator nameGenerator
     ) : BaseClusterer<AgglomerativeSettings>(distanceCalculator, nameGenerator)
 {
-    protected override string ClusterPrefix => nameof(ClusterAlgorithm.Agglomerative);
+    protected override string ClusterPrefix => nameof(ClusteringAlgorithm.Agglomerative);
 
     private List<AgglomerativeClusterModel> clusters = default!;
     private AgglomerativeSettings settings = default!;

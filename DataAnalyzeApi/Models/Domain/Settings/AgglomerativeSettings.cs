@@ -8,7 +8,7 @@ public record AgglomerativeSettings(
     bool IncludeParameters,
     double Threshold
 ) : BaseClusterSettings(
-    ClusterAlgorithm.Agglomerative,
+    ClusteringAlgorithm.Agglomerative,
     NumericMetric,
     CategoricalMetric,
     IncludeParameters
