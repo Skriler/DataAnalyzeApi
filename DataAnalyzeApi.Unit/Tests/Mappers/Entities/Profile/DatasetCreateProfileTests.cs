@@ -2,8 +2,8 @@ using AutoMapper;
 using DataAnalyzeApi.Mappers.Entities.Profiles;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
-using DataAnalyzeApi.Unit.Common.Assertions;
-using DataAnalyzeApi.Unit.Common.Factories;
+using DataAnalyzeApi.Unit.Common.Assertions.Datasets;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Tests.Mappers.Entities.Profile;

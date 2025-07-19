@@ -1,5 +1,5 @@
 using DataAnalyzeApi.Services.Validation;
-using DataAnalyzeApi.Unit.Common.Factories;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
 namespace DataAnalyzeApi.Unit.Tests.Services.Validation;

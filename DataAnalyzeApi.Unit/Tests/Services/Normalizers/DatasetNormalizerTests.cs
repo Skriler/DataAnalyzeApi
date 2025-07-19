@@ -1,6 +1,6 @@
-﻿using DataAnalyzeApi.Services.Normalizers;
-using DataAnalyzeApi.Unit.Common.Assertions;
-using DataAnalyzeApi.Unit.Common.Factories.Models;
+using DataAnalyzeApi.Services.Normalizers;
+using DataAnalyzeApi.Unit.Common.Assertions.Datasets;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets.Models;
 using DataAnalyzeApi.Unit.Common.TestData.Normalizers;
 
 namespace DataAnalyzeApi.Unit.Tests.Services.Normalizers;

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 using DataAnalyzeApi.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAnalyzeApi.Models.Entities.Analysis.Clustering;
 
@@ -10,6 +10,8 @@ public class ClusteringAnalysisResult : AnalysisResult
 {
     public ClusteringAlgorithm Algorithm { get; set; }
 
-    [JsonIgnore]
     public List<Cluster> Clusters { get; set; } = [];
+
+    [JsonIgnore]
+    public List<DataObjectCoordinate> ObjectCoordinates { get; set; } = [];
 }

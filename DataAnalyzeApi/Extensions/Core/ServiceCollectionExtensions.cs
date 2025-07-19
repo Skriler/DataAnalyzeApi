@@ -3,7 +3,7 @@ using DataAnalyzeApi.DAL;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.DAL.Repositories.Analysis;
 using DataAnalyzeApi.DAL.Seeders;
-using DataAnalyzeApi.Mappers.Analysis;
+using DataAnalyzeApi.Mappers.Analysis.Domain;
 using DataAnalyzeApi.Mappers.Analysis.Entities;
 using DataAnalyzeApi.Mappers.Analysis.Profiles;
 using DataAnalyzeApi.Mappers.Entities;
@@ -19,6 +19,8 @@ using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analysis.Comparers;
 using DataAnalyzeApi.Services.Analysis.Core;
+using DataAnalyzeApi.Services.Analysis.DimensionalityReducers;
+using DataAnalyzeApi.Services.Analysis.DimensionalityReducers.PcaHelpers;
 using DataAnalyzeApi.Services.Analysis.DistanceCalculators;
 using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
 using DataAnalyzeApi.Services.Analysis.Factories.Metric;
@@ -192,6 +194,7 @@ public static class ServiceCollectionExtensions
             .AddHelpers()
             .AddDataProcessingServices()
             .AddDistanceServices()
+            .AddDimensionalityReducers()
             .AddClusteringServices()
             .AddFactories()
             .AddFilters()
@@ -214,8 +217,9 @@ public static class ServiceCollectionExtensions
             .AddAutoMapper(typeof(SimilarityAnalysisResultProfile))
             .AddAutoMapper(typeof(ClusteringAnalysisResultProfile))
             .AddScoped<DatasetSettingsMapper>()
-            .AddScoped<ModelAnalysisMapper>()
-            .AddScoped<SimlarityEntityAnalysisMapper>()
+            .AddScoped<SimilarityDomainAnalysisMapper>()
+            .AddScoped<ClusteringDomainAnalysisMapper>()
+            .AddScoped<SimilarityEntityAnalysisMapper>()
             .AddScoped<ClusteringEntityAnalysisMapper>();
     }
 
@@ -253,6 +257,18 @@ public static class ServiceCollectionExtensions
 
         // Core services
         services.AddScoped<IDistanceCalculator, DistanceCalculator>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDimensionalityReducers(this IServiceCollection services)
+    {
+        // Helpers
+        services.AddScoped<MatrixProcessor>();
+        services.AddScoped<EigenSolver>();
+
+        // Core services
+        services.AddScoped<IDimensionalityReducer, PcaReducer>();
 
         return services;
     }

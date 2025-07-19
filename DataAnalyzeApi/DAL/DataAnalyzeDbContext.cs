@@ -27,6 +27,8 @@ public class DataAnalyzeDbContext(
 
     public DbSet<Cluster> Clusters { get; set; }
 
+    public DbSet<DataObjectCoordinate> DataObjectCoordinates { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -107,6 +109,19 @@ public class DataAnalyzeDbContext(
             .HasMany(c => c.Objects)
             .WithMany()
             .UsingEntity("ClusterDataObjects");
+
+        modelBuilder.Entity<DataObjectCoordinate>(entity =>
+        {
+            entity.HasOne(coord => coord.Object)
+                .WithMany()
+                .HasForeignKey(coord => coord.ObjectId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(coord => coord.ClusteringAnalysisResult)
+                .WithMany(result => result.ObjectCoordinates)
+                .HasForeignKey(coord => coord.ClusteringAnalysisResultId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 
     /// <summary>

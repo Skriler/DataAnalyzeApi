@@ -1,4 +1,3 @@
-using AutoMapper;
 using DataAnalyzeApi.Attributes;
 using DataAnalyzeApi.DAL.Repositories.Analysis;
 using DataAnalyzeApi.Mappers.Analysis.Entities;
@@ -14,11 +13,11 @@ namespace DataAnalyzeApi.Controllers.Results;
 [Produces("application/json")]
 public class SimilarityAnalysisResultController(
     SimilarityAnalysisResultRepository repository,
-    SimlarityEntityAnalysisMapper mapper
+    SimilarityEntityAnalysisMapper mapper
     ) : ControllerBase
 {
     private readonly SimilarityAnalysisResultRepository repository = repository;
-    private readonly SimlarityEntityAnalysisMapper mapper = mapper;
+    private readonly SimilarityEntityAnalysisMapper mapper = mapper;
 
     /// <summary>
     /// Get all similarity analysis results.

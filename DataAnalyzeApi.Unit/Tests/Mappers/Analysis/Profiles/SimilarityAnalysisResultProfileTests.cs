@@ -1,8 +1,8 @@
 using AutoMapper;
 using DataAnalyzeApi.Mappers.Analysis.Profiles;
 using DataAnalyzeApi.Models.Entities.Analysis.Similarity;
-using DataAnalyzeApi.Unit.Common.Assertions;
-using DataAnalyzeApi.Unit.Common.Factories;
+using DataAnalyzeApi.Unit.Common.Assertions.Analysis.Entities;
+using DataAnalyzeApi.Unit.Common.Factories.Analysis.Entities;
 
 namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Profiles;
 
@@ -12,14 +12,14 @@ namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Profiles;
 public class SimilarityAnalysisResultProfileTests
 {
     private readonly IMapper mapper;
-    private readonly EntityAnalysisTestFactory factory;
+    private readonly SimilarityEntityAnalysisTestFactory factory;
 
     public SimilarityAnalysisResultProfileTests()
     {
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile<SimilarityAnalysisResultProfile>());
 
         mapper = configuration.CreateMapper();
-        factory = new EntityAnalysisTestFactory();
+        factory = new SimilarityEntityAnalysisTestFactory();
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class SimilarityAnalysisResultProfileTests
         var result = mapper.Map<SimilarityAnalysisResult>(resultDto);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto);
     }
@@ -47,7 +47,7 @@ public class SimilarityAnalysisResultProfileTests
         var result = mapper.Map<SimilarityAnalysisResult>(resultDto);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto);
     }
@@ -62,7 +62,7 @@ public class SimilarityAnalysisResultProfileTests
         var result = mapper.Map<SimilarityAnalysisResult>(resultDto);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto);
     }

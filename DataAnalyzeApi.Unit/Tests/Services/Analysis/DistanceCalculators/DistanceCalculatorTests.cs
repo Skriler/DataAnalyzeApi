@@ -4,7 +4,7 @@ using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.DistanceCalculators;
 using DataAnalyzeApi.Services.Analysis.Factories.Metric;
 using DataAnalyzeApi.Services.Analysis.Metrics;
-using DataAnalyzeApi.Unit.Common.Factories.Models;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets.Models;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 using Moq;
 

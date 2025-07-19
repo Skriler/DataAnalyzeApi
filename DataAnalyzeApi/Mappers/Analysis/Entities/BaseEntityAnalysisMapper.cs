@@ -19,8 +19,8 @@ public abstract class BaseEntityAnalysisMapper<TEntity, TDto>
     /// <summary>
     /// Maps analysis result entity list to DTO list.
     /// </summary>
-    public List<TDto> MapAnalysisResultList(List<TEntity> results, bool includeParameters = false)
-         => results.ConvertAll(r => MapAnalysisResult(r, includeParameters));
+    public List<TDto> MapAnalysisResultList(List<TEntity> results, bool includeParameters = false) =>
+         results.ConvertAll(r => MapAnalysisResult(r, includeParameters));
 
     /// <summary>
     /// Maps DataObject entity to its DTO.

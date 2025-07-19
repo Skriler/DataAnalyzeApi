@@ -2,7 +2,7 @@ using DataAnalyzeApi.Exceptions.Vector;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Services.Analysis.Comparers;
-using DataAnalyzeApi.Unit.Common.Factories.Models;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets.Models;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 using DataAnalyzeApi.Unit.Common.TestData.Comparers;
 using Moq;

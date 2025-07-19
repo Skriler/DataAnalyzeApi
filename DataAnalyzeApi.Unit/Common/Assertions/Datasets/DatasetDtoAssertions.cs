@@ -1,7 +1,7 @@
-﻿using DataAnalyzeApi.Models.DTOs.Dataset.Create;
+using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.Entities;
 
-namespace DataAnalyzeApi.Unit.Common.Assertions;
+namespace DataAnalyzeApi.Unit.Common.Assertions.Datasets;
 
 public static class DatasetDtoAssertions
 {

@@ -3,7 +3,7 @@ using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
-namespace DataAnalyzeApi.Unit.Common.Factories;
+namespace DataAnalyzeApi.Unit.Common.Factories.Datasets;
 
 public class DatasetDtoTestFactory
 {

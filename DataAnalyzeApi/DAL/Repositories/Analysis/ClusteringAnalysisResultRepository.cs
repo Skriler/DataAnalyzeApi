@@ -24,7 +24,8 @@ public class ClusteringAnalysisResultRepository(DataAnalyzeDbContext context)
             : "Clusters.Objects";
 
         return context.ClusteringAnalysisResults
-            .Include(objectsInclude);
+            .Include(objectsInclude)
+            .Include(car => car.ObjectCoordinates);
     }
 
     /// <summary>

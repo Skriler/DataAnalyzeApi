@@ -11,7 +11,7 @@ namespace DataAnalyzeApi.Services.Analysis.Results;
 public class SimilarityAnalysisResultService : BaseAnalysisResultService<SimilarityAnalysisResult, SimilarityAnalysisResultDto>
 {
     public SimilarityAnalysisResultService(
-        SimlarityEntityAnalysisMapper analysisMapper,
+        SimilarityEntityAnalysisMapper analysisMapper,
         SimilarityAnalysisResultRepository repository,
         DatasetRepository datasetRepository,
         IMapper mapper)

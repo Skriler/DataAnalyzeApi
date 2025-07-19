@@ -1,9 +1,9 @@
-﻿using AutoFixture;
+using AutoFixture;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Enum;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 
-namespace DataAnalyzeApi.Unit.Common.Factories.Models;
+namespace DataAnalyzeApi.Unit.Common.Factories.Datasets.Models;
 
 public class ParameterStateModelFactory(Fixture fixture)
 {

@@ -1,4 +1,3 @@
-using AutoMapper;
 using DataAnalyzeApi.Attributes;
 using DataAnalyzeApi.DAL.Repositories.Analysis;
 using DataAnalyzeApi.Mappers.Analysis.Entities;

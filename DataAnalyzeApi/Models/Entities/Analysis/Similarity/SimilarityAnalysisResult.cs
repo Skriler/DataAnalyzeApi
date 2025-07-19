@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAnalyzeApi.Models.Entities.Analysis.Similarity;
@@ -7,6 +6,5 @@ namespace DataAnalyzeApi.Models.Entities.Analysis.Similarity;
 [Index(nameof(RequestHash), Name = "IX_SimilarityAnalysisResults_RequestHash")]
 public class SimilarityAnalysisResult : AnalysisResult
 {
-    [JsonIgnore]
     public List<SimilarityPair> SimilarityPairs { get; set; } = [];
 }

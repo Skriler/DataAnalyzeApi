@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using DataAnalyzeApi.Mappers.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Entities.Analysis;
 using DataAnalyzeApi.Services.Analysis.Results;
@@ -13,7 +12,6 @@ namespace DataAnalyzeApi.Services.Analysis.Core;
 /// Base class for analysis services.
 /// </summary>
 public abstract class BaseAnalysisService<TRequest, TEntity, TDto, TResultService>(
-    ModelAnalysisMapper modelAnalysisMapper,
     AnalysisCacheService<TDto> cacheService,
     TResultService resultService,
     string cachePrefix
@@ -23,7 +21,6 @@ public abstract class BaseAnalysisService<TRequest, TEntity, TDto, TResultServic
     where TDto : BaseAnalysisResultDto
     where TResultService : BaseAnalysisResultService<TEntity, TDto>
 {
-    protected readonly ModelAnalysisMapper modelAnalysisMapper = modelAnalysisMapper;
     protected readonly AnalysisCacheService<TDto> cacheService = cacheService;
     protected readonly TResultService resultService = resultService;
     protected readonly string cachePrefix = cachePrefix;

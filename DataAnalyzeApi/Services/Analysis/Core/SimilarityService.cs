@@ -1,4 +1,4 @@
-using DataAnalyzeApi.Mappers.Analysis;
+using DataAnalyzeApi.Mappers.Analysis.Domain;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
@@ -18,15 +18,17 @@ public class SimilarityService
 {
     private const string analysisType = "similarity";
 
+    private readonly SimilarityDomainAnalysisMapper analysisMapper;
     private readonly SimilarityComparer comparer;
 
     public SimilarityService(
-        ModelAnalysisMapper modelAnalysisMapper,
+        SimilarityDomainAnalysisMapper analysisMapper,
         SimilarityComparer comparer,
         AnalysisCacheService<SimilarityAnalysisResultDto> cacheService,
         SimilarityAnalysisResultService resultService
-    ) : base(modelAnalysisMapper, cacheService, resultService, analysisType)
+    ) : base(cacheService, resultService, analysisType)
     {
+        this.analysisMapper = analysisMapper;
         this.comparer = comparer;
     }
 
@@ -39,7 +41,7 @@ public class SimilarityService
     {
         var similarities = comparer.CompareAllObjects(dataset);
 
-        var similaritiesDto = modelAnalysisMapper.MapSimilarityPairList(
+        var similaritiesDto = analysisMapper.MapList(
             similarities,
             request?.IncludeParameters ?? false);
 

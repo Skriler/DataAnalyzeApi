@@ -1,3 +1,4 @@
+using System.Diagnostics.Metrics;
 using AutoMapper;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.DAL.Repositories.Analysis;
@@ -31,28 +32,73 @@ public class ClusteringAnalysisResultService: BaseAnalysisResultService<Clusteri
     }
 
     /// <summary>
-    /// Attaches the actual dataset objects to each cluster in the analysis result.
+    /// Attaches the actual dataset objects to each cluster in the analysis result and links coordinates.
     /// </summary>
     protected override void AttachObjectsToAnalysisResult(
         ClusteringAnalysisResult entity,
         Dictionary<long, DataObject> datasetObjects)
     {
+        var objectCoordinates = entity.ObjectCoordinates.ToDictionary(obj => obj.Id);
+
         foreach (var cluster in entity.Clusters)
         {
-            var objectIds = cluster.Objects.ConvertAll(obj => obj.Id);
-
-            cluster.Objects.Clear();
-
-            foreach (var objectId in objectIds)
-            {
-                if (!datasetObjects.TryGetValue(objectId, out var realObject))
-                {
-                    throw new InvalidOperationException(
-                        $"Object with ID {objectId} not found in dataset {entity.DatasetId}");
-                }
-
-                cluster.Objects.Add(realObject);
-            }
+            ProcessClusterObjects(
+                cluster,
+                datasetObjects,
+                objectCoordinates,
+                entity.DatasetId);
         }
+    }
+
+    /// <summary>
+    /// Replaces object IDs with actual objects and links coordinates.
+    /// </summary>
+    private static void ProcessClusterObjects(
+        Cluster cluster,
+        Dictionary<long, DataObject> datasetObjects,
+        Dictionary<long, DataObjectCoordinate> objectCoordinates,
+        long datasetId)
+    {
+        var objectIds = cluster.Objects.ConvertAll(obj => obj.Id);
+        cluster.Objects.Clear();
+
+        foreach (var objectId in objectIds)
+        {
+            var realObject = GetAndValidateDataObject(objectId, datasetObjects, datasetId);
+            cluster.Objects.Add(realObject);
+
+            LinkObjectCoordinate(realObject, objectCoordinates);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves and validates a DataObject by ID.
+    /// </summary>
+    private static DataObject GetAndValidateDataObject(
+        long objectId,
+        Dictionary<long, DataObject> datasetObjects,
+        long datasetId)
+    {
+        if (!datasetObjects.TryGetValue(objectId, out var realObject))
+        {
+            throw new InvalidOperationException($"Object with ID {objectId} not found in dataset {datasetId}");
+        }
+
+        return realObject;
+    }
+
+    /// <summary>
+    /// Links a DataObject to DataObjectCoordinate.
+    /// </summary>
+    private static void LinkObjectCoordinate(
+        DataObject obj,
+        Dictionary<long, DataObjectCoordinate> objectCoordinates)
+    {
+        if (!objectCoordinates.TryGetValue(obj.Id, out var objectCoordinate))
+        {
+            throw new InvalidOperationException($"Object coordinate with object ID {obj.Id} not found in result");
+        }
+
+        objectCoordinate.Object = obj;
     }
 }

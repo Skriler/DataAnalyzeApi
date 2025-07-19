@@ -1,9 +1,10 @@
-using DataAnalyzeApi.Mappers.Analysis;
+using DataAnalyzeApi.Mappers.Analysis.Domain;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Requests;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Models.Entities.Analysis.Clustering;
+using DataAnalyzeApi.Services.Analysis.DimensionalityReducers;
 using DataAnalyzeApi.Services.Analysis.Factories.Clusterer;
 using DataAnalyzeApi.Services.Analysis.Results;
 using DataAnalyzeApi.Services.Cache;
@@ -19,16 +20,21 @@ public class ClusteringService
 {
     private const string analysisType = "clustering";
 
+    private readonly ClusteringDomainAnalysisMapper analysisMapper;
     private readonly IClustererFactory clustererFactory;
+    private readonly IDimensionalityReducer dimensionalityReducer;
 
     public ClusteringService(
-        ModelAnalysisMapper modelAnalysisMapper,
+        ClusteringDomainAnalysisMapper analysisMapper,
         IClustererFactory clustererFactory,
+        IDimensionalityReducer dimensionalityReducer,
         AnalysisCacheService<ClusteringAnalysisResultDto> cacheService,
         ClusteringAnalysisResultService resultService
-    ) : base(modelAnalysisMapper, cacheService, resultService, analysisType)
+    ) : base(cacheService, resultService, analysisType)
     {
+        this.analysisMapper = analysisMapper;
         this.clustererFactory = clustererFactory;
+        this.dimensionalityReducer = dimensionalityReducer;
     }
 
     /// <summary>
@@ -42,8 +48,11 @@ public class ClusteringService
         var clusterer = clustererFactory.Get<TSettings>(settings.Algorithm);
         var clusters = clusterer.Cluster(dataset.Objects, settings);
 
-        var clustersDto = modelAnalysisMapper.MapClusterList(
+        var reduceDimensionResult = dimensionalityReducer.ReduceDimensions(dataset.Objects);
+
+        var clustersDto = analysisMapper.MapList(
             clusters,
+            reduceDimensionResult.DataObjectCoordinates,
             settings.IncludeParameters);
 
         var result = new ClusteringAnalysisResultDto()

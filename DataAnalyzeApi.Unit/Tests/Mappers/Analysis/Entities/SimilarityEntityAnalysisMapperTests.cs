@@ -1,6 +1,6 @@
 using DataAnalyzeApi.Mappers.Analysis.Entities;
-using DataAnalyzeApi.Unit.Common.Assertions;
-using DataAnalyzeApi.Unit.Common.Factories;
+using DataAnalyzeApi.Unit.Common.Assertions.Analysis.Entities;
+using DataAnalyzeApi.Unit.Common.Factories.Analysis.Entities;
 
 namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Entities;
 
@@ -9,8 +9,8 @@ namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Entities;
 [Trait("SubComponent", "Analysis")]
 public class SimilarityEntityAnalysisMapperTests
 {
-    private readonly SimlarityEntityAnalysisMapper mapper = new();
-    private readonly EntityAnalysisTestFactory factory = new();
+    private readonly SimilarityEntityAnalysisMapper mapper = new();
+    private readonly SimilarityEntityAnalysisTestFactory factory = new();
 
     [Fact]
     public void MapAnalysisResult_WithoutParameters_ReturnsCorrectDto()
@@ -23,7 +23,7 @@ public class SimilarityEntityAnalysisMapperTests
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);
@@ -40,7 +40,7 @@ public class SimilarityEntityAnalysisMapperTests
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);
@@ -57,7 +57,7 @@ public class SimilarityEntityAnalysisMapperTests
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);
@@ -74,7 +74,7 @@ public class SimilarityEntityAnalysisMapperTests
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
+        SimilarityEntityAnalysisMapperAssertions.AssertSimilarityAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);

@@ -1,5 +1,5 @@
 using AutoMapper;
-using DataAnalyzeApi.Models.DTOs.Analysis;
+using DataAnalyzeApi.Models.DTOs.Analysis.Clustering;
 using DataAnalyzeApi.Models.DTOs.Analysis.Clustering.Results;
 using DataAnalyzeApi.Models.Entities;
 using DataAnalyzeApi.Models.Entities.Analysis.Clustering;
@@ -20,11 +20,18 @@ public class ClusteringAnalysisResultProfile : Profile
             .ForMember(
                 dest => dest.CreatedAt,
                 opt => opt.MapFrom(_ => DateTime.UtcNow)
+            )
+            .ForMember(
+                dest => dest.ObjectCoordinates,
+                opt => opt.MapFrom(src => src.Clusters.SelectMany(c => c.Objects))
             );
 
         CreateMap<ClusterDto, Cluster>();
 
-        CreateMap<DataObjectAnalysisDto, DataObject>()
+        CreateMap<DataObjectClusteringAnalysisDto, DataObject>()
             .ForMember(dest => dest.Values, opt => opt.Ignore());
+
+        CreateMap<DataObjectClusteringAnalysisDto, DataObjectCoordinate>()
+           .ForMember(dest => dest.ObjectId, opt => opt.MapFrom(src => src.Id));
     }
 }

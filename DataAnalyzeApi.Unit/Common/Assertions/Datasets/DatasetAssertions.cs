@@ -1,7 +1,7 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Dataset.Normalized;
 
-namespace DataAnalyzeApi.Unit.Common.Assertions;
+namespace DataAnalyzeApi.Unit.Common.Assertions.Datasets;
 
 public static class DatasetAssertions
 {

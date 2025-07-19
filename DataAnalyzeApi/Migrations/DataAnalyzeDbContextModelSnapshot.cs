@@ -85,6 +85,35 @@ namespace DataAnalyzeApi.Migrations
                     b.ToTable("Clusters");
                 });
 
+            modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.DataObjectCoordinate", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ClusteringAnalysisResultId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ObjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("X")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Y")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObjectId");
+
+                    b.HasIndex(new[] { "ClusteringAnalysisResultId" }, "IX_DataObjectCoordinates_ClusteringAnalysisResultId");
+
+                    b.ToTable("DataObjectCoordinates");
+                });
+
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Similarity.SimilarityPair", b =>
                 {
                     b.Property<long>("Id")
@@ -483,6 +512,25 @@ namespace DataAnalyzeApi.Migrations
                     b.Navigation("ClusteringAnalysisResult");
                 });
 
+            modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.DataObjectCoordinate", b =>
+                {
+                    b.HasOne("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusteringAnalysisResult", "ClusteringAnalysisResult")
+                        .WithMany("ObjectCoordinates")
+                        .HasForeignKey("ClusteringAnalysisResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAnalyzeApi.Models.Entities.DataObject", "Object")
+                        .WithMany()
+                        .HasForeignKey("ObjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ClusteringAnalysisResult");
+
+                    b.Navigation("Object");
+                });
+
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Similarity.SimilarityPair", b =>
                 {
                     b.HasOne("DataAnalyzeApi.Models.Entities.DataObject", "ObjectA")
@@ -617,6 +665,8 @@ namespace DataAnalyzeApi.Migrations
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Clustering.ClusteringAnalysisResult", b =>
                 {
                     b.Navigation("Clusters");
+
+                    b.Navigation("ObjectCoordinates");
                 });
 
             modelBuilder.Entity("DataAnalyzeApi.Models.Entities.Analysis.Similarity.SimilarityAnalysisResult", b =>

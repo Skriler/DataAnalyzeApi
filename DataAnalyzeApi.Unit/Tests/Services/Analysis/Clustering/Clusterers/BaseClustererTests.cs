@@ -5,7 +5,7 @@ using DataAnalyzeApi.Models.Enums;
 using DataAnalyzeApi.Services.Analysis.Clustering.Clusterers;
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
 using DataAnalyzeApi.Services.Analysis.DistanceCalculators;
-using DataAnalyzeApi.Unit.Common.Factories.Models;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets.Models;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 using DataAnalyzeApi.Unit.Common.TestData.Clustering.Clusterers;
 using Moq;

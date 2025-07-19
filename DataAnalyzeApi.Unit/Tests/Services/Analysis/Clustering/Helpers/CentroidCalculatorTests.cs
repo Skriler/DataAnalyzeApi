@@ -1,7 +1,7 @@
 using DataAnalyzeApi.Services.Analysis.Clustering.Helpers;
-using DataAnalyzeApi.Unit.Common.Assertions;
+using DataAnalyzeApi.Unit.Common.Assertions.Datasets;
 using DataAnalyzeApi.Unit.Common.Factories;
-using DataAnalyzeApi.Unit.Common.Factories.Models;
+using DataAnalyzeApi.Unit.Common.Factories.Datasets.Models;
 using DataAnalyzeApi.Unit.Common.Models.Analysis;
 using DataAnalyzeApi.Unit.Common.TestData.Clustering.Helpers;
 

@@ -1,8 +1,8 @@
-﻿using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
+using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.DTOs.Analysis;
 using DataAnalyzeApi.Models.Entities;
 
-namespace DataAnalyzeApi.Unit.Common.Assertions;
+namespace DataAnalyzeApi.Unit.Common.Assertions.Datasets;
 
 public static class DatasetModelAssertions
 {

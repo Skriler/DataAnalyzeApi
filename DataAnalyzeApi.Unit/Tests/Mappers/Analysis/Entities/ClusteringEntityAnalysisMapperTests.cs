@@ -1,6 +1,6 @@
 using DataAnalyzeApi.Mappers.Analysis.Entities;
-using DataAnalyzeApi.Unit.Common.Assertions;
-using DataAnalyzeApi.Unit.Common.Factories;
+using DataAnalyzeApi.Unit.Common.Assertions.Analysis.Entities;
+using DataAnalyzeApi.Unit.Common.Factories.Analysis.Entities;
 
 namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Entities;
 
@@ -10,20 +10,22 @@ namespace DataAnalyzeApi.Unit.Tests.Mappers.Analysis.Entities;
 public class ClusteringEntityAnalysisMapperTests
 {
     private readonly ClusteringEntityAnalysisMapper mapper = new();
-    private readonly EntityAnalysisTestFactory factory = new();
+    private readonly ClusteringEntityAnalysisTestFactory factory = new();
 
     [Fact]
     public void MapAnalysisResult_WithoutParameters_ReturnsCorrectDto()
     {
         // Arrange
         const bool includeParameters = false;
-        var result = factory.CreateClusteringAnalysisResult(clustersCount: 3, objectsPerCluster: 2);
+        var result = factory.CreateClusteringAnalysisResult(
+            clustersCount: 3,
+            objectsPerCluster: 2);
 
         // Act
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
+        ClusteringEntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);
@@ -34,13 +36,15 @@ public class ClusteringEntityAnalysisMapperTests
     {
         // Arrange
         const bool includeParameters = true;
-        var result = factory.CreateClusteringAnalysisResult(clustersCount: 2, objectsPerCluster: 4);
+        var result = factory.CreateClusteringAnalysisResult(
+            clustersCount: 2,
+            objectsPerCluster: 4);
 
         // Act
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
+        ClusteringEntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);
@@ -51,13 +55,15 @@ public class ClusteringEntityAnalysisMapperTests
     {
         // Arrange
         const bool includeParameters = false;
-        var result = factory.CreateClusteringAnalysisResult(clustersCount: 0, objectsPerCluster: 0);
+        var result = factory.CreateClusteringAnalysisResult(
+            clustersCount: 0,
+            objectsPerCluster: 0);
 
         // Act
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
+        ClusteringEntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);
@@ -68,13 +74,15 @@ public class ClusteringEntityAnalysisMapperTests
     {
         // Arrange
         const bool includeParameters = true;
-        var result = factory.CreateClusteringAnalysisResult(clustersCount: 1, objectsPerCluster: 5);
+        var result = factory.CreateClusteringAnalysisResult(
+            clustersCount: 1,
+            objectsPerCluster: 5);
 
         // Act
         var resultDto = mapper.MapAnalysisResult(result, includeParameters);
 
         // Assert
-        EntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
+        ClusteringEntityAnalysisMapperAssertions.AssertClusteringAnalysisResultEqualDto(
             result,
             resultDto,
             includeParameters);

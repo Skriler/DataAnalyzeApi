@@ -4,7 +4,7 @@ using DataAnalyzeApi.Models.Entities.Analysis.Similarity;
 
 namespace DataAnalyzeApi.Mappers.Analysis.Entities;
 
-public class SimlarityEntityAnalysisMapper : BaseEntityAnalysisMapper<SimilarityAnalysisResult, SimilarityAnalysisResultDto>
+public class SimilarityEntityAnalysisMapper : BaseEntityAnalysisMapper<SimilarityAnalysisResult, SimilarityAnalysisResultDto>
 {
     /// <summary>
     /// Maps analysis result SimilarityAnalysisResult to SimilarityAnalysisResultDto.
@@ -25,8 +25,8 @@ public class SimlarityEntityAnalysisMapper : BaseEntityAnalysisMapper<Similarity
     /// </summary>
     public virtual List<SimilarityPairDto> MapSimilarityPairList(
         List<SimilarityPair> pairs,
-        bool includeParameters = false)
-        => pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
+        bool includeParameters = false) =>
+        pairs.ConvertAll(p => MapSimilarityPair(p, includeParameters));
 
     /// <summary>
     /// Maps SimilarityPair entity to SimilarityPairDto.
