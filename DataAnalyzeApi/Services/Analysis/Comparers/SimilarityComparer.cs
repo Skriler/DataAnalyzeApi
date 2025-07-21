@@ -1,4 +1,5 @@
 using DataAnalyzeApi.Exceptions.Vector;
+using DataAnalyzeApi.Extensions.Model;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Similarity;
 using DataAnalyzeApi.Models.Enum;
@@ -19,8 +20,9 @@ public class SimilarityComparer(ICompare comparer)
     {
         ValidateDataset(dataset);
 
-        InitializeMaxRanges(dataset.Objects, dataset.Parameters);
-        return CompareObjects(dataset.Objects, dataset.Parameters);
+        var filteredDataset = dataset.FilterByActiveParameters();
+        InitializeMaxRanges(filteredDataset.Objects, filteredDataset.Parameters);
+        return CompareObjects(filteredDataset.Objects, filteredDataset.Parameters);
     }
 
     /// <summary>
@@ -78,9 +80,9 @@ public class SimilarityComparer(ICompare comparer)
         List<DataObjectModel> objects,
         List<ParameterStateModel> parameterStates)
     {
-        var activeParameterStates = parameterStates
-            .Where(ps => ps.IsActive)
-            .ToList();
+        //var activeParameterStates = parameterStates
+        //    .Where(ps => ps.IsActive)
+        //    .ToList();
 
         var similarities = new List<SimilarityPairModel>();
 
@@ -95,7 +97,7 @@ public class SimilarityComparer(ICompare comparer)
                 var similarity = new SimilarityPairModel(
                     objectA,
                     objectB,
-                    CalculateSimilarityPercentage(objectA, objectB, activeParameterStates)
+                    CalculateSimilarityPercentage(objectA, objectB, parameterStates)
                 );
 
                 similarities.Add(similarity);
@@ -144,7 +146,7 @@ public class SimilarityComparer(ICompare comparer)
 
     /// <summary>
     /// Validates input dataset.
-    /// Throws exceptions if the dataset is null or if it contains no objects or parameters.
+    /// Throws exceptions if the dataset is null or if it contains no objects, values or values.
     /// </summary>
     private static void ValidateDataset(DatasetModel dataset)
     {
@@ -153,8 +155,23 @@ public class SimilarityComparer(ICompare comparer)
         if (dataset.Objects == null || dataset.Objects.Count == 0)
             throw new ArgumentException("Dataset must contain objects", nameof(dataset));
 
+        dataset.Objects.ForEach(obj => ValidateVector(obj.Values));
+
         if (dataset.Parameters == null || dataset.Parameters.Count == 0)
             throw new ArgumentException("Dataset must contain parameters", nameof(dataset));
+    }
+
+    /// <summary>
+    /// Validates input vector.
+    /// Throws exceptions if the vector is null or empty.
+    /// </summary>
+    private static void ValidateVector(List<ParameterValueModel> values)
+    {
+        if (values == null)
+            throw new VectorNullException();
+
+        if (values.Count == 0)
+            throw new EmptyVectorException();
     }
 
     /// <summary>
@@ -163,11 +180,8 @@ public class SimilarityComparer(ICompare comparer)
     /// </summary>
     private static void ValidateVectors(List<ParameterValueModel> valuesA, List<ParameterValueModel> valuesB)
     {
-        if (valuesA == null || valuesB == null)
-            throw new VectorNullException();
-
-        if (valuesA.Count == 0)
-            throw new EmptyVectorException();
+        ValidateVector(valuesA);
+        ValidateVector(valuesB);
 
         if (valuesA.Count != valuesB.Count)
             throw new VectorLengthMismatchException();

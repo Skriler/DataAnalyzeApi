@@ -14,12 +14,18 @@ public class ParameterStateModelFactory(Fixture fixture)
     /// </summary>
     public List<ParameterStateModel> CreateList(List<RawDataObject> rawObjects)
     {
-        var parameterCount = rawObjects.FirstOrDefault()?.Values.Count ?? 0;
+        var parameterCount = rawObjects.Any()
+            ? rawObjects.Max(obj => obj.Values.Count)
+            : 0;
         var parameterStateModels = new List<ParameterStateModel>(parameterCount);
 
         for (int i = 0; i < parameterCount; ++i)
         {
-            var values = rawObjects.ConvertAll(obj => obj.Values[i]);
+            var values = rawObjects
+                .Where(obj => obj.Values.Count > i)
+                .Select(obj => obj.Values[i])
+                .ToList();
+
             var type = DetermineParameterType(values);
 
             parameterStateModels.Add(CreateParameterState(i, type));

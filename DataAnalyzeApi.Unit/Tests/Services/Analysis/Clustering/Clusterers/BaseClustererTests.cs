@@ -78,7 +78,7 @@ public abstract class BaseClustererTests<TClusterer, TSettings>
         // Assert
         Assert.Single(result);
         Assert.Single(result[0].Objects);
-        Assert.Equal(dataset.Objects[0], result[0].Objects[0]);
+        Assert.Equal(dataset.Objects[0].Name, result[0].Objects[0].Name);
     }
 
     [Fact]

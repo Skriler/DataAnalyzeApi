@@ -1,3 +1,4 @@
+using DataAnalyzeApi.Extensions.Model;
 using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Clustering.Agglomerative;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
@@ -20,8 +21,10 @@ public class AgglomerativeClusterer(
 
     public override List<ClusterModel> Cluster(List<DataObjectModel> objects, AgglomerativeSettings settings)
     {
+        var filteredObjects = objects.FilterByActiveParameters();
         this.settings = settings;
-        clusters = objects.ConvertAll(
+
+        clusters = filteredObjects.ConvertAll(
             obj => new AgglomerativeClusterModel(obj, nameGenerator.GenerateName(ClusterPrefix))
             );
 

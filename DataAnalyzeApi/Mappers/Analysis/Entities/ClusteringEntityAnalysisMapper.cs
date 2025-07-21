@@ -20,6 +20,7 @@ public class ClusteringEntityAnalysisMapper : BaseEntityAnalysisMapper<Clusterin
         return new ClusteringAnalysisResultDto
         {
             DatasetId = result.DatasetId,
+            CreatedAt = result.CreatedAt,
             Algorithm = result.Algorithm,
             Clusters = MapClusterList(
                 result.Clusters,

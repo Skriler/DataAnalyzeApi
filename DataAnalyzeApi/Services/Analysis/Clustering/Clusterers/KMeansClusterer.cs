@@ -1,3 +1,4 @@
+using DataAnalyzeApi.Extensions.Model;
 using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Clustering.KMeans;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
@@ -32,12 +33,14 @@ public class KMeansClusterer(
     {
         Validate(objects, settings);
 
+        var filteredObjects = objects.FilterByActiveParameters();
         this.settings = settings;
-        clusters = new List<KMeansClusterModel>(settings.NumberOfClusters);
-        objectClusterMap = new Dictionary<DataObjectModel, int>(objects.Count);
 
-        InitializeClusters(objects);
-        PerformClustering(objects);
+        clusters = new List<KMeansClusterModel>(settings.NumberOfClusters);
+        objectClusterMap = new Dictionary<DataObjectModel, int>(filteredObjects.Count);
+
+        InitializeClusters(filteredObjects);
+        PerformClustering(filteredObjects);
 
         return clusters
             .Cast<ClusterModel>()

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DataAnalyzeApi.Models.DTOs.Auth;
 using DataAnalyzeApi.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,6 @@ namespace DataAnalyzeApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-[AllowAnonymous]
 [Produces("application/json")]
 public class AuthController(
     AuthService authService,
@@ -23,6 +23,7 @@ public class AuthController(
     /// <param name="dto">The login data dto</param>
     /// <returns>An action result containing the authentication result or an error message</returns>
     [HttpPost("login")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -53,6 +54,7 @@ public class AuthController(
     /// <param name="dto">The registration dto containing user information</param>
     /// <returns>An action result indicating the success or failure of the registration</returns>
     [HttpPost("register")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -83,6 +85,25 @@ public class AuthController(
 
         logger.LogInformation("User {Username} successfully registered", dto.Username);
         return Created(string.Empty, "User successfully registered");
+    }
+
+    /// <summary>
+    /// Logs out the current user.
+    /// </summary>
+    /// <returns>An action result indicating successful logout</returns>
+    [HttpPost("logout")]
+    [Authorize]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public ActionResult<string> Logout()
+    {
+        var username = User.Identity?.Name;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        logger.LogInformation("User {Username} (ID: {UserId}) successfully logged out",
+            username ?? "Unknown", userId ?? "Unknown");
+
+        return Ok("Successfully logged out");
     }
 
     /// <summary>

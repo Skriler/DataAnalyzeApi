@@ -1,3 +1,4 @@
+using DataAnalyzeApi.Extensions.Model;
 using DataAnalyzeApi.Models.Domain.Clustering;
 using DataAnalyzeApi.Models.Domain.Dataset.Analysis;
 using DataAnalyzeApi.Models.Domain.Settings;
@@ -35,17 +36,19 @@ public class DBSCANClusterer(
     /// </summary>
     public override List<ClusterModel> Cluster(List<DataObjectModel> objects, DBSCANSettings settings)
     {
+        var filteredObjects = objects.FilterByActiveParameters();
         this.settings = settings;
+
         var clusters = new List<ClusterModel>();
 
-        foreach (var obj in objects)
+        foreach (var obj in filteredObjects)
         {
             if (visitedObjects.Contains(obj))
                 continue;
 
             visitedObjects.Add(obj);
 
-            var neighbors = GetNeighbors(obj, objects);
+            var neighbors = GetNeighbors(obj, filteredObjects);
 
             // The core point requires the point itself plus at least (MinPoints - 1) neighbors.
             // So we add 1 to the neighbor count to include the point itself in the total count.
@@ -61,7 +64,7 @@ public class DBSCANClusterer(
 
             clusters.Add(cluster);
 
-            ExpandCluster(cluster, neighbors, objects);
+            ExpandCluster(cluster, neighbors, filteredObjects);
         }
 
         AddNoiseCluster(clusters);

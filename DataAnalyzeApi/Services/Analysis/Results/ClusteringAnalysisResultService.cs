@@ -1,4 +1,3 @@
-using System.Diagnostics.Metrics;
 using AutoMapper;
 using DataAnalyzeApi.DAL.Repositories;
 using DataAnalyzeApi.DAL.Repositories.Analysis;
@@ -38,7 +37,7 @@ public class ClusteringAnalysisResultService: BaseAnalysisResultService<Clusteri
         ClusteringAnalysisResult entity,
         Dictionary<long, DataObject> datasetObjects)
     {
-        var objectCoordinates = entity.ObjectCoordinates.ToDictionary(obj => obj.Id);
+        var objectCoordinates = entity.ObjectCoordinates.ToDictionary(obj => obj.ObjectId);
 
         foreach (var cluster in entity.Clusters)
         {

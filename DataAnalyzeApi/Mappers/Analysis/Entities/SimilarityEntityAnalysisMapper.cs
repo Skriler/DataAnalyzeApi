@@ -16,6 +16,7 @@ public class SimilarityEntityAnalysisMapper : BaseEntityAnalysisMapper<Similarit
         return new SimilarityAnalysisResultDto
         {
             DatasetId = result.DatasetId,
+            CreatedAt = result.CreatedAt,
             Similarities = MapSimilarityPairList(result.SimilarityPairs, includeParameters),
         };
     }

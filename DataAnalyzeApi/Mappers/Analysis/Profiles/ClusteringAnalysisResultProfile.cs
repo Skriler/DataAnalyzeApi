@@ -32,6 +32,10 @@ public class ClusteringAnalysisResultProfile : Profile
             .ForMember(dest => dest.Values, opt => opt.Ignore());
 
         CreateMap<DataObjectClusteringAnalysisDto, DataObjectCoordinate>()
-           .ForMember(dest => dest.ObjectId, opt => opt.MapFrom(src => src.Id));
+           .ForMember(dest => dest.Id, opt => opt.Ignore())
+           .ForMember(
+                dest => dest.ObjectId,
+                opt => opt.MapFrom(src => src.Id)
+           );
     }
 }
