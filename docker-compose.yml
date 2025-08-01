@@ -69,8 +69,8 @@ services:
       - Identity__AdminUser__FirstName=${ADMIN_FIRSTNAME}
       - Identity__AdminUser__LastName=${ADMIN_LASTNAME}
       - Identity__AdminUser__Password=${ADMIN_PASSWORD}
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     networks:
       - data-analyze-api-network
     depends_on:
@@ -87,6 +87,7 @@ services:
     volumes:
       - /var/lib/nginx-config/nginx.conf:/etc/nginx/nginx.conf:ro
       - /var/lib/nginx-config/conf.d:/etc/nginx/conf.d:ro
+      - /home/Skriler/deploy/frontend:/usr/share/nginx/html:ro
       - nginxlogs:/var/log/nginx
     networks:
       - data-analyze-api-network

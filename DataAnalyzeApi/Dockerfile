@@ -16,16 +16,8 @@ RUN dotnet publish "./DataAnalyzeApi.csproj" \
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
-
-# Create app user
-RUN groupadd -r appgroup && useradd -r -g appgroup appuser
-
 WORKDIR /app
 COPY --from=build /app/publish .
-
-# Set ownership
-RUN chown -R appuser:appgroup /app
-USER appuser
 
 EXPOSE 8080
 

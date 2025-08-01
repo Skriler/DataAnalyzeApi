@@ -2,20 +2,23 @@ name: CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   test:
     environment: ci
     runs-on: ubuntu-latest
-    
+    name: Run Tests
+
     services:
       postgres:
         image: postgres
         env:
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
-          POSTGRES_DB: datasets_db 
+          POSTGRES_DB: datasets_db
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -23,7 +26,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis
         options: >-
@@ -35,58 +38,63 @@ jobs:
           - 6379:6379
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0'
-        
-    - name: Restore dependencies
-      run: dotnet restore DataAnalyzeApi.sln
-      
-    - name: Build
-      run: dotnet build DataAnalyzeApi.sln --no-restore --configuration Release
-      
-    - name: Run Unit Tests
-      run: dotnet test DataAnalyzeApi.Unit/DataAnalyzeApi.Unit.csproj --configuration Release
-      
-    - name: Run Integration Tests
-      run: dotnet test DataAnalyzeApi.Integration/DataAnalyzeApi.Integration.csproj --configuration Release
-      env:
-        # Postgres
-        Postgres__Host: localhost
-        Postgres__Username: testuser
-        Postgres__Password: testpassword
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        # Redis
-        Redis__Host: localhost
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0"
 
-        # JWT
-        JwtConfig__Secret: ${{ secrets.JWTCONFIG_SECRET }}
+      - name: Restore dependencies
+        run: dotnet restore DataAnalyzeApi.sln
 
-        # Admin user
-        Identity__AdminUser__Username: ${{ secrets.IDENTITY_ADMINUSER_USERNAME }}
-        Identity__AdminUser__Email: ${{ secrets.IDENTITY_ADMINUSER_EMAIL }}
-        Identity__AdminUser__FirstName: ${{ secrets.IDENTITY_ADMINUSER_FIRSTNAME }}
-        Identity__AdminUser__LastName: ${{ secrets.IDENTITY_ADMINUSER_LASTNAME }}
-        Identity__AdminUser__Password: ${{ secrets.IDENTITY_ADMINUSER_PASSWORD }}
+      - name: Build
+        run: dotnet build DataAnalyzeApi.sln --no-restore --configuration Release
+
+      - name: Run Unit Tests
+        run: dotnet test DataAnalyzeApi.Unit/DataAnalyzeApi.Unit.csproj --configuration Release
+
+      - name: Run Integration Tests
+        run: dotnet test DataAnalyzeApi.Integration/DataAnalyzeApi.Integration.csproj --configuration Release
+        env:
+          # Postgres
+          Postgres__Host: localhost
+          Postgres__Username: testuser
+          Postgres__Password: testpassword
+
+          # Redis
+          Redis__Host: localhost
+
+          # JWT
+          JwtConfig__Secret: ${{ secrets.JWTCONFIG_SECRET }}
+
+          # Admin user
+          Identity__AdminUser__Username: ${{ secrets.IDENTITY_ADMINUSER_USERNAME }}
+          Identity__AdminUser__Email: ${{ secrets.IDENTITY_ADMINUSER_EMAIL }}
+          Identity__AdminUser__FirstName: ${{ secrets.IDENTITY_ADMINUSER_FIRSTNAME }}
+          Identity__AdminUser__LastName: ${{ secrets.IDENTITY_ADMINUSER_LASTNAME }}
+          Identity__AdminUser__Password: ${{ secrets.IDENTITY_ADMINUSER_PASSWORD }}
 
   deploy:
     needs: test
     runs-on: self-hosted
-    
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/master'
+
     steps:
-    - uses: actions/checkout@v4
-      
-    - name: Build and Deploy
-      run: |
-        # Build image
-        docker build -f DataAnalyzeApi/Dockerfile -t data-analyze-api:latest DataAnalyzeApi
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        cd /home/Skriler/deploy
-        docker-compose down
-        docker-compose up -d
+      - name: Build Docker image
+        run: |
+          docker build -f DataAnalyzeApi/Dockerfile -t data-analyze-api:latest DataAnalyzeApi
 
-        # Remove dangling images
-        docker image prune -f
+      - name: Deploy application
+        run: |
+          cd /home/Skriler/deploy
+          docker-compose down
+          docker-compose up -d
+
+      - name: Clean up unused images
+        run: docker image prune -f
