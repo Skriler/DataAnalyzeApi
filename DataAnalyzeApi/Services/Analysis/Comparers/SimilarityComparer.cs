@@ -80,10 +80,6 @@ public class SimilarityComparer(ICompare comparer)
         List<DataObjectModel> objects,
         List<ParameterStateModel> parameterStates)
     {
-        //var activeParameterStates = parameterStates
-        //    .Where(ps => ps.IsActive)
-        //    .ToList();
-
         var similarities = new List<SimilarityPairModel>();
 
         for (int i = 0; i < objects.Count; ++i)
