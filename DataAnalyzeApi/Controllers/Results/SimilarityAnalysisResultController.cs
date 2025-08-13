@@ -2,6 +2,7 @@ using DataAnalyzeApi.Attributes;
 using DataAnalyzeApi.DAL.Repositories.Analysis;
 using DataAnalyzeApi.Mappers.Analysis.Entities;
 using DataAnalyzeApi.Models.DTOs.Analysis.Similarity.Results;
+using DataAnalyzeApi.Models.DTOs.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,36 @@ public class SimilarityAnalysisResultController(
         var results = await repository.GetAllAsync();
 
         return mapper.MapAnalysisResultList(results);
+    }
+
+    /// <summary>
+    /// Get paginated similarity analysis results.
+    /// </summary>
+    /// <param name="request">Pagination parameters</param>
+    /// <returns>An action result containing paginated similarity analysis results</returns>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PaginationResult<SimilarityAnalysisResultDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<PaginationResult<SimilarityAnalysisResultDto>>> GetPaged(
+        [FromQuery] PaginationRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var results = await repository.GetPagedAsync(request);
+
+        return new PaginationResult<SimilarityAnalysisResultDto>
+        {
+            Data = mapper.MapAnalysisResultList(results.Data),
+            TotalCount = results.TotalCount,
+            PageNumber = results.PageNumber,
+            PageSize = results.PageSize
+        };
     }
 
     /// <summary>

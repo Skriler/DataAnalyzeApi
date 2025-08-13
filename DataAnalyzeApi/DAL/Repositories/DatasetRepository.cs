@@ -1,3 +1,4 @@
+using DataAnalyzeApi.Models.DTOs.Common;
 using DataAnalyzeApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,41 @@ public class DatasetRepository(DataAnalyzeDbContext context)
             query = query.AsNoTracking();
 
         return await query.ToListAsync();
+    }
+
+    /// <summary>
+    /// Retrieves all datasets with pagination support.
+    /// </summary>
+    public async Task<PaginationResult<Dataset>> GetAllPagedAsync(
+        PaginationRequest request,
+        bool trackChanges = false)
+    {
+        var query = GetDatasetsWithIncludes();
+
+        if (request.FromDate.HasValue)
+            query = query.Where(d => d.CreatedAt >= request.FromDate.Value);
+
+        if (request.ToDate.HasValue)
+            query = query.Where(d => d.CreatedAt <= request.ToDate.Value);
+
+        if (!trackChanges)
+            query = query.AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(a => a.CreatedAt)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        return new PaginationResult<Dataset>
+        {
+            Data = items,
+            TotalCount = totalCount,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+        };
     }
 
     /// <summary>

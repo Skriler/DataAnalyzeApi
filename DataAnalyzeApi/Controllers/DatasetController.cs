@@ -1,6 +1,7 @@
 using AutoMapper;
 using DataAnalyzeApi.Attributes;
 using DataAnalyzeApi.DAL.Repositories;
+using DataAnalyzeApi.Models.DTOs.Common;
 using DataAnalyzeApi.Models.DTOs.Dataset.Create;
 using DataAnalyzeApi.Models.DTOs.Dataset.Read;
 using DataAnalyzeApi.Models.Entities;
@@ -40,6 +41,38 @@ public class DatasetController(
         var datasets = await repository.GetAllAsync();
 
         return mapper.Map<List<DatasetDto>>(datasets);
+    }
+
+    /// <summary>
+    /// Get all datasets with pagination support.
+    /// </summary>
+    /// <param name="request">Pagination and filtering parameters</param>
+    /// <returns>Paginated list of datasets</returns>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PaginationResult<DatasetDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<PaginationResult<DatasetDto>>> GetAllPaged(
+        [FromQuery] PaginationRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var paginatedDatasets = await repository.GetAllPagedAsync(request);
+
+        var result = new PaginationResult<DatasetDto>
+        {
+            Data = mapper.Map<List<DatasetDto>>(paginatedDatasets.Data),
+            TotalCount = paginatedDatasets.TotalCount,
+            PageNumber = paginatedDatasets.PageNumber,
+            PageSize = paginatedDatasets.PageSize
+        };
+
+        return Ok(result);
     }
 
     /// <summary>

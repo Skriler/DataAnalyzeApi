@@ -1,3 +1,4 @@
+using DataAnalyzeApi.Models.DTOs.Common;
 using DataAnalyzeApi.Models.Entities.Analysis;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,50 @@ public abstract class BaseAnalysisRepository<TAnalysisResult>(DataAnalyzeDbConte
         return await query
             .OrderByDescending(a => a.CreatedAt)
             .ToListAsync();
+    }
+
+    /// <summary>
+    /// Retrieves paginated analysis results with caching. Includes parameters if flag is true.
+    /// </summary>
+    public virtual async Task<PaginationResult<TAnalysisResult>> GetPagedAsync(
+        PaginationRequest request,
+        bool includeParameters = false,
+        bool trackChanges = false)
+    {
+        var analysisType = typeof(TAnalysisResult).Name.Replace("AnalysisResult", "").ToLower();
+
+        // TODO: Try to get from cache first
+
+        var query = GetAnalysisResultsWithIncludes(includeParameters);
+
+        if (request.FromDate.HasValue)
+            query = query.Where(a => a.CreatedAt >= request.FromDate.Value);
+
+        if (request.ToDate.HasValue)
+            query = query.Where(a => a.CreatedAt <= request.ToDate.Value);
+
+        if (!trackChanges)
+            query = query.AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        var data = await query
+            .OrderByDescending(a => a.CreatedAt)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        var result = new PaginationResult<TAnalysisResult>
+        {
+            Data = data,
+            TotalCount = totalCount,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
+
+        // TODO: Cache the result
+
+        return result;
     }
 
     /// <summary>
